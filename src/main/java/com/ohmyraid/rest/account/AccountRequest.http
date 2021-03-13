@@ -1,0 +1,18 @@
+### Test
+GET http://localhost:8104/account/test
+
+###
+
+### SignUp Test
+POST http://localhost:8104/account/signup
+Content-Type: application/json
+
+{
+"email" : "donghyeondev@gmail.com",
+"password" : "qwe123"
+}
+
+###
+POST http://localhost:8104/account/signup
+Content-Type: application/json
+< ./dummy.json
