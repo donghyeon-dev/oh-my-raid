@@ -3,6 +3,7 @@ package com.ohmyraid.service.account;
 import com.ohmyraid.common.result.ErrorResult;
 import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.repository.account.AccountRepository;
+import com.ohmyraid.utils.CryptoUtils;
 import com.ohmyraid.vo.account.SignUpInpVo;
 import com.ohmyraid.vo.account.SignUpResVo;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
@@ -21,7 +22,7 @@ public class AccountService {
     public SignUpResVo signUp(SignUpInpVo signUpInpVo){
         accountRepository.save(AccountEntity.builder().
                 email(signUpInpVo.getEmail())
-                .password(signUpInpVo.getPassword())
+                .password(CryptoUtils.encryptPw(signUpInpVo.getPassword()))
         .build());
 
         List<AccountEntity> accountList = accountRepository.findAll();

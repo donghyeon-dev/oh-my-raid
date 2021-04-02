@@ -2,7 +2,7 @@ package com.ohmyraid.common.wrapper;
 
 import com.ohmyraid.common.result.Result;
 import com.ohmyraid.common.result.SuccessResult;
-import com.ohmyraid.utils.MessageUtil;
+import com.ohmyraid.utils.MessageUtils;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -40,7 +40,7 @@ public abstract class AbstractResultView<T> implements Serializable {
      */
     public AbstractResultView<T> setResult(Result result) {
         this.code = result.getResultCode();
-        this.message = MessageUtil.getMessage(result.getResultMsg(), result.getResultMsgArgs());
+        this.message = MessageUtils.getMessage(result.getResultMsg(), result.getResultMsgArgs());
         return this;
     }
 
