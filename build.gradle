@@ -29,6 +29,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.4.2'
+
 
 //    compile 'org.springframework.cloud:spring-cloud-aws-messaging'
 
@@ -55,6 +57,8 @@ dependencies {
     // JPA
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.1.4.RELEASE'
 
+    // JWT
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
 
 
