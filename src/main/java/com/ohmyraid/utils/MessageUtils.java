@@ -6,12 +6,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.util.StringUtils;
 
 import java.util.Locale;
 
-public class MessageUtil {
-    static final Logger logger = LoggerFactory.getLogger(MessageUtil.class);
+public class MessageUtils {
+    static final Logger logger = LoggerFactory.getLogger(MessageUtils.class);
 
     private static MessageSource messageSource = StaticContextAccessor.getBean(ReloadableResourceBundleMessageSource.class);
 
@@ -28,13 +27,13 @@ public class MessageUtil {
     }
 
     public static String getMessage(String msgId, Object[] msgArgs, String basicText) {
-        return StringUtil.getMessage(getOriginMessage(msgId, basicText), msgArgs);
+        return StringUtils.getMessage(getOriginMessage(msgId, basicText), msgArgs);
     }
 
     private static String getOriginMessage(String msgKey, String basicText) {
 
         // 하드코딩
-        Locale locale = StringUtils.parseLocaleString("ko");
+        Locale locale = org.springframework.util.StringUtils.parseLocaleString("ko");
 
         if (org.springframework.util.StringUtils.isEmpty(msgKey)) {
             if (org.springframework.util.StringUtils.isEmpty(basicText)) {
@@ -43,7 +42,7 @@ public class MessageUtil {
                 return basicText;
             }
         }
-        if (StringUtils.isEmpty(basicText)) {
+        if (org.springframework.util.StringUtils.isEmpty(basicText)) {
             basicText = "";
         }
         try {

@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-public class StringUtil {
-    static final Logger logger = LoggerFactory.getLogger(StringUtil.class);
+public class StringUtils {
+    static final Logger logger = LoggerFactory.getLogger(StringUtils.class);
 
     public final static String EMPTY_STRING = "";
     private final static String WHITE_SPACE = " \t\n\r\f";
