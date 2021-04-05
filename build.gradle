@@ -18,6 +18,10 @@ repositories {
     mavenCentral()
 }
 
+ext { // SpringCloudVersion을  SpringBoot Version에 맞춰 지정해준다.
+    set('springCloudVersion', "2020.0.0")
+}
+
 dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok'
@@ -31,8 +35,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.4.2'
 
+    // Feign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
-//    compile 'org.springframework.cloud:spring-cloud-aws-messaging'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
@@ -43,9 +48,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
 
     // Swagger
-    compile(group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2') {
-        exclude module: 'swagger-annotations' exclude module: 'swagger-models'
-    }
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     compile("io.swagger:swagger-annotations:1.5.21")
     compile("io.swagger:swagger-models:1.5.21")
 
@@ -62,6 +66,12 @@ dependencies {
 
 
 
+}
+
+dependencyManagement { // MavenBom: 필요한 dependency의 버전을 신경쓰지 않고 프로젝트에 dependency를 추가할 수 있다고 한다.
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 test {

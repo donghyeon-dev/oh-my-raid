@@ -1,5 +1,5 @@
 server:
-  port: 8104
+  port: 8880
   servlet:
     context-path: /
 
@@ -20,12 +20,20 @@ spring:
 
 
 # Swagger 설정
-springfox:
-  documentation:
-    swagger:
-      v2.path: /swagger/swagger.json
-      use-service: OMR
-      ui-enabled: true
-      group-name: OMR-API
-      description: OhMyRaid-API
-      post-paths: /*.*|/s/*.*
+#springfox:
+#  documentation:
+#    swagger:
+#      v2.path: /swagger/swagger.json
+#      use-service: OMR
+#      ui-enabled: true
+#      group-name: OMR-API
+#      description: OhMyRaid-API
+#      post-paths: /*.*|/s/*.*
+
+feign:
+  client:
+    config:
+      RAD:
+        loggerLevel: full
+        connectTimeout: 5000
+        readTimeout: 5000
