@@ -20,9 +20,10 @@ public class AccountService {
     AccountRepository accountRepository;
 
     public SignUpResVo signUp(SignUpInpVo signUpInpVo){
-        accountRepository.save(AccountEntity.builder().
-                email(signUpInpVo.getEmail())
+        accountRepository.save(AccountEntity.builder()
+                .email(signUpInpVo.getEmail())
                 .password(CryptoUtils.encryptPw(signUpInpVo.getPassword()))
+                .nickname(signUpInpVo.getNickname())
         .build());
 
         List<AccountEntity> accountList = accountRepository.findAll();
