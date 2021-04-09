@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CharacterVo {
 
+    private long characterId;
     private String name;
     private String race;
     private String classs;

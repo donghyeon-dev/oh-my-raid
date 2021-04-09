@@ -1,5 +1,6 @@
 package com.ohmyraid.domain.character;
 
+import com.ohmyraid.domain.account.AccountEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,12 @@ import java.time.LocalDateTime;
 public class CharacterEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "character_id")
+    private Long characterId;
+
+    @ManyToOne
+    @JoinColumn(name="account_id")
+    private AccountEntity accountEntity;
 
     @Column(length = 12, nullable = false)
     private String name;
