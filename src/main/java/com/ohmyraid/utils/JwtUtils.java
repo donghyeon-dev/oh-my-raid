@@ -18,13 +18,13 @@ public class JwtUtils {
      * Access Token 생성한다.
      *
      * @param id
-     * @param userNm
+     * @param name
      * @return
      */
-    public String createAccessToken(String id, String userNm) {
+    public String createAccessToken(String id, String name) {
         // Access Token 생성
         String accessToken = Jwts.builder().setIssuer(issuer).setIssuedAt(new Date())
-                .claim("LoginId", id).claim("UserName", userNm)
+                .claim("LoginId", id).claim("UserName", name)
                 .signWith(SignatureAlgorithm.HS512,id)
                 .setExpiration(new Date(System.currentTimeMillis()+3600000)) //1시간
                 .compact();
