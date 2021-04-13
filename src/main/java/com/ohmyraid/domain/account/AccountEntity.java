@@ -22,7 +22,7 @@ public class AccountEntity {
     @Column(length = 25, nullable = false, unique = true)
     private String email;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 20, nullable = false, updatable = true)
     private String password;
 
     @Column(length = 25, nullable = false, unique = true)
