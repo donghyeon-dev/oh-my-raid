@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
@@ -25,6 +26,14 @@ import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    // message source
+    @Value("${spring.messages.basename}")
+    private final String messagesBasename = null;
+    @Value("${spring.messages.encoding}")
+    private final String messagesEncoding = null;
+    @Value("${spring.messages.cache-duration}")
+    int messagesCacheSeconds = -1;
 //
 //    @Value("${springfox.documentation.swagger.ui-enabled}")
 //    private final Boolean SWAGGER_UI_ENABLED = null;
@@ -44,6 +53,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
         bean.addUrlPatterns("/*");
 
         return bean;
+    }
+
+    @Bean
+    public ReloadableResourceBundleMessageSource messageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename(messagesBasename);
+        messageSource.setDefaultEncoding(messagesEncoding);
+        messageSource.setCacheSeconds(messagesCacheSeconds);
+        return messageSource;
     }
 
 

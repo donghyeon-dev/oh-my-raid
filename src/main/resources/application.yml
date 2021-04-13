@@ -17,7 +17,17 @@ spring:
       format_sql: true
     generate-ddl: true
     show-sql: true
+  messages:
+    cache-duration: -1
+    basename: classpath:/i18n/messages
+    encoding: UTF-8
 
+logging:
+  level:
+    root: INFO
+    com.ohmyraid: INFO
+  file:
+    path: logs
 
 # Swagger 설정
 #springfox:

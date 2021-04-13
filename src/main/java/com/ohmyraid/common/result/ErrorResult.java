@@ -2,13 +2,15 @@ package com.ohmyraid.common.result;
 
 public enum ErrorResult implements Result {
 
-    FAIL("ESYS000", "정상적으로 처리되지 않았습니다. 관리자에게 문의하십시오."), // 정상적으로 처리되지 않았습니다. 관리자에게 문의하십시오.
-    INVALID_INPUT("ESYS001", "입력값 검증에 실패하였습니다."), // 입력값 검증에 실패하였습니다.
-    INTERNAL("ESYS002", "정상적으로 처리되지 않았습니다. 관리자에게 문의하십시오."), // 정상적으로 처리되지 않았습니다. 관리자에게 문의하십시오.
-    PAGE_NOT_FOUND("ESYS004", "페이지를 찾을 수 없습니다."), // 페이지를 찾을 수 없습니다.
-    BAD_REQUEST("ESYS005", "서버가 인식할 수 없는 요청 구문입니다."), // 서버가 인식할 수 없는 요청 구문입니다.
-    NO_SESSION("ESYS006", "세션이 존재하지 않습니다."), // 세션이 존재하지 않습니다.
-    NO_URL_AUTH("ESYS007", "접근 권한이 없습니다."), // 접근 권한이 없습니다.
+    FAIL("ESYS000", "service.fail.msg"), // 정상적으로 처리되지 않았습니다. 관리자에게 문의하십시오.
+    INVALID_INPUT("ESYS001", "service.fail.invalid.msg"), // 입력값 검증에 실패하였습니다.
+    INTERNAL("ESYS002", "service.fail.internal.msg"), // 정상적으로 처리되지 않았습니다. 관리자에게 문의하십시오.
+    PAGE_NOT_FOUND("ESYS003", "service.fail.page.msg"), // 페이지를 찾을 수 없습니다.
+    BAD_REQUEST("ESYS004", "service.fail.badrq.msg"), // 서버가 인식할 수 없는 요청 구문입니다.
+    NO_SESSION("ESYS005", "service.fail.session.msg"), // 세션이 존재하지 않습니다.
+    NO_URL_AUTH("ESYS006", "service.fail.auth.msg"), // 접근 권한이 없습니다.
+    DUP_ID("ESVC007","signup.fail.dup.id.msg"), // 아이디가 중복됩니다
+    DUP_NN("ESVC008", "signup.fail.dup.nn.msg") // 닉네임이 중복됩니다.
     ;
 
     private String resultCode;

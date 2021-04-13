@@ -3,9 +3,12 @@ package com.ohmyraid.utils;
 import com.ohmyraid.common.suport.StaticContextAccessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Locale;
 
@@ -14,20 +17,20 @@ public class MessageUtils {
 
     private static MessageSource messageSource = StaticContextAccessor.getBean(ReloadableResourceBundleMessageSource.class);
 
-    public static String getMessage(String msgId) {
-        return getMessage(msgId, new String[] {});
+    public static String getMessage(String msg) {
+        return getMessage(msg, new String[] {});
     }
 
-    public static String getMessage(String msgId, Object msgArgs) {
-        return getMessage(msgId, new Object[] {msgArgs}, null);
+    public static String getMessage(String msg, Object msgArgs) {
+        return getMessage(msg, new Object[] {msgArgs}, null);
     }
 
-    public static String getMessage(String msgId, Object[] msgArgs) {
-        return getMessage(msgId, msgArgs, null);
+    public static String getMessage(String msg, Object[] msgArgs) {
+        return getMessage(msg, msgArgs, null);
     }
 
-    public static String getMessage(String msgId, Object[] msgArgs, String basicText) {
-        return StringUtils.getMessage(getOriginMessage(msgId, basicText), msgArgs);
+    public static String getMessage(String msg, Object[] msgArgs, String basicText) {
+        return StringUtils.getMessage(getOriginMessage(msg, basicText), msgArgs);
     }
 
     private static String getOriginMessage(String msgKey, String basicText) {
