@@ -25,7 +25,9 @@ spring:
 logging:
   level:
     root: INFO
-    com.ohmyraid: INFO
+    com.ohmyraid: DEBUG
+    org.hibernate.type.descriptor.sql: trace
+    org.springframework.jdbc.datasource.init.ScriptUtils: DEBUG
   file:
     path: logs
 
