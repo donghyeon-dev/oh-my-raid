@@ -14,4 +14,10 @@ public class CryptoUtils {
         log.debug("cryptedPw is {}", encodedPw);
         return encodedPw;
     }
+
+    public static boolean isPwVerify(String plaiPw, String encryptedPw){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
+        return encoder.matches(plaiPw,encryptedPw);
+
+    }
 }
