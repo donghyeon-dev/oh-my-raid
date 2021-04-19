@@ -10,5 +10,4 @@ public class CharacterFeignInpVo {
     String region;
     String realm;
     String name;
-    String fields;
 }

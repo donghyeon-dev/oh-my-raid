@@ -60,4 +60,12 @@ public class CharacterEntity {
     @Column(length = 10, nullable = false)
     private LocalDateTime lastCrawledAt;
 
+    // gear
+    @Column(length = 10, nullable = false)
+    private int itemLevelEquipped;
+
+    //mythic_plus_scores_by_season:current
+    @Column(length = 10, nullable = false)
+    private int mythicPlusScoreBySeason;
+
 }
