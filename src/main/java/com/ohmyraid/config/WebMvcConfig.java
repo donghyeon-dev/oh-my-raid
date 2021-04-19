@@ -1,6 +1,5 @@
 package com.ohmyraid.config;
 
-import com.google.common.base.Predicate;
 import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -8,21 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ParameterBuilder;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.schema.ModelRef;
-import springfox.documentation.service.AllowableListValues;
-import springfox.documentation.service.AllowableValues;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Parameter;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -63,7 +47,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         messageSource.setCacheSeconds(messagesCacheSeconds);
         return messageSource;
     }
-
 
 //    @Bean
 //    public Docket postsApi() {
