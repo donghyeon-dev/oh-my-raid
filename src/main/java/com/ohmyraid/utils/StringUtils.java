@@ -16,6 +16,14 @@ public class StringUtils {
     public final static String EMPTY_STRING = "";
     private final static String WHITE_SPACE = " \t\n\r\f";
 
+    public static String objectToString(Object target){
+        if(target == null){
+            return "";
+        } else {
+            return String.valueOf(target);
+        }
+    }
+
     public static String evl(String value, String defaultValue) {
         return isEmpty(value) ? defaultValue : value;
     }
