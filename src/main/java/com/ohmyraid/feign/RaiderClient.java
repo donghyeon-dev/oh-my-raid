@@ -13,12 +13,28 @@ import java.util.Map;
 @FeignClient(name = "RAD", url = "https://raider.io")
 public interface RaiderClient {
     @GetMapping(value = "/api/v1/characters/profile")
-    Map<String,String> getCharacterInf(@RequestParam("region") String region,
+    Map<String,Object> getCharacterGear(@RequestParam("region") String region,
                                        @RequestParam("realm") String realm,
                                        @RequestParam("name") String name,
                                        @RequestParam("fields") String field,
                                        @RequestHeader(value = "user-agent", defaultValue = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36") String ua
                                 );
+
+    @GetMapping(value = "/api/v1/characters/profile")
+    Map<String,Object> getCharacterRaidProgress(@RequestParam("region") String region,
+                                        @RequestParam("realm") String realm,
+                                        @RequestParam("name") String name,
+                                        @RequestParam("fields") String field,
+                                        @RequestHeader(value = "user-agent", defaultValue = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36") String ua
+    );
+
+    @GetMapping(value = "/api/v1/characters/profile")
+    Map<String,Object> getCharacterMythicScore(@RequestParam("region") String region,
+                                                @RequestParam("realm") String realm,
+                                                @RequestParam("name") String name,
+                                                @RequestParam("fields") String field,
+                                                @RequestHeader(value = "user-agent", defaultValue = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36") String ua
+    );
 
 
 }
