@@ -30,19 +30,15 @@ dependencies {
 
     // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.4.2'
-
-    // Feign
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-
-
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+//    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.4.2'
 
+    // Feign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.2'
