@@ -8,6 +8,7 @@ import java.util.List;
 public interface CharacterRespository extends JpaRepository<CharacterEntity, Long> {
     public List<CharacterEntity> findAllByName(String name);
     public CharacterEntity findByName(String name);
-    public List<CharacterEntity> findAllByAccountEntityAccountId(Long accountId);
+//    public List<CharacterEntity> findAllByAccountEntityAccountId(Long accountId);
+    public List<CharacterLoginOpMapping> findAllByAccountEntityAccountId(Long accountId);
     public CharacterEntity findByNameAndRealm(String name, String realm);
 }

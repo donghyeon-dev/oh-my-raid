@@ -87,6 +87,8 @@ public class CharacterService {
             log.debug("Raid Progression is {}", raidPrgVo);
             log.debug("MythicPlusScore is {}", mpScoreVo);
 
+            LocalDateTime time = ZonedDateTime.parse(StringUtils.objectToString(gearResult.get("last_crawled_at"))).toLocalDateTime();
+            time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
             //가져온 정보를 DB에 인서트
             characterRespository.save(CharacterEntity.builder()
@@ -101,7 +103,7 @@ public class CharacterService {
                     .honorableKills(StringUtils.objectToString(gearResult.get("honorable_kills")))
                     .region(StringUtils.objectToString(gearResult.get("region")))
                     .realm(StringUtils.objectToString(gearResult.get("realm")))
-                    .lastCrawledAt(ZonedDateTime.parse(StringUtils.objectToString(gearResult.get("last_crawled_at"))).toLocalDateTime())
+                    .lastCrawledAt(time)
                     .itemLevelEquipped(gearVo.getItemLevelEquipped())
                     .mythicPlusScoreBySeason(mpScoreVo.getScores().getAll())
                     .accountEntity(accountRepository.findAllByEmail("donghyeondev@gmail.com")) // Todo Test용 엔티티 하나 가져온거임 추후에 Redis개발을 하게되면, Redis의 계정으로 옮기기??
@@ -121,6 +123,7 @@ public class CharacterService {
             );
             return true;
         } else {
+
             // FeignClient를 통해 유저의 아이템레벨 정보를 가져온다,
             Map<String, Object> gearResult
                     = raiderClient.getCharacterGear(inpVo.getRegion(),
@@ -148,6 +151,10 @@ public class CharacterService {
             log.debug("Raid Progression is {}", raidPrgVo);
             log.debug("MythicPlusScore is {}", mpScoreVo);
 
+            // 날짜포맷변환
+            LocalDateTime time = ZonedDateTime.parse(StringUtils.objectToString(gearResult.get("last_crawled_at"))).toLocalDateTime();
+            time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
             characterRespository.save(CharacterEntity.builder()
                     .characterId(targetEntity.getCharacterId())
                     .name(StringUtils.objectToString(gearResult.get("name")))
@@ -161,7 +168,7 @@ public class CharacterService {
                     .honorableKills(StringUtils.objectToString(gearResult.get("honorable_kills")))
                     .region(StringUtils.objectToString(gearResult.get("region")))
                     .realm(StringUtils.objectToString(gearResult.get("realm")))
-                    .lastCrawledAt(ZonedDateTime.parse(StringUtils.objectToString(gearResult.get("last_crawled_at"))).toLocalDateTime())
+                    .lastCrawledAt(time)
                     .itemLevelEquipped(gearVo.getItemLevelEquipped())
                     .mythicPlusScoreBySeason(mpScoreVo.getScores().getAll())
                     .accountEntity(accountRepository.findAllByEmail("donghyeondev@gmail.com")) // Todo Test용 엔티티 하나 가져온거임 추후에 Redis개발을 하게되면, Redis의 계정으로 옮기기??
