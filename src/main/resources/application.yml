@@ -2,6 +2,10 @@ server:
   port: 8880
   servlet:
     context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 spring:
   application:
