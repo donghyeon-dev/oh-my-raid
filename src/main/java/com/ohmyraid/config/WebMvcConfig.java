@@ -6,6 +6,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -30,14 +31,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //    @Value("${springfox.documentation.swagger.use-service}")
 //    private final String SWAGGER_USE_SERVICE = null;
 
-    @Bean
-    public FilterRegistrationBean<CorsFilter> simpleCorsFilter() {
-        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<CorsFilter>();
-        bean.setFilter(new CorsFilter());
-        bean.addUrlPatterns("/*");
-
-        return bean;
-    }
+//    @Bean
+//    public FilterRegistrationBean<CorsFilter> simpleCorsFilter() {
+//        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<CorsFilter>();
+//        bean.setFilter(new CorsFilter());
+//        bean.addUrlPatterns("/*");
+//
+//        return bean;
+//    }
 
     @Bean
     public ReloadableResourceBundleMessageSource messageSource() {
@@ -47,6 +48,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
         messageSource.setCacheSeconds(messagesCacheSeconds);
         return messageSource;
     }
+//
+//    @Bean
+//    public CharacterEncodingFilter characterEncodingFilter(){
+//        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+//        characterEncodingFilter.setEncoding("UTF-8");
+//        characterEncodingFilter.setForceEncoding(true);
+//        return characterEncodingFilter;
+//    }
 
 //    @Bean
 //    public Docket postsApi() {
