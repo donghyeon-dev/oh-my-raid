@@ -6,6 +6,7 @@ import com.ohmyraid.common.wrapper.ResultView;
 import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.repository.account.AccountRepository;
+import com.ohmyraid.repository.character.CharacterLoginOpMapping;
 import com.ohmyraid.repository.character.CharacterRespository;
 import com.ohmyraid.utils.CryptoUtils;
 import com.ohmyraid.utils.JwtUtils;
@@ -47,12 +48,12 @@ public class LoginService {
         boolean isPwVerify = CryptoUtils.isPwVerify(inpVo.getPassword(), accountEntity.getPassword());
         log.debug("isPwVerify = {}",isPwVerify);
         if(isPwVerify) {
-            List<CharacterEntity> characterList = characterRespository.findAllByAccountEntityAccountId(accountEntity.getAccountId());
+            List<CharacterLoginOpMapping> characterList = characterRespository.findAllByAccountEntityAccountId(accountEntity.getAccountId());
             log.debug("CharacterList is {}", characterList);
-            String token = jwtUtils.createAccessToken(String.valueOf(accountEntity.getAccountId()), accountEntity.getNickname());
+            String token = jwtUtils.createAccessToken(String.valueOf(accountEntity.getEmail()), accountEntity.getNickname());
             LoginOutpVo outpVo = new LoginOutpVo();
             outpVo.setEmail(accountEntity.getEmail());
-            outpVo.setAccount(accountEntity);
+            outpVo.setNickname(accountEntity.getNickname());
             outpVo.setCharacterList(characterList);
             outpVo.setAccessToken(token);
 

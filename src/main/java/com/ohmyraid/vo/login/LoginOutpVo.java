@@ -2,6 +2,7 @@ package com.ohmyraid.vo.login;
 
 import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.domain.character.CharacterEntity;
+import com.ohmyraid.repository.character.CharacterLoginOpMapping;
 import com.ohmyraid.vo.character.CharacterVo;
 import lombok.Data;
 
@@ -15,9 +16,9 @@ public class LoginOutpVo {
 
     private String email;
 
-    private AccountEntity account;
+    private String nickname;
 
-    private List<CharacterEntity> characterList;
+    private List<CharacterLoginOpMapping> characterList;
 
     private String accessToken;
 
