@@ -6,6 +6,11 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -15,10 +20,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
     // message source
     @Value("${spring.messages.basename}")
     private final String messagesBasename = null;
+
     @Value("${spring.messages.encoding}")
     private final String messagesEncoding = null;
+
     @Value("${spring.messages.cache-duration}")
     int messagesCacheSeconds = -1;
+
+    @Value("${spring.redis.port}")
+    private int redisPort;
+
+    @Value("${spring.redis.host}")
+    private String redisHost;
+
 //
 //    @Value("${springfox.documentation.swagger.ui-enabled}")
 //    private final Boolean SWAGGER_UI_ENABLED = null;
@@ -48,6 +62,22 @@ public class WebMvcConfig implements WebMvcConfigurer {
         messageSource.setCacheSeconds(messagesCacheSeconds);
         return messageSource;
     }
+
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory(){
+        return new LettuceConnectionFactory(redisHost,redisPort);
+    }
+
+    @Bean
+    public RedisTemplate<?,?> redisTemplate(){
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        return redisTemplate;
+    }
+
+
 //
 //    @Bean
 //    public CharacterEncodingFilter characterEncodingFilter(){

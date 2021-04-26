@@ -25,6 +25,9 @@ spring:
     cache-duration: -1
     basename: classpath:/i18n/messages
     encoding: UTF-8
+  redis:
+    host: localhost
+    port: 6379
 
 logging:
   level:
