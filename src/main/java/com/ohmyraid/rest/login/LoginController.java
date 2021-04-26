@@ -1,5 +1,6 @@
 package com.ohmyraid.rest.login;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.common.wrapper.ResultView;
 import com.ohmyraid.service.login.LoginService;
 import com.ohmyraid.vo.login.LoginInpVo;
@@ -20,7 +21,7 @@ public class LoginController {
 
     @PostMapping(value = "")
     @ApiOperation(value = "로그인", notes = "이메일주소와 비밀번호로 로그인")
-    public ResultView<LoginOutpVo> signIn(@RequestBody LoginInpVo loginInpVo){
+    public ResultView<LoginOutpVo> signIn(@RequestBody LoginInpVo loginInpVo) throws JsonProcessingException {
 
         return new ResultView<>(loginService.signIn(loginInpVo));
     }

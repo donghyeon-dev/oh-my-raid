@@ -1,5 +1,6 @@
 package com.ohmyraid.service.login;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.common.result.CommonServiceException;
 import com.ohmyraid.common.result.ErrorResult;
 import com.ohmyraid.common.wrapper.ResultView;
@@ -10,6 +11,7 @@ import com.ohmyraid.repository.character.CharacterLoginOpMapping;
 import com.ohmyraid.repository.character.CharacterRespository;
 import com.ohmyraid.utils.CryptoUtils;
 import com.ohmyraid.utils.JwtUtils;
+import com.ohmyraid.utils.RedisUtils;
 import com.ohmyraid.vo.account.AccountVo;
 import com.ohmyraid.vo.login.LoginInpVo;
 import com.ohmyraid.vo.login.LoginOutpVo;
@@ -33,7 +35,10 @@ public class LoginService {
     @Autowired
     JwtUtils jwtUtils;
 
-    public LoginOutpVo signIn(LoginInpVo inpVo){
+    @Autowired
+    RedisUtils redisUtils;
+
+    public LoginOutpVo signIn(LoginInpVo inpVo) throws JsonProcessingException {
 
         // 아이디 통해 검색
         AccountEntity accountEntity = accountRepository.findAllByEmail(inpVo.getEmail());
@@ -48,6 +53,7 @@ public class LoginService {
         boolean isPwVerify = CryptoUtils.isPwVerify(inpVo.getPassword(), accountEntity.getPassword());
         log.debug("isPwVerify = {}",isPwVerify);
         if(isPwVerify) {
+            // Output Vo 작성
             List<CharacterLoginOpMapping> characterList = characterRespository.findAllByAccountEntityAccountId(accountEntity.getAccountId());
             log.debug("CharacterList is {}", characterList);
             String token = jwtUtils.createAccessToken(String.valueOf(accountEntity.getEmail()), accountEntity.getNickname());
@@ -57,6 +63,8 @@ public class LoginService {
             outpVo.setCharacterList(characterList);
             outpVo.setAccessToken(token);
 
+            // 레디스에 세션 넣기
+            redisUtils.putSession(token, outpVo);
             return outpVo;
         } else {
             throw new CommonServiceException(ErrorResult.LOGIN_FAIL_INVALID_PW);

@@ -1,4 +1,4 @@
-정package com.ohmyraid.service;
+package com.ohmyraid.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ohmyraid.vo.login.LoginInpVo;
@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @AutoConfigureMockMvc
 public class LoginServiceTest {
 
-    private static final Logger log = LoggerFactory.getLogger(CharacterServiceTest.class);
+    private static final Logger log = LoggerFactory.getLogger(LoginServiceTest.class);
 
     @Autowired
      MockMvc mockMvc;
