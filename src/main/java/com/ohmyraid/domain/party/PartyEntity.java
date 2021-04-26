@@ -1,11 +1,13 @@
 package com.ohmyraid.domain.party;
 
+import com.ohmyraid.domain.account.AccountEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity(name = "OMR_PARTY")
 @Getter
@@ -37,8 +39,15 @@ public class PartyEntity {
     @Column(length = 100, nullable = false)
     private String contents;
 
-    @Column(length = 50, nullable = false)
-    private String creater;
+    @OneToOne
+    @JoinColumn(name = "account_id")
+    private AccountEntity creater;
+
+    @Column(length = 10,nullable = false)
+    private LocalDateTime  startAt;
+
+    @Column(length = 10,nullable =   false)
+    private LocalDateTime  recruitUntil;
 
 
 }
