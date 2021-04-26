@@ -20,7 +20,7 @@ public class CharacterEntity {
     @Column(name = "character_id")
     private Long characterId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="account_id")
     private AccountEntity accountEntity;
 
