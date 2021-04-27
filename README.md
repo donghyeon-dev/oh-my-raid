@@ -11,4 +11,7 @@ Raider.io 의 API를 땡겨와서 캐릭터 정보를 가져온다.
 
 
 - JPA
-- JUnit (서비스 생성하기 전에 항상 테스트코드부터 짜보기)
+- JUnit
+- Feign
+- Swagger
+- Lombok
