@@ -28,6 +28,9 @@ spring:
   redis:
     host: localhost
     port: 6379
+  jwt:
+    secret-key: ohmyaraidapi
+    issuer: ohmyraid
 
 logging:
   level:
@@ -37,6 +40,12 @@ logging:
     org.springframework.jdbc.datasource.init.ScriptUtils: DEBUG
   file:
     path: logs
+
+project:
+  interceptor:
+    authentication:
+      add-path: /**
+      exclude-path: /swagger-ui.html,/swagger-ui.html/**,/account/signup,/login,/error,/null/swagger-resources/**,/swagger*,/swagger*/**
 
 # Swagger 설정
 #springfox:
