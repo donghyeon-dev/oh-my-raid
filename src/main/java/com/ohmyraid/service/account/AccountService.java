@@ -7,18 +7,17 @@ import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.utils.CryptoUtils;
 import com.ohmyraid.vo.account.SignUpInpVo;
 import com.ohmyraid.vo.account.SignUpResVo;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AccountService {
 
-    @Autowired
-    AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     public SignUpResVo signUp(SignUpInpVo signUpInpVo){
 

@@ -28,12 +28,11 @@ public class RedisUtils {
      * @param vo
      */
     public void putSession(String key, LoginOutpVo vo) throws JsonProcessingException {
-        log.debug("putSession() started");
         ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
         String value = objectMapper.writeValueAsString(vo);
         valueOperations.set(key,value);
         redisTemplate.expireAt(key, Date.from(ZonedDateTime.now().plusHours(1).toInstant()));
-        log.debug("Key is {}, Value is {}", key, value);
+        log.debug("putSession() && Key is {}, Value is {}", key, value);
     }
 
     /**
@@ -47,7 +46,7 @@ public class RedisUtils {
         String value = valueOperations.get(key);
         LoginOutpVo outpVo = objectMapper.readValue(value, LoginOutpVo.class);
 
-        log.debug("getSession Return is {}", outpVo);
+        log.debug("getSession() Return is {}", outpVo);
         return outpVo;
     }
 

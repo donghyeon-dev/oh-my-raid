@@ -12,6 +12,7 @@ import com.ohmyraid.repository.character.CharacterRespository;
 import com.ohmyraid.utils.CryptoUtils;
 import com.ohmyraid.utils.StringUtils;
 import com.ohmyraid.vo.character.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,22 +29,18 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CharacterService {
 
-    @Autowired
-    CharacterRespository characterRespository;
+    private final CharacterRespository characterRespository;
 
-    @Autowired
-    AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
-    @Autowired
-    CharacterRaidInfRespository characterRaidInfRespository;
+    private final CharacterRaidInfRespository characterRaidInfRespository;
 
-    @Autowired
-    RaiderClient raiderClient;
+    private final RaiderClient raiderClient;
 
-    @Autowired
-    ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
     String gear = "gear";
     String mpScore = "mythic_plus_scores_by_season:current";
