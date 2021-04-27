@@ -1,5 +1,6 @@
 package com.ohmyraid.service.character;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ohmyraid.common.wrapper.ResultView;
 import com.ohmyraid.domain.account.AccountEntity;
@@ -10,7 +11,9 @@ import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.repository.character.CharacterRaidInfRespository;
 import com.ohmyraid.repository.character.CharacterRespository;
 import com.ohmyraid.utils.CryptoUtils;
+import com.ohmyraid.utils.RedisUtils;
 import com.ohmyraid.utils.StringUtils;
+import com.ohmyraid.utils.ThreadLocalUtils;
 import com.ohmyraid.vo.character.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +43,8 @@ public class CharacterService {
 
     private final RaiderClient raiderClient;
 
+    private final RedisUtils redisUtils;
+
     private final ObjectMapper mapper;
 
     String gear = "gear";
@@ -52,7 +57,12 @@ public class CharacterService {
      * @return
      */
     @Transactional
-    public Boolean getCharacterInf(CharacterFeignInpVo inpVo){
+    public Boolean getCharacterInf(CharacterFeignInpVo inpVo) throws JsonProcessingException {
+
+        // token 가져오기
+        String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
+        String email = redisUtils.getSession(token).getEmail();
+
 
         CharacterEntity targetEntity = characterRespository.findByNameAndRealm(inpVo.getName(), inpVo.getRealm());
         if(ObjectUtils.isEmpty(targetEntity)) {
@@ -103,7 +113,7 @@ public class CharacterService {
                     .lastCrawledAt(time)
                     .itemLevelEquipped(gearVo.getItemLevelEquipped())
                     .mythicPlusScoreBySeason(mpScoreVo.getScores().getAll())
-                    .accountEntity(accountRepository.findAllByEmail("donghyeondev@gmail.com")) // Todo Test용 엔티티 하나 가져온거임 추후에 Redis개발을 하게되면, Redis의 계정으로 옮기기??
+                    .accountEntity(accountRepository.findAllByEmail(email))
                     .build()
             );
             // 생성한 엔티티 가져와서 Raid Progression Entity에 사용
@@ -168,7 +178,7 @@ public class CharacterService {
                     .lastCrawledAt(time)
                     .itemLevelEquipped(gearVo.getItemLevelEquipped())
                     .mythicPlusScoreBySeason(mpScoreVo.getScores().getAll())
-                    .accountEntity(accountRepository.findAllByEmail("donghyeondev@gmail.com")) // Todo Test용 엔티티 하나 가져온거임 추후에 Redis개발을 하게되면, Redis의 계정으로 옮기기??
+                    .accountEntity(accountRepository.findAllByEmail(email))
                     .build()
             );
             // 생성한 엔티티 가져와서 Raid Progression Entity에 사용
