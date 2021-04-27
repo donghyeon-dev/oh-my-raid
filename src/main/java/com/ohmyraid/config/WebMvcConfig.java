@@ -1,8 +1,8 @@
 package com.ohmyraid.config;
 
-import org.apache.catalina.filters.CorsFilter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -11,10 +11,12 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@Slf4j
+@RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
 
     // message source
@@ -32,6 +34,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Value("${spring.redis.host}")
     private String redisHost;
+
+    @Value("${project.interceptor.authentication.exclude-path}")
+    private final String AUTHENTICATION_EXCLUDE_PATH = null;
+
+    @Value("${project.interceptor.authentication.add-path}")
+    private final String AUTHENTICATION_ADD_PATH = null;
+
+    private final AuthenticationInterceptor authenticationInterceptor;
+
+    private final RequestInterceptor requestInterceptor;
 
 //
 //    @Value("${springfox.documentation.swagger.ui-enabled}")
@@ -77,8 +89,22 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return redisTemplate;
     }
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
 
-//
+        log.info("WebMvcConfig :: excludePath is {}", AUTHENTICATION_EXCLUDE_PATH);
+        String[] excludePath = AUTHENTICATION_EXCLUDE_PATH.split(",");
+        String [] addPath = AUTHENTICATION_ADD_PATH.split(",");
+        log.info("WebMvcConfig :: excludePath size is {}", excludePath.length);
+
+        registry.addInterceptor(requestInterceptor);
+
+        registry.addInterceptor(authenticationInterceptor)
+                .addPathPatterns(addPath)
+                .excludePathPatterns(excludePath);
+    }
+
+    //
 //    @Bean
 //    public CharacterEncodingFilter characterEncodingFilter(){
 //        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
