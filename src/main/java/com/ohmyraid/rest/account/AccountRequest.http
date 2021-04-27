@@ -1,18 +1,20 @@
 ### Test
-GET http://localhost:8104/account/test
+GET http://localhost:8880/account/test
 
 ###
 
 ### SignUp Test
-POST http://localhost:8104/account/signup
+POST http://localhost:8880/account/signup
 Content-Type: application/json
 
 {
-"email" : "donghyeondev@gmail.com",
-"password" : "qwe123"
+"email" : "donghaynzxc@gmail.com",
+"password" : "qwe123",
+  "nickname" : "박동"
 }
 
 ###
-POST http://localhost:8104/account/signup
+POST http://localhost:8880/account/signup
 Content-Type: application/json
+
 < ./dummy.json
