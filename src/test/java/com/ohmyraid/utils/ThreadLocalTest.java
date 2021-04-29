@@ -1,7 +1,7 @@
 package com.ohmyraid.utils;
 
 import com.ohmyraid.config.Constant;
-import com.ohmyraid.vo.account.ThreadInfVo;
+import com.ohmyraid.dto.account.ThreadInfDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -37,9 +37,9 @@ public class ThreadLocalTest {
 
     @Test
     public void ThreadLocal_CustomUtilTest(){
-        ThreadInfVo threadInfVo = new ThreadInfVo();
-        threadInfVo.setAccessToken("abcdef");
-        ThreadLocalUtils.add(Constant.ThreadLocal.THREAD_INF,threadInfVo);
+        ThreadInfDto threadInfDto = new ThreadInfDto();
+        threadInfDto.setAccessToken("abcdef");
+        ThreadLocalUtils.add(Constant.ThreadLocal.THREAD_INF, threadInfDto);
 
         log.debug("Thread's ThreadInfoVo is {}",ThreadLocalUtils.getThreadInfo());
     }

@@ -1,4 +1,4 @@
-package com.ohmyraid.vo.auth;
+package com.ohmyraid.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AuthResponseVo implements Serializable {
+public class AuthResponseDto implements Serializable {
 
     private String accessToken;
 

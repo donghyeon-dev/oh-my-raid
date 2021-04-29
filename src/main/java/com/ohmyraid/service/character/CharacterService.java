@@ -2,22 +2,18 @@ package com.ohmyraid.service.character;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ohmyraid.common.wrapper.ResultView;
-import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.domain.character.CharacterRaidInfEntity;
 import com.ohmyraid.feign.RaiderClient;
 import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.repository.character.CharacterRaidInfRespository;
 import com.ohmyraid.repository.character.CharacterRespository;
-import com.ohmyraid.utils.CryptoUtils;
 import com.ohmyraid.utils.RedisUtils;
 import com.ohmyraid.utils.StringUtils;
 import com.ohmyraid.utils.ThreadLocalUtils;
-import com.ohmyraid.vo.character.*;
+import com.ohmyraid.dto.character.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -28,7 +24,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -57,7 +52,7 @@ public class CharacterService {
      * @return
      */
     @Transactional
-    public Boolean getCharacterInf(CharacterFeignInpVo inpVo) throws JsonProcessingException {
+    public Boolean getCharacterInf(CharacterFeignInpDto inpVo) throws JsonProcessingException {
 
         // token 가져오기
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
@@ -73,7 +68,7 @@ public class CharacterService {
                     inpVo.getRealm(), inpVo.getName(), gear,
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) Apple" +
                             "WebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");
-            GearVo gearVo = mapper.convertValue(gearResult.get("gear"), GearVo.class);
+            GearDto gearDto = mapper.convertValue(gearResult.get("gear"), GearDto.class);
 
             // FeignClient를 통해 유저의 RaidProgression 정보를 가져온다,
             Map<String, Object> raidResult = raiderClient.getCharacterRaidProgress(inpVo.getRegion(),
@@ -81,7 +76,7 @@ public class CharacterService {
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) Apple" +
                             "WebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");
             Map<String, String> rp = mapper.convertValue(raidResult.get("raid_progression"), Map.class);
-            RaidPrgVo raidPrgVo = mapper.convertValue(rp.get("castle-nathria"), RaidPrgVo.class);
+            RaidPrgDto raidPrgDto = mapper.convertValue(rp.get("castle-nathria"), RaidPrgDto.class);
 
             // FeignClient를 통해 유저의 M+ 정보를 가져온다,
             Map<String, Object> mythicPlusResult = raiderClient.getCharacterMythicScore(inpVo.getRegion(),
@@ -89,10 +84,10 @@ public class CharacterService {
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) Apple" +
                             "WebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");
             List<Map<String, String>> mp = mapper.convertValue(mythicPlusResult.get("mythic_plus_scores_by_season"), ArrayList.class);
-            MpScoreVo mpScoreVo = mapper.convertValue(mp.get(0), MpScoreVo.class);
-            log.debug("GearVo is {}", gearVo);
-            log.debug("Raid Progression is {}", raidPrgVo);
-            log.debug("MythicPlusScore is {}", mpScoreVo);
+            MpScoreDto mpScoreDto = mapper.convertValue(mp.get(0), MpScoreDto.class);
+            log.debug("GearVo is {}", gearDto);
+            log.debug("Raid Progression is {}", raidPrgDto);
+            log.debug("MythicPlusScore is {}", mpScoreDto);
 
             LocalDateTime time = ZonedDateTime.parse(StringUtils.objectToString(gearResult.get("last_crawled_at"))).toLocalDateTime();
             time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -111,8 +106,8 @@ public class CharacterService {
                     .region(StringUtils.objectToString(gearResult.get("region")))
                     .realm(StringUtils.objectToString(gearResult.get("realm")))
                     .lastCrawledAt(time)
-                    .itemLevelEquipped(gearVo.getItemLevelEquipped())
-                    .mythicPlusScoreBySeason(mpScoreVo.getScores().getAll())
+                    .itemLevelEquipped(gearDto.getItemLevelEquipped())
+                    .mythicPlusScoreBySeason(mpScoreDto.getScores().getAll())
                     .accountEntity(accountRepository.findAllByEmail(email))
                     .build()
             );
@@ -120,12 +115,12 @@ public class CharacterService {
             CharacterEntity characterEntity = characterRespository.findByNameAndRealm(StringUtils.objectToString(gearResult.get("name")), StringUtils.objectToString(gearResult.get("realm")));
             characterRaidInfRespository.save(CharacterRaidInfEntity.builder()
                     .characterEntity(characterEntity)
-                    .normalBossesKilled(raidPrgVo.getNormalBossesKilled())
-                    .heroicBossesKilled(raidPrgVo.getHeroicBossesKilled())
-                    .mythicBossesKilled(raidPrgVo.getMythicBossesKilled())
-                    .totalBosses(raidPrgVo.getTotalBosses())
+                    .normalBossesKilled(raidPrgDto.getNormalBossesKilled())
+                    .heroicBossesKilled(raidPrgDto.getHeroicBossesKilled())
+                    .mythicBossesKilled(raidPrgDto.getMythicBossesKilled())
+                    .totalBosses(raidPrgDto.getTotalBosses())
                     .raidTier("castle-nathria") // Todo 이게 하드코딩이 맞는걸까...?
-                    .summary(raidPrgVo.getSummary())
+                    .summary(raidPrgDto.getSummary())
                     .build()
             );
             return true;
@@ -137,7 +132,7 @@ public class CharacterService {
                     inpVo.getRealm(), inpVo.getName(), gear,
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) Apple" +
                             "WebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");
-            GearVo gearVo = mapper.convertValue(gearResult.get("gear"), GearVo.class);
+            GearDto gearDto = mapper.convertValue(gearResult.get("gear"), GearDto.class);
 
             // FeignClient를 통해 유저의 RaidProgression 정보를 가져온다,
             Map<String, Object> raidResult = raiderClient.getCharacterRaidProgress(inpVo.getRegion(),
@@ -145,7 +140,7 @@ public class CharacterService {
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) Apple" +
                             "WebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");
             Map<String, String> rp = mapper.convertValue(raidResult.get("raid_progression"), Map.class);
-            RaidPrgVo raidPrgVo = mapper.convertValue(rp.get("castle-nathria"), RaidPrgVo.class);
+            RaidPrgDto raidPrgDto = mapper.convertValue(rp.get("castle-nathria"), RaidPrgDto.class);
 
             // FeignClient를 통해 유저의 M+ 정보를 가져온다,
             Map<String, Object> mythicPlusResult = raiderClient.getCharacterMythicScore(inpVo.getRegion(),
@@ -153,10 +148,10 @@ public class CharacterService {
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) Apple" +
                             "WebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");
             List<Map<String, String>> mp = mapper.convertValue(mythicPlusResult.get("mythic_plus_scores_by_season"), ArrayList.class);
-            MpScoreVo mpScoreVo = mapper.convertValue(mp.get(0), MpScoreVo.class);
-            log.debug("GearVo is {}", gearVo);
-            log.debug("Raid Progression is {}", raidPrgVo);
-            log.debug("MythicPlusScore is {}", mpScoreVo);
+            MpScoreDto mpScoreDto = mapper.convertValue(mp.get(0), MpScoreDto.class);
+            log.debug("GearVo is {}", gearDto);
+            log.debug("Raid Progression is {}", raidPrgDto);
+            log.debug("MythicPlusScore is {}", mpScoreDto);
 
             // 날짜포맷변환
             LocalDateTime time = ZonedDateTime.parse(StringUtils.objectToString(gearResult.get("last_crawled_at"))).toLocalDateTime();
@@ -176,8 +171,8 @@ public class CharacterService {
                     .region(StringUtils.objectToString(gearResult.get("region")))
                     .realm(StringUtils.objectToString(gearResult.get("realm")))
                     .lastCrawledAt(time)
-                    .itemLevelEquipped(gearVo.getItemLevelEquipped())
-                    .mythicPlusScoreBySeason(mpScoreVo.getScores().getAll())
+                    .itemLevelEquipped(gearDto.getItemLevelEquipped())
+                    .mythicPlusScoreBySeason(mpScoreDto.getScores().getAll())
                     .accountEntity(accountRepository.findAllByEmail(email))
                     .build()
             );
@@ -187,12 +182,12 @@ public class CharacterService {
             characterRaidInfRespository.save(CharacterRaidInfEntity.builder()
                     .raidId(raidInfEntity.getRaidId())
                     .characterEntity(characterEntity)
-                    .normalBossesKilled(raidPrgVo.getNormalBossesKilled())
-                    .heroicBossesKilled(raidPrgVo.getHeroicBossesKilled())
-                    .mythicBossesKilled(raidPrgVo.getMythicBossesKilled())
-                    .totalBosses(raidPrgVo.getTotalBosses())
+                    .normalBossesKilled(raidPrgDto.getNormalBossesKilled())
+                    .heroicBossesKilled(raidPrgDto.getHeroicBossesKilled())
+                    .mythicBossesKilled(raidPrgDto.getMythicBossesKilled())
+                    .totalBosses(raidPrgDto.getTotalBosses())
                     .raidTier("castle-nathria") // Todo 이게 하드코딩이 맞는걸까...?
-                    .summary(raidPrgVo.getSummary())
+                    .summary(raidPrgDto.getSummary())
                     .build()
             );
             return false;

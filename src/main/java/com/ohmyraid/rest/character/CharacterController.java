@@ -3,15 +3,11 @@ package com.ohmyraid.rest.character;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.common.wrapper.ResultView;
 import com.ohmyraid.service.character.CharacterService;
-import com.ohmyraid.vo.character.CharacterFeignInpVo;
-import com.ohmyraid.vo.character.CharacterVo;
+import com.ohmyraid.dto.character.CharacterFeignInpDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/character")
@@ -26,7 +22,7 @@ public class CharacterController {
     public ResultView<Boolean> getCharacterInf(@RequestParam("region") String region,
                                                             @RequestParam("realm") String realm,
                                                             @RequestParam("name") String name) throws JsonProcessingException {
-        CharacterFeignInpVo inpVo = new CharacterFeignInpVo();
+        CharacterFeignInpDto inpVo = new CharacterFeignInpDto();
         inpVo.setRegion(region);
         inpVo.setRealm(realm);
         inpVo.setName(name);

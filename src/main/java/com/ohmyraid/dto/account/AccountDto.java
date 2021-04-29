@@ -1,14 +1,15 @@
-package com.ohmyraid.vo.login;
+package com.ohmyraid.dto.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
-/**
- * 로그인 인풋 Vo
- */
 @Data
-public class LoginInpVo {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class AccountDto {
+
+    private long accountId;
 
     private String email;
+
     private String password;
 }

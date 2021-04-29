@@ -1,4 +1,4 @@
-package com.ohmyraid.vo.account;
+package com.ohmyraid.dto.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties
-public class SignUpInpVo {
+public class SignUpInpDto {
 
     @ApiModelProperty(value = "로그인이메일", name = "email")
     private String email;

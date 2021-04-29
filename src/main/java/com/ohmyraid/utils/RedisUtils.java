@@ -2,7 +2,7 @@ package com.ohmyraid.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ohmyraid.vo.login.LoginOutpVo;
+import com.ohmyraid.dto.login.LoginOutpDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,7 +27,7 @@ public class RedisUtils {
      * @param key
      * @param vo
      */
-    public void putSession(String key, LoginOutpVo vo) throws JsonProcessingException {
+    public void putSession(String key, LoginOutpDto vo) throws JsonProcessingException {
         ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
         String value = objectMapper.writeValueAsString(vo);
         valueOperations.set(key,value);
@@ -41,10 +41,10 @@ public class RedisUtils {
      * @return
      * @throws JsonProcessingException
      */
-    public LoginOutpVo getSession(String key) throws JsonProcessingException {
+    public LoginOutpDto getSession(String key) throws JsonProcessingException {
         ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
         String value = valueOperations.get(key);
-        LoginOutpVo outpVo = objectMapper.readValue(value, LoginOutpVo.class);
+        LoginOutpDto outpVo = objectMapper.readValue(value, LoginOutpDto.class);
 
         log.debug("getSession() Return is {}", outpVo);
         return outpVo;

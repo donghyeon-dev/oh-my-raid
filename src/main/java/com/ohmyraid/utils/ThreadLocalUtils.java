@@ -1,7 +1,7 @@
 package com.ohmyraid.utils;
 
 import com.ohmyraid.config.Constant;
-import com.ohmyraid.vo.account.ThreadInfVo;
+import com.ohmyraid.dto.account.ThreadInfDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +14,8 @@ public class ThreadLocalUtils {
 
     private static ThreadLocal<Map<Object, Object>> threadLocal = new ThreadLocal();
 
-    public static ThreadInfVo getThreadInfo(){
-        return (ThreadInfVo) get(Constant.ThreadLocal.THREAD_INF);
+    public static ThreadInfDto getThreadInfo(){
+        return (ThreadInfDto) get(Constant.ThreadLocal.THREAD_INF);
 
     }
 

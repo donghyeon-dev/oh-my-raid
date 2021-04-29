@@ -2,7 +2,7 @@ package com.ohmyraid.config;
 
 import com.ohmyraid.utils.StringUtils;
 import com.ohmyraid.utils.ThreadLocalUtils;
-import com.ohmyraid.vo.account.ThreadInfVo;
+import com.ohmyraid.dto.account.ThreadInfDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -25,9 +25,9 @@ public class RequestInterceptor implements HandlerInterceptor {
         String token = "";
         if(StringUtils.isNotEmpty(request.getHeader("Authorization"))) {
             token = request.getHeader("Authorization");
-            ThreadInfVo threadInfVo = new ThreadInfVo();
-            threadInfVo.setAccessToken(token);
-            ThreadLocalUtils.add("ThreadInf", threadInfVo);
+            ThreadInfDto threadInfDto = new ThreadInfDto();
+            threadInfDto.setAccessToken(token);
+            ThreadLocalUtils.add("ThreadInf", threadInfDto);
             log.debug("Token is Exists. ThreadInf is added inside of ThreadLocal");
         }
 

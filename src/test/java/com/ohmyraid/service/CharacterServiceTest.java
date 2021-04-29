@@ -2,7 +2,7 @@ package com.ohmyraid.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ohmyraid.feign.RaiderClient;
-import com.ohmyraid.vo.character.*;
+import com.ohmyraid.dto.character.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class CharacterServiceTest {
                 "azshara", "autocat", "gear",
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) Apple" +
                         "WebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");
-        GearVo gearVo = mapper.convertValue(gearResult.get("gear"),GearVo.class);
+        GearDto gearDto = mapper.convertValue(gearResult.get("gear"), GearDto.class);
 
         // FeignClient를 통해 유저의 RaidProgression 정보를 가져온다,
         Map<String, Object> raidResult = raiderClient.getCharacterRaidProgress("kr",
@@ -49,7 +49,7 @@ public class CharacterServiceTest {
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) Apple" +
                         "WebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");
         Map<String, String> rp = mapper.convertValue(raidResult.get("raid_progression"),Map.class);
-        RaidPrgVo raidPrgVo = mapper.convertValue(rp.get("castle-nathria"), RaidPrgVo.class);
+        RaidPrgDto raidPrgDto = mapper.convertValue(rp.get("castle-nathria"), RaidPrgDto.class);
 
         // FeignClient를 통해 유저의 M+ 정보를 가져온다,
         Map<String, Object> mythicPlusResult = raiderClient.getCharacterMythicScore("kr",
@@ -57,10 +57,10 @@ public class CharacterServiceTest {
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) Apple" +
                         "WebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");
         List<Map<String, String>> mp = mapper.convertValue(mythicPlusResult.get("mythic_plus_scores_by_season"), ArrayList.class);
-        MpScoreVo mpScoreVo = mapper.convertValue(mp.get(0) ,MpScoreVo.class);
-        log.debug("GearVo is {}", gearVo);
-        log.debug("Raid Progression is {}", raidPrgVo);
-        log.debug("MythicPlusScore is {}", mpScoreVo);
+        MpScoreDto mpScoreDto = mapper.convertValue(mp.get(0) , MpScoreDto.class);
+        log.debug("GearVo is {}", gearDto);
+        log.debug("Raid Progression is {}", raidPrgDto);
+        log.debug("MythicPlusScore is {}", mpScoreDto);
 
     }
 }

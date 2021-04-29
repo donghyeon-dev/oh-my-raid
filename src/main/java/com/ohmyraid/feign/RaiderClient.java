@@ -1,8 +1,5 @@
 package com.ohmyraid.feign;
 
-import com.ohmyraid.common.wrapper.ResultView;
-import com.ohmyraid.domain.character.CharacterEntity;
-import com.ohmyraid.vo.character.CharacterVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

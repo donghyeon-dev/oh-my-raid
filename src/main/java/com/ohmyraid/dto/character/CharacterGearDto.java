@@ -1,4 +1,4 @@
-package com.ohmyraid.vo.character;
+package com.ohmyraid.dto.character;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -7,12 +7,11 @@ import java.time.LocalDateTime;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CharacterVo {
+public class CharacterGearDto {
 
-    private long characterId;
     private String name;
     private String race;
-    private String classs;
+    private String classes;
     private String activeSpecName;
     private String activeSpecRole;
     private String gender;
@@ -22,4 +21,5 @@ public class CharacterVo {
     private String region;
     private String realm;
     private LocalDateTime lastCrawledAt;
+    private GearDto gear;
 }

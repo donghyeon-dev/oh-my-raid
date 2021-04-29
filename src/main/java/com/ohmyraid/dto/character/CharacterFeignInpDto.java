@@ -1,11 +1,13 @@
-package com.ohmyraid.vo.account;
+package com.ohmyraid.dto.character;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SignUpResVo {
+public class CharacterFeignInpDto {
 
-    private String message;
+    String region;
+    String realm;
+    String name;
 }

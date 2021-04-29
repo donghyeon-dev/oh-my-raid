@@ -1,4 +1,4 @@
-package com.ohmyraid.vo.character;
+package com.ohmyraid.dto.character;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CharacterRaidPrgVo {
+public class CharacterRaidPrgDto {
 
     private String name;
     private String race;
@@ -21,5 +21,5 @@ public class CharacterRaidPrgVo {
     private String region;
     private String realm;
     private LocalDateTime lastCrawledAt;
-    private RaidPrgVo raidProgression;
+    private RaidPrgDto raidProgression;
 }

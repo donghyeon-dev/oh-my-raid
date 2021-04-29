@@ -1,4 +1,4 @@
-package com.ohmyraid.vo.character;
+package com.ohmyraid.dto.character;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -6,14 +6,16 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+public class GearDto implements Serializable {
+    private static final long serialVersionUID = -2925893922100802694L;
 
-public class RaidPrgVo {
-    private String summary;
-    private int totalBosses;
-    private int normalBossesKilled;
-    private int heroicBossesKilled;
-    private int mythicBossesKilled;
+
+    private int itemLevelEquipped;
+    private int itemLevelTotal;
+    private int artifact_traits;
 }

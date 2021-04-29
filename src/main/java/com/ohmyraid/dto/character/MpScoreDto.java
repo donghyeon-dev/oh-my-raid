@@ -1,4 +1,4 @@
-package com.ohmyraid.vo.character;
+package com.ohmyraid.dto.character;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,8 +10,8 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 
-public class MpScoreVo {
+public class MpScoreDto {
     private String season;
-    private ScoresVo scores;
+    private ScoresDto scores;
 
 }

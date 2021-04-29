@@ -1,4 +1,4 @@
-package com.ohmyraid.vo.character;
+package com.ohmyraid.dto.character;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,14 +10,10 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 
-public class ScoresVo {
-    private int all;
-    private int dps;
-    private int healder;
-    private int tank;
-    private int spec_0;
-    private int spec_1;
-    private int spec_2;
-    private int spec_3;
-
+public class RaidPrgDto {
+    private String summary;
+    private int totalBosses;
+    private int normalBossesKilled;
+    private int heroicBossesKilled;
+    private int mythicBossesKilled;
 }

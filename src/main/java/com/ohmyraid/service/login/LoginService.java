@@ -10,8 +10,8 @@ import com.ohmyraid.repository.character.CharacterRespository;
 import com.ohmyraid.utils.CryptoUtils;
 import com.ohmyraid.utils.JwtUtils;
 import com.ohmyraid.utils.RedisUtils;
-import com.ohmyraid.vo.login.LoginInpVo;
-import com.ohmyraid.vo.login.LoginOutpVo;
+import com.ohmyraid.dto.login.LoginInpDto;
+import com.ohmyraid.dto.login.LoginOutpDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class LoginService {
      * @return
      * @throws JsonProcessingException
      */
-    public LoginOutpVo signIn(LoginInpVo inpVo) throws JsonProcessingException {
+    public LoginOutpDto signIn(LoginInpDto inpVo) throws JsonProcessingException {
 
         // 아이디 통해 검색
         AccountEntity accountEntity = accountRepository.findAllByEmail(inpVo.getEmail());
@@ -57,7 +57,7 @@ public class LoginService {
             List<CharacterLoginOpMapping> characterList = characterRespository.findAllByAccountEntityAccountId(accountEntity.getAccountId());
             log.debug("CharacterList is {}", characterList);
             String token = jwtUtils.createAccessToken(String.valueOf(accountEntity.getEmail()), accountEntity.getNickname());
-            LoginOutpVo outpVo = new LoginOutpVo();
+            LoginOutpDto outpVo = new LoginOutpDto();
             outpVo.setEmail(accountEntity.getEmail());
             outpVo.setNickname(accountEntity.getNickname());
             outpVo.setCharacterList(characterList);

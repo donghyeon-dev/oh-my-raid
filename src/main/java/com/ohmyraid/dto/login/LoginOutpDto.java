@@ -1,9 +1,6 @@
-package com.ohmyraid.vo.login;
+package com.ohmyraid.dto.login;
 
-import com.ohmyraid.domain.account.AccountEntity;
-import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.repository.character.CharacterLoginOpMapping;
-import com.ohmyraid.vo.character.CharacterVo;
 import lombok.Data;
 
 import java.util.List;
@@ -12,7 +9,7 @@ import java.util.List;
  * 로그인 output Vo
  */
 @Data
-public class LoginOutpVo {
+public class LoginOutpDto {
 
     private String email;
 

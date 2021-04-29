@@ -5,8 +5,8 @@ import com.ohmyraid.common.result.ErrorResult;
 import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.utils.CryptoUtils;
-import com.ohmyraid.vo.account.SignUpInpVo;
-import com.ohmyraid.vo.account.SignUpResVo;
+import com.ohmyraid.dto.account.SignUpInpDto;
+import com.ohmyraid.dto.account.SignUpResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +19,16 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    public SignUpResVo signUp(SignUpInpVo signUpInpVo){
+    public SignUpResDto signUp(SignUpInpDto signUpInpDto){
 
         // 중복검사
         List<AccountEntity> accountList = accountRepository.findAll();
         List<AccountEntity> nameList = accountRepository.findAll();
         accountList = accountList.stream()
-                .filter(a -> a.getEmail().equals(signUpInpVo.getEmail()))
+                .filter(a -> a.getEmail().equals(signUpInpDto.getEmail()))
                 .collect(Collectors.toList());
         nameList = accountList.stream()
-                .filter(a -> a.getNickname().equals(signUpInpVo.getNickname()))
+                .filter(a -> a.getNickname().equals(signUpInpDto.getNickname()))
                 .collect(Collectors.toList());
         if(accountList.size() != 0 ){ // ID 중복검사
             throw new CommonServiceException(ErrorResult.DUP_ID);
@@ -36,13 +36,13 @@ public class AccountService {
             throw new CommonServiceException(ErrorResult.DUP_NN);
         } else{
             accountRepository.save(AccountEntity.builder()
-                    .email(signUpInpVo.getEmail())
-                    .password(CryptoUtils.encryptPw(signUpInpVo.getPassword()))
-                    .nickname(signUpInpVo.getNickname())
+                    .email(signUpInpDto.getEmail())
+                    .password(CryptoUtils.encryptPw(signUpInpDto.getPassword()))
+                    .nickname(signUpInpDto.getNickname())
                     .build());
-            SignUpResVo signUpResVo = new SignUpResVo();
-            signUpResVo.setMessage("회원가입 성공");
-            return signUpResVo;
+            SignUpResDto signUpResDto = new SignUpResDto();
+            signUpResDto.setMessage("회원가입 성공");
+            return signUpResDto;
         }
     }
 }

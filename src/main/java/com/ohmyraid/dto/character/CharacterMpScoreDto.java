@@ -1,4 +1,4 @@
-package com.ohmyraid.vo.character;
+package com.ohmyraid.dto.character;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CharacterMpScoreVo {
+public class CharacterMpScoreDto {
 
     private String name;
     private String race;
@@ -22,5 +22,5 @@ public class CharacterMpScoreVo {
     private String region;
     private String realm;
     private LocalDateTime lastCrawledAt;
-    private List<MpScoreVo> mythicPlusScoresBySeason;
+    private List<MpScoreDto> mythicPlusScoresBySeason;
 }
