@@ -28,6 +28,10 @@ spring:
   redis:
     host: localhost
     port: 6379
+  data:
+    redis:
+      repositories:
+        enabled: false
   jwt:
     secret-key: ohmyaraidapi
     issuer: ohmyraid
@@ -45,7 +49,7 @@ project:
   interceptor:
     authentication:
       add-path: /**
-      exclude-path: /swagger-ui.html,/swagger-ui.html/**,/account/signup,/login,/error,/null/swagger-resources/**,/swagger*,/swagger*/**
+      exclude-path: /swagger-ui.html,/swagger-ui.html/**,/account/signup,/login,/error,/null/swagger-resources/**,/swagger*,/swagger*/**,/webjars/**,/login/**
 
 # Swagger 설정
 #springfox:

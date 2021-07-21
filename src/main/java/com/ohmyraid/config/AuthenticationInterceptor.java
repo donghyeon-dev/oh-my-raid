@@ -5,6 +5,7 @@ import com.ohmyraid.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,11 +25,14 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         // Header의 AccessToken의 유효성 검사
         String header =  request.getHeader("Authorization");
         log.debug("AuthenticationInterceptor :: Authorization Value is {}", header);
-
-        boolean isTokenValid = jwtUtils.isTokenValid(header);
-        if(!isTokenValid){
-            log.error("AuthenticationInterceptor :: AccessToken is INVALID");
-            throw new CommonNoAuthenticationException();
+        if(!ObjectUtils.isEmpty(header)) {
+            boolean isTokenValid = jwtUtils.isTokenValid(header);
+            if (!isTokenValid) {
+                log.error("AuthenticationInterceptor :: AccessToken is INVALID");
+                throw new CommonNoAuthenticationException();
+            }
+        } else {
+            return false;
         }
 
         return true;

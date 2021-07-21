@@ -28,7 +28,7 @@ public class PartyEntity {
     private String difficulty;
 
     @Column(length = 5, nullable = false)
-    private int requiredMember;
+    private int requiredMembers;
 
     @Column(length = 5, nullable = false)
     private int times;
@@ -36,7 +36,7 @@ public class PartyEntity {
     @Column(length = 5, nullable = false)
     private String memberCapacity;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 1000, nullable = false)
     private String contents;
 
     @OneToOne

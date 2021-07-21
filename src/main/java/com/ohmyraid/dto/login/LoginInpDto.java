@@ -1,5 +1,6 @@
 package com.ohmyraid.dto.login;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -8,6 +9,9 @@ import lombok.Data;
 @Data
 public class LoginInpDto {
 
+    @ApiModelProperty(example = "donghyeondev@gmail.com")
     private String email;
+
+    @ApiModelProperty(example = "qkrgus0712!")
     private String password;
 }

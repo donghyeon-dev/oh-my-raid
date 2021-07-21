@@ -7,14 +7,13 @@ import com.ohmyraid.dto.login.LoginInpDto;
 import com.ohmyraid.dto.login.LoginOutpDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/login")
 @RequiredArgsConstructor
+@Slf4j
 public class LoginController {
 
     private final LoginService loginService;
@@ -24,5 +23,11 @@ public class LoginController {
     public ResultView<LoginOutpDto> signIn(@RequestBody LoginInpDto loginInpDto) throws JsonProcessingException {
 
         return new ResultView<>(loginService.signIn(loginInpDto));
+    }
+    @GetMapping(value = "/oauth")
+    @ApiOperation(value = "oauth", notes = "이메일주소와 비밀번호로 로그인")
+    public ResultView<String> oauth(@RequestParam(value = "code") String code){
+        log.debug("Code is {}", code);
+        return new ResultView<String>("hi");
     }
 }

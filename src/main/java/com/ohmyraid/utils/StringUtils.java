@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -22,6 +25,13 @@ public class StringUtils {
         } else {
             return String.valueOf(target);
         }
+    }
+
+    public static LocalDateTime stringToLocalDateTime(String date){
+        LocalDateTime time = ZonedDateTime.parse(date).toLocalDateTime();
+        time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        return time;
     }
 
     public static String evl(String value, String defaultValue) {
