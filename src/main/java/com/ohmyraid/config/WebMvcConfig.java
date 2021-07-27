@@ -48,7 +48,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final RequestInterceptor requestInterceptor;
 
-//
 //    @Value("${springfox.documentation.swagger.ui-enabled}")
 //    private final Boolean SWAGGER_UI_ENABLED = null;
 //    @Value("${springfox.documentation.swagger.group-name}")

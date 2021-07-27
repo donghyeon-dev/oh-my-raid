@@ -4,20 +4,21 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.common.result.CommonServiceException;
 import com.ohmyraid.common.result.ErrorResult;
 import com.ohmyraid.domain.account.AccountEntity;
+import com.ohmyraid.dto.auth.AuthDto;
+import com.ohmyraid.dto.auth.AuthRequestDto;
+import com.ohmyraid.feign.TokenClient;
 import com.ohmyraid.repository.account.AccountRepository;
-import com.ohmyraid.repository.character.CharacterLoginOpMapping;
-import com.ohmyraid.repository.character.CharacterRespository;
 import com.ohmyraid.utils.CryptoUtils;
 import com.ohmyraid.utils.JwtUtils;
 import com.ohmyraid.utils.RedisUtils;
 import com.ohmyraid.dto.login.LoginInpDto;
-import com.ohmyraid.dto.login.LoginOutpDto;
+import com.ohmyraid.dto.login.RedisDto;
+import com.ohmyraid.utils.ThreadLocalUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -26,11 +27,21 @@ public class LoginService {
 
     private final AccountRepository accountRepository;
 
-    private final CharacterRespository characterRespository;
+    private final TokenClient tokenClient;
 
     private final JwtUtils jwtUtils;
 
     private final RedisUtils redisUtils;
+
+    @Value("${bz.redirect-uri}")
+    private final String REDIRECT_URI = null;
+
+    @Value("${bz.grant-type}")
+    private final String GRANT_TYPE = null;
+
+    @Value("${bz.scope}")
+    private final String SCOPE = null;
+
 
     /**
      * 로그인 서비스
@@ -38,7 +49,7 @@ public class LoginService {
      * @return
      * @throws JsonProcessingException
      */
-    public LoginOutpDto signIn(LoginInpDto inpVo) throws JsonProcessingException {
+    public RedisDto signIn(LoginInpDto inpVo) throws JsonProcessingException {
 
         // 아이디 통해 검색
         AccountEntity accountEntity = accountRepository.findAllByEmail(inpVo.getEmail());
@@ -54,20 +65,42 @@ public class LoginService {
         log.debug("isPwVerify = {}",isPwVerify);
         if(isPwVerify) {
             // Output Vo 작성
-            List<CharacterLoginOpMapping> characterList = characterRespository.findAllByAccountEntityAccountId(accountEntity.getAccountId());
-            log.debug("CharacterList is {}", characterList);
             String token = jwtUtils.createAccessToken(String.valueOf(accountEntity.getEmail()), accountEntity.getNickname());
-            LoginOutpDto outpVo = new LoginOutpDto();
-            outpVo.setEmail(accountEntity.getEmail());
-            outpVo.setNickname(accountEntity.getNickname());
-            outpVo.setCharacterList(characterList);
-            outpVo.setAccessToken(token);
+            RedisDto redisDto = new RedisDto();
+            redisDto.setEmail(accountEntity.getEmail());
+            redisDto.setNickname(accountEntity.getNickname());
+            redisDto.setAccessToken(token);
 
             // 레디스에 세션 넣기
-            redisUtils.putSession(token, outpVo);
-            return outpVo;
+            redisUtils.putSession(token, redisDto);
+            return redisDto;
         } else {
             throw new CommonServiceException(ErrorResult.LOGIN_FAIL_INVALID_PW);
         }
     }
+
+    /**
+     * ToDo 여기 있어야 할게 아님.... 나중에 BLIZZARD 연동 계정 정보 가져오기 이런 기능을 만들면 옮겨야함
+     * oAuth Credential_Code 방식을 이용해 AccessToken을 가져온다.
+     * @param code
+     * @return
+     */
+    public String getAccessToken(String code) throws JsonProcessingException {
+        //Auth Value발급을 위해 환경변수에서 clientId와 ClientSecret을 가져와 인코딩한다.
+        String AUTH = CryptoUtils.getAuthValue();
+
+        // RequestDto정의
+        AuthRequestDto authRequestDto = AuthRequestDto.builder()
+                .grant_type(GRANT_TYPE)
+                .redirect_uri(REDIRECT_URI)
+                .scope(SCOPE)
+                .code(code)
+                .build();
+
+        // 토큰요청 ToDo 여기서 Exception이 난다면 어떻게 처리해야할까...
+        AuthDto tokenRes = tokenClient.getAccessToken(authRequestDto, AUTH);
+        log.debug("TokenRes is {}", tokenRes);
+
+      return tokenRes.getAccess_token();
+    };
 }

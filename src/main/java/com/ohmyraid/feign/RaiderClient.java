@@ -2,6 +2,7 @@ package com.ohmyraid.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -32,7 +33,6 @@ public interface RaiderClient {
                                                 @RequestParam("fields") String field,
                                                 @RequestHeader(value = "user-agent", defaultValue = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36") String ua
     );
-
 
 }
 

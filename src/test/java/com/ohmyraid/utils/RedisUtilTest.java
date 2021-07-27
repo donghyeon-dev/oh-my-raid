@@ -2,7 +2,7 @@ package com.ohmyraid.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ohmyraid.dto.login.LoginOutpDto;
+import com.ohmyraid.dto.login.RedisDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -50,7 +50,7 @@ public class RedisUtilTest {
     @Test
     void ObjectMapper_레디스_커넥션_테스트() throws JsonProcessingException {
         String key = "key";
-        LoginOutpDto outpVo = new LoginOutpDto();
+        RedisDto outpVo = new RedisDto();
         outpVo.setNickname("autocat");
         outpVo.setEmail("donghyeondev@gmail.com");
         outpVo.setAccessToken("accessToken");
@@ -68,14 +68,14 @@ public class RedisUtilTest {
     @Test
     void RedisUtils_레디스_커넥션_테스트() throws JsonProcessingException {
         String key = "key";
-        LoginOutpDto outpVo = new LoginOutpDto();
+        RedisDto outpVo = new RedisDto();
         outpVo.setNickname("autocat");
         outpVo.setEmail("donghyeondev@gmail.com");
         outpVo.setAccessToken("accessToken");
 
         redisUtils.putSession(key,outpVo);
 
-        LoginOutpDto result = redisUtils.getSession(key);
+        RedisDto result = redisUtils.getSession(key);
         log.info("result is {}", result);
         assertEquals(outpVo,result);
     }

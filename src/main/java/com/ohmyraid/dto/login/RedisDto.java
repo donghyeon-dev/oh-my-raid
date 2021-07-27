@@ -8,18 +8,19 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 로그인 output Vo
+ * Redis Session Vo
+ * 로그인 결과 혹은 Redis의 밸류로 저장되는 사용자의 정보
  */
 @Data
-public class LoginOutpDto implements Serializable {
+public class RedisDto implements Serializable {
     private static final long serialVersionUID = -2925893922100802694L;
 
     private String email;
 
     private String nickname;
 
-    private List<CharacterLoginOpMapping> characterList;
-
     private String accessToken;
+
+    private String bzAccessToken;
 
 }

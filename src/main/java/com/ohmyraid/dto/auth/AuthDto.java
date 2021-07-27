@@ -5,15 +5,20 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * oauth/token의 결과물을 받아오는 DTO
+ */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AuthResponseDto implements Serializable {
+public class AuthDto implements Serializable {
 
-    private String accessToken;
+    private String access_token;
 
-    private String tokenType;
+    private String token_type;
 
-    private int expiresIn;
+    private int expires_in;
 
     private String scope;
+
+    private String sub;
 }

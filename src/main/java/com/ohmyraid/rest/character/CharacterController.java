@@ -28,4 +28,6 @@ public class CharacterController {
         inpVo.setName(name);
         return new ResultView<>(characterService.getCharacterInf(inpVo));
     }
+
+
 }
