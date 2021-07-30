@@ -6,7 +6,9 @@ import com.ohmyraid.common.result.ErrorResult;
 import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.dto.auth.AuthDto;
 import com.ohmyraid.dto.auth.AuthRequestDto;
-import com.ohmyraid.feign.TokenClient;
+import com.ohmyraid.dto.auth.CheckTokenDto;
+import com.ohmyraid.dto.auth.StoreAtReqDto;
+import com.ohmyraid.feign.BattlenetClient;
 import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.utils.CryptoUtils;
 import com.ohmyraid.utils.JwtUtils;
@@ -20,6 +22,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,7 +33,7 @@ public class LoginService {
 
     private final AccountRepository accountRepository;
 
-    private final TokenClient tokenClient;
+    private final BattlenetClient battlenetClient;
 
     private final JwtUtils jwtUtils;
 
@@ -98,9 +104,39 @@ public class LoginService {
                 .build();
 
         // 토큰요청 ToDo 여기서 Exception이 난다면 어떻게 처리해야할까...
-        AuthDto tokenRes = tokenClient.getAccessToken(authRequestDto, AUTH);
+        AuthDto tokenRes = battlenetClient.getAccessToken(authRequestDto, AUTH);
         log.debug("TokenRes is {}", tokenRes);
 
       return tokenRes.getAccess_token();
     };
+
+    public Boolean storeAccessToken(StoreAtReqDto reqDto) throws JsonProcessingException {
+        String bzToken = reqDto.getAccessToken();;
+        log.debug("Bllizzard Token is {}", bzToken);
+
+        CheckTokenDto body = new CheckTokenDto();
+        body.setRegion("KR");
+        body.setToken(bzToken);
+        log.debug("RequestBody is {}", body);
+        Map<String, Object> checkTokenResult = battlenetClient.checkToken(body);
+
+        // Feign 통신이 된다면
+        if( !ObjectUtils.isEmpty(checkTokenResult) ){
+            int exp = (int) checkTokenResult.get("exp");
+            int now = (int) (System.currentTimeMillis()/1000);
+            if(exp > now ){
+                // session에 bz AccessToken을 등록
+                String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
+                RedisDto redisDto = redisUtils.getSession(token);
+                redisDto.setBzAccessToken(reqDto.getAccessToken());
+                redisUtils.putSession(token, redisDto);
+                return true;
+            } else{
+                return false ;
+            }
+        } else {
+            return false;
+        }
+    }
+
 }
