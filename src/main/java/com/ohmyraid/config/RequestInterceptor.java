@@ -17,7 +17,7 @@ public class RequestInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
+        // 프리핸들러에서 헤더의 Authorization(토큰)을 추출하여 쓰레드로컬에 넣는다.
         if(ThreadLocalUtils.isExist("token")){
             log.debug("ThreadLocal is cleared");
             ThreadLocalUtils.clear();
@@ -36,6 +36,7 @@ public class RequestInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        // 포스트핸들러에서 쓰레드로컬 초기화
         ThreadLocalUtils.clear();
 
     }
