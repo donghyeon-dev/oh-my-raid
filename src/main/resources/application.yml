@@ -71,6 +71,6 @@ feign:
   client:
     config:
       RAD:
-        loggerLevel: full
+        loggerLevel: basic
         connectTimeout: 5000
         readTimeout: 5000
