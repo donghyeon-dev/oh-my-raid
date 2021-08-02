@@ -11,6 +11,9 @@ bz:
   redirect-uri: http://localhost:3000/oauth
   grant-type: authorization_code
   scope: wow.profile
+  namespace: profile-kr
+  locale: ko_KR
+  region: kr
 
 spring:
   application:
