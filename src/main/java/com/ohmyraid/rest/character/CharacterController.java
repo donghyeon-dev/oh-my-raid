@@ -17,17 +17,9 @@ public class CharacterController {
 
     private final CharacterService characterService;
 
-    @GetMapping(value = "/inf")
-    @ApiOperation(value = "캐릭터 정보 가져오기",notes = "지역, 서버, 이름, 필드를 입력하여 캐릭터 정보를 가져온다.")
-    public ResultView<Boolean> getCharacterInf(@RequestParam("region") String region,
-                                                            @RequestParam("realm") String realm,
-                                                            @RequestParam("name") String name) throws JsonProcessingException {
-        CharacterFeignInpDto inpVo = new CharacterFeignInpDto();
-        inpVo.setRegion(region);
-        inpVo.setRealm(realm);
-        inpVo.setName(name);
-        return new ResultView<>(characterService.getCharacterInf(inpVo));
+    @GetMapping(value = "/total-summary")
+    @ApiOperation(value = "/profile/user/wow?",notes = "캐릭터의 요약 정보를 가져온다.")
+    public ResultView<Boolean> getTotalSummary() throws JsonProcessingException {
+        return new ResultView<>(characterService.getTotalSummary());
     }
-
-
 }

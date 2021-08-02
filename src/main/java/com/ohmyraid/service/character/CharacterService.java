@@ -2,9 +2,12 @@ package com.ohmyraid.service.character;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.domain.character.CharacterRaidInfEntity;
+import com.ohmyraid.dto.wow_account.WowAccountDto;
 import com.ohmyraid.feign.RaiderClient;
+import com.ohmyraid.feign.WowClient;
 import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.repository.character.CharacterRaidInfRespository;
 import com.ohmyraid.repository.character.CharacterRespository;
@@ -14,6 +17,7 @@ import com.ohmyraid.utils.ThreadLocalUtils;
 import com.ohmyraid.dto.character.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -38,6 +42,8 @@ public class CharacterService {
 
     private final RaiderClient raiderClient;
 
+    private final WowClient wowClient;
+
     private final RedisUtils redisUtils;
 
     private final ObjectMapper mapper;
@@ -45,6 +51,15 @@ public class CharacterService {
     String gear = "gear";
     String mpScore = "mythic_plus_scores_by_season:current";
     String raidPrg = "raid_progression";
+
+    @Value("${bz.namespace}")
+    private final String namespace = null;
+
+    @Value("${bz.locale}")
+    private final String locale = null;
+
+    @Value("${bz.region}")
+    private final String region = null;
 
     /**
      * 캐릭터의 기본정보, 템렙, 쐐기, 레이드진행정보를 저장한다.
@@ -192,5 +207,19 @@ public class CharacterService {
             );
             return false;
         }
+    }
+
+    public Boolean getTotalSummary() throws JsonProcessingException {
+        // 토큰가져오기
+        String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
+        String bzToken = redisUtils.getSession(token).getBzAccessToken();
+
+        Map<String, Object> resultSummary = wowClient.getAccountProfileSummary(namespace, locale, bzToken, region);
+        List<WowAccountDto> wowAccountDto = mapper.convertValue(resultSummary.get("wow_accounts")
+                ,  TypeFactory.defaultInstance().constructCollectionType(List.class, WowAccountDto.class));
+        log.debug("wowAccountDto is {}", wowAccountDto);
+
+
+        return true;
     }
 }
