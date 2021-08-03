@@ -19,6 +19,8 @@ public class RedisDto implements Serializable {
 
     private String nickname;
 
+    private long accountId;
+
     private String accessToken;
 
     private String bzAccessToken;
