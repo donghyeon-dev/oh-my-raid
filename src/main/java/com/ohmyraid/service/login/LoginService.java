@@ -76,6 +76,7 @@ public class LoginService {
             redisDto.setEmail(accountEntity.getEmail());
             redisDto.setNickname(accountEntity.getNickname());
             redisDto.setAccessToken(token);
+            redisDto.setAccountId(accountEntity.getAccountId());
 
             // 레디스에 세션 넣기
             redisUtils.putSession(token, redisDto);
