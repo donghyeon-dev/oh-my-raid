@@ -40,8 +40,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.debug(">>>>>>>>>>>  Request URI \t : {}  <<<<<<<<<<<  \n" +
-                "===============================  REQUEST DONE  ===============================", request.getRequestURI());
+        log.debug("+++++++++++++++++++++++++++++++  REQUEST DONE  +++++++++++++++++++++++++++++++\n" +
+                ">>>>>>>>>>  Request URI \t : {}  <<<<<<<<<<", request.getRequestURI());
     }
 
 }
