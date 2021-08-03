@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.domain.character.CharacterRaidInfEntity;
+import com.ohmyraid.dto.auth.SpecInfDto;
 import com.ohmyraid.dto.wow_account.WowAccountDto;
 import com.ohmyraid.feign.RaiderClient;
 import com.ohmyraid.feign.WowClient;
@@ -27,7 +28,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -192,8 +195,11 @@ public class CharacterService {
                     .build()
             );
             // 생성한 엔티티 가져와서 Raid Progression Entity에 사용
-            CharacterEntity characterEntity = characterRespository.findByNameAndRealm(StringUtils.objectToString(gearResult.get("name")), StringUtils.objectToString(gearResult.get("realm")));
-            CharacterRaidInfEntity raidInfEntity = characterRaidInfRespository.findByCharacterEntity_CharacterId(characterEntity.getCharacterId());
+            CharacterEntity characterEntity = characterRespository
+                    .findByNameAndRealm(StringUtils.objectToString(gearResult.get("name")),
+                                        StringUtils.objectToString(gearResult.get("realm")));
+            CharacterRaidInfEntity raidInfEntity = characterRaidInfRespository
+                    .findByCharacterEntity_CharacterId(characterEntity.getCharacterId());
             characterRaidInfRespository.save(CharacterRaidInfEntity.builder()
                     .raidId(raidInfEntity.getRaidId())
                     .characterEntity(characterEntity)
@@ -213,12 +219,65 @@ public class CharacterService {
         // 토큰가져오기
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         String bzToken = redisUtils.getSession(token).getBzAccessToken();
+        long accountId = redisUtils.getSession(token).getAccountId();
 
+        // AccountSummary Feign 호출 및 파싱
         Map<String, Object> resultSummary = wowClient.getAccountProfileSummary(namespace, locale, bzToken, region);
         List<WowAccountDto> wowAccountDto = mapper.convertValue(resultSummary.get("wow_accounts")
                 ,  TypeFactory.defaultInstance().constructCollectionType(List.class, WowAccountDto.class));
         log.debug("wowAccountDto is {}", wowAccountDto);
+        int size = wowAccountDto.size();
 
+        // SpecInf 호출을 하기 전 데이터 재파싱
+        List<ActualCharacterDto>requestList = new ArrayList<>();
+        if(size == 1){
+            // 리스트가 하나니까 걍 꺼내
+            requestList = wowAccountDto.get(0).getCharacters()
+                    .stream()
+                    .filter(c -> c.getLevel() > 10)
+                    .map(
+                            c -> {
+                                ActualCharacterDto characterDto = new ActualCharacterDto();
+                                characterDto.setCharacterSeNumber(c.getId());
+                                characterDto.setAccountId(accountId);
+                                characterDto.setName(c.getName().toLowerCase());
+                                characterDto.setLevel(c.getLevel());
+                                characterDto.setPlaybleClass(c.getPlayableClass().getName());
+                                characterDto.setRace(c.getPlayableRace().getName());
+                                characterDto.setSlug(c.getRealm().getSlug());
+                                characterDto.setFaction(c.getFaction().getName());
+                                return characterDto;
+                            })
+                    .collect(Collectors.toList());
+        } else {
+            // 리스트가 여러개라면 반복문을 통해 reqDto를 뽑아낸다.
+            for(WowAccountDto dto : wowAccountDto){
+                ActualCharacterDto characterDto = new ActualCharacterDto();
+                dto.getCharacters()
+                        .stream()
+                        .filter(c -> c.getLevel() > 10)
+                        .map(
+                                c -> {
+                                    characterDto.setCharacterSeNumber(c.getId());
+                                    characterDto.setAccountId(accountId);
+                                    characterDto.setName(c.getName().toLowerCase());
+                                    characterDto.setLevel(c.getLevel());
+                                    characterDto.setPlaybleClass(c.getPlayableClass().getName());
+                                    characterDto.setRace(c.getPlayableRace().getName());
+                                    characterDto.setSlug(c.getRealm().getSlug());
+                                    characterDto.setFaction(c.getFaction().getName());
+                                    return characterDto;
+                                });
+                requestList.add(characterDto);
+            };
+        };
+        log.debug("SpecInfReqDto is {}", requestList);
+
+        for(ActualCharacterDto characterDto : requestList) {
+            SpecInfDto specInfRes = wowClient.getCharacterSpecInf(namespace, bzToken, locale, characterDto.getSlug(), characterDto.getName());
+            log.debug("SpecInfRes is {}", specInfRes);
+
+        }
 
         return true;
     }

@@ -2,6 +2,7 @@ package com.ohmyraid.feign;
 
 import com.ohmyraid.dto.auth.AuthDto;
 import com.ohmyraid.dto.auth.AuthRequestDto;
+import com.ohmyraid.dto.auth.SpecInfDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,12 @@ public interface WowClient {
                                                 @RequestParam(name = "access_token") String access_token,
                                                 @RequestParam(name = ":region", defaultValue = "kr") String region);
 
-
-
+    @GetMapping(value = "profile/wow/character/{slug}/{characterName}")
+    SpecInfDto getCharacterSpecInf(@RequestParam(name = "namespace" , defaultValue = "profile-kr") String namespace,
+                                   @RequestParam(name = "access_token") String access_token,
+                                   @RequestParam(name = "locale", defaultValue = "ko_KR") String locale,
+                                   @PathVariable(name = "slug")String slug,
+                                   @PathVariable(name = "characterName")String characterName
+                                            );
 
 }
