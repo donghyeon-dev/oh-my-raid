@@ -32,7 +32,7 @@ public class JwtUtils {
         String accessToken = Jwts.builder().setIssuer(ISSUER).setIssuedAt(new Date())
                 .claim("LoginId", id).claim("UserName", name)
                 .signWith(SignatureAlgorithm.HS512,SECRET_KEY)
-                .setExpiration(new Date(System.currentTimeMillis()+3600000)) //1시간
+                .setExpiration(new Date(System.currentTimeMillis()+36000000)) //10시간
                 .compact();
         return accessToken;
     }
