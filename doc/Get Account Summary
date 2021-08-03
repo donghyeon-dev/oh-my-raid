@@ -1,0 +1,857 @@
+Get Account Summary
+- URL
+	https://kr.api.blizzard.com/profile/user/wow?namespace=profile-kr&locale=ko_KR&access_token=USu9y8VDHQ8tyFFsSB2Rts1ZtvxzxArwkc&:region=kr
+- HTTP GET
+- parameter
+	namespace=profile-kr
+	region=kr
+	locale=ko_KR
+	access_token
+
+###
+
+{
+    "_links": {
+        "self": {
+            "href": "https://kr.api.blizzard.com/profile/user/wow?namespace=profile-kr"
+        },
+        "user": {
+            "href": "https://kr.api.blizzard.com/profile/user"
+        },
+        "profile": {
+            "href": "https://kr.api.blizzard.com/profile/user/wow?namespace=profile-kr"
+        }
+    },
+    "id": 11293537,
+    "wow_accounts": [
+        {
+            "id": 23392796,
+            "characters": [
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%EB%B0%95%ED%93%A8%EB%A6%AC?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/205-lu?namespace=profile-kr"
+                    },
+                    "name": "박퓨리",
+                    "id": 86261209,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+                        },
+                        "name": "아즈샤라",
+                        "id": 205,
+                        "slug": "azshara"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/9?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "흑마법사",
+                        "id": 9
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/5?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "언데드",
+                        "id": 5
+                    },
+                    "gender": {
+                        "type": "MALE",
+                        "name": "남성"
+                    },
+                    "faction": {
+                        "type": "HORDE",
+                        "name": "호드"
+                    },
+                    "level": 50
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%EC%A3%BD%EB%8B%A4%EC%82%B4%EC%95%98%EB%84%A4?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/205-lu?namespace=profile-kr"
+                    },
+                    "name": "죽다살았네",
+                    "id": 87291332,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+                        },
+                        "name": "아즈샤라",
+                        "id": 205,
+                        "slug": "azshara"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/6?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "죽음의 기사",
+                        "id": 6
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/2?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "오크",
+                        "id": 2
+                    },
+                    "gender": {
+                        "type": "MALE",
+                        "name": "남성"
+                    },
+                    "faction": {
+                        "type": "HORDE",
+                        "name": "호드"
+                    },
+                    "level": 55
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/autocat?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/205-lu?namespace=profile-kr"
+                    },
+                    "name": "Autocat",
+                    "id": 106939170,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+                        },
+                        "name": "아즈샤라",
+                        "id": 205,
+                        "slug": "azshara"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/11?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "드루이드",
+                        "id": 11
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/28?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "높은산 타우렌",
+                        "id": 28
+                    },
+                    "gender": {
+                        "type": "FEMALE",
+                        "name": "여성"
+                    },
+                    "faction": {
+                        "type": "HORDE",
+                        "name": "호드"
+                    },
+                    "level": 60
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%EB%94%B1%EC%B9%B4?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/205-lu?namespace=profile-kr"
+                    },
+                    "name": "딱카",
+                    "id": 107726076,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+                        },
+                        "name": "아즈샤라",
+                        "id": 205,
+                        "slug": "azshara"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/1?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "전사",
+                        "id": 1
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/6?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "타우렌",
+                        "id": 6
+                    },
+                    "gender": {
+                        "type": "MALE",
+                        "name": "남성"
+                    },
+                    "faction": {
+                        "type": "HORDE",
+                        "name": "호드"
+                    },
+                    "level": 42
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%EC%A3%BD%EB%94%B0?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/205-lu?namespace=profile-kr"
+                    },
+                    "name": "죽따",
+                    "id": 108382765,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+                        },
+                        "name": "아즈샤라",
+                        "id": 205,
+                        "slug": "azshara"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/7?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "주술사",
+                        "id": 7
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/2?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "오크",
+                        "id": 2
+                    },
+                    "gender": {
+                        "type": "MALE",
+                        "name": "남성"
+                    },
+                    "faction": {
+                        "type": "HORDE",
+                        "name": "호드"
+                    },
+                    "level": 60
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%9E%AD?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/205-lu?namespace=profile-kr"
+                    },
+                    "name": "현랭",
+                    "id": 110275795,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+                        },
+                        "name": "아즈샤라",
+                        "id": 205,
+                        "slug": "azshara"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/5?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "사제",
+                        "id": 5
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/26?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "판다렌",
+                        "id": 26
+                    },
+                    "gender": {
+                        "type": "MALE",
+                        "name": "남성"
+                    },
+                    "faction": {
+                        "type": "HORDE",
+                        "name": "호드"
+                    },
+                    "level": 51
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%EA%B7%B8%ED%82%AC?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/205-lu?namespace=profile-kr"
+                    },
+                    "name": "그킬",
+                    "id": 111261217,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+                        },
+                        "name": "아즈샤라",
+                        "id": 205,
+                        "slug": "azshara"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/10?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "수도사",
+                        "id": 10
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/10?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "블러드 엘프",
+                        "id": 10
+                    },
+                    "gender": {
+                        "type": "FEMALE",
+                        "name": "여성"
+                    },
+                    "faction": {
+                        "type": "HORDE",
+                        "name": "호드"
+                    },
+                    "level": 50
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%EB%88%88%EB%B6%88?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/205-lu?namespace=profile-kr"
+                    },
+                    "name": "눈불",
+                    "id": 112658518,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+                        },
+                        "name": "아즈샤라",
+                        "id": 205,
+                        "slug": "azshara"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/12?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "악마사냥꾼",
+                        "id": 12
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/10?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "블러드 엘프",
+                        "id": 10
+                    },
+                    "gender": {
+                        "type": "MALE",
+                        "name": "남성"
+                    },
+                    "faction": {
+                        "type": "HORDE",
+                        "name": "호드"
+                    },
+                    "level": 54
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%EC%9D%B4%EC%96%B4%EB%B3%B4%EA%B8%B0?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/205-lu?namespace=profile-kr"
+                    },
+                    "name": "이어보기",
+                    "id": 116433764,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+                        },
+                        "name": "아즈샤라",
+                        "id": 205,
+                        "slug": "azshara"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/2?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "성기사",
+                        "id": 2
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/10?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "블러드 엘프",
+                        "id": 10
+                    },
+                    "gender": {
+                        "type": "FEMALE",
+                        "name": "여성"
+                    },
+                    "faction": {
+                        "type": "HORDE",
+                        "name": "호드"
+                    },
+                    "level": 60
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%EB%B0%95%EB%8F%99%ED%98%84?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/205-lu?namespace=profile-kr"
+                    },
+                    "name": "박동현",
+                    "id": 117938439,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+                        },
+                        "name": "아즈샤라",
+                        "id": 205,
+                        "slug": "azshara"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/4?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "도적",
+                        "id": 4
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/10?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "블러드 엘프",
+                        "id": 10
+                    },
+                    "gender": {
+                        "type": "FEMALE",
+                        "name": "여성"
+                    },
+                    "faction": {
+                        "type": "HORDE",
+                        "name": "호드"
+                    },
+                    "level": 60
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/205-lu?namespace=profile-kr"
+                    },
+                    "name": "현냉",
+                    "id": 121906483,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+                        },
+                        "name": "아즈샤라",
+                        "id": 205,
+                        "slug": "azshara"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/8?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "마법사",
+                        "id": 8
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/8?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "트롤",
+                        "id": 8
+                    },
+                    "gender": {
+                        "type": "FEMALE",
+                        "name": "여성"
+                    },
+                    "faction": {
+                        "type": "HORDE",
+                        "name": "호드"
+                    },
+                    "level": 60
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/autotab?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/205-lu?namespace=profile-kr"
+                    },
+                    "name": "Autotab",
+                    "id": 129418099,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+                        },
+                        "name": "아즈샤라",
+                        "id": 205,
+                        "slug": "azshara"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/3?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "사냥꾼",
+                        "id": 3
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/28?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "높은산 타우렌",
+                        "id": 28
+                    },
+                    "gender": {
+                        "type": "MALE",
+                        "name": "남성"
+                    },
+                    "faction": {
+                        "type": "HORDE",
+                        "name": "호드"
+                    },
+                    "level": 31
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%EC%98%A4%ED%86%A0%EC%BA%A3?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/205-lu?namespace=profile-kr"
+                    },
+                    "name": "오토캣",
+                    "id": 154451872,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+                        },
+                        "name": "아즈샤라",
+                        "id": 205,
+                        "slug": "azshara"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/8?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "마법사",
+                        "id": 8
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/8?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "트롤",
+                        "id": 8
+                    },
+                    "gender": {
+                        "type": "FEMALE",
+                        "name": "여성"
+                    },
+                    "faction": {
+                        "type": "HORDE",
+                        "name": "호드"
+                    },
+                    "level": 3
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/durotan/%ED%94%BD%ED%97%A4?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/210-lu?namespace=profile-kr"
+                    },
+                    "name": "픽헤",
+                    "id": 86297002,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/210?namespace=dynamic-kr"
+                        },
+                        "name": "듀로탄",
+                        "id": 210,
+                        "slug": "durotan"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/2?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "성기사",
+                        "id": 2
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/1?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "인간",
+                        "id": 1
+                    },
+                    "gender": {
+                        "type": "MALE",
+                        "name": "남성"
+                    },
+                    "faction": {
+                        "type": "ALLIANCE",
+                        "name": "얼라이언스"
+                    },
+                    "level": 24
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/durotan/%ED%94%BD%ED%95%B4?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/210-lu?namespace=profile-kr"
+                    },
+                    "name": "픽해",
+                    "id": 102419884,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/210?namespace=dynamic-kr"
+                        },
+                        "name": "듀로탄",
+                        "id": 210,
+                        "slug": "durotan"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/4?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "도적",
+                        "id": 4
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/4?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "나이트 엘프",
+                        "id": 4
+                    },
+                    "gender": {
+                        "type": "MALE",
+                        "name": "남성"
+                    },
+                    "faction": {
+                        "type": "ALLIANCE",
+                        "name": "얼라이언스"
+                    },
+                    "level": 3
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/hyjal/%EC%A0%95%EC%B2%B4%EA%B0%80%EB%AD%90%EC%9A%94?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/2107-lu?namespace=profile-kr"
+                    },
+                    "name": "정체가뭐요",
+                    "id": 151618912,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/2107?namespace=dynamic-kr"
+                        },
+                        "name": "하이잘",
+                        "id": 2107,
+                        "slug": "hyjal"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/11?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "드루이드",
+                        "id": 11
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/22?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "늑대인간",
+                        "id": 22
+                    },
+                    "gender": {
+                        "type": "MALE",
+                        "name": "남성"
+                    },
+                    "faction": {
+                        "type": "ALLIANCE",
+                        "name": "얼라이언스"
+                    },
+                    "level": 9
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/hyjal/%ED%95%B5%EB%83%89%EC%A3%BD?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/2107-lu?namespace=profile-kr"
+                    },
+                    "name": "핵냉죽",
+                    "id": 152422329,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/2107?namespace=dynamic-kr"
+                        },
+                        "name": "하이잘",
+                        "id": 2107,
+                        "slug": "hyjal"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/6?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "죽음의 기사",
+                        "id": 6
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/11?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "드레나이",
+                        "id": 11
+                    },
+                    "gender": {
+                        "type": "MALE",
+                        "name": "남성"
+                    },
+                    "faction": {
+                        "type": "ALLIANCE",
+                        "name": "얼라이언스"
+                    },
+                    "level": 23
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/hyjal/%ED%96%89%EB%83%89%EC%A3%BD?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/2107-lu?namespace=profile-kr"
+                    },
+                    "name": "행냉죽",
+                    "id": 152422427,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/2107?namespace=dynamic-kr"
+                        },
+                        "name": "하이잘",
+                        "id": 2107,
+                        "slug": "hyjal"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/6?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "죽음의 기사",
+                        "id": 6
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/22?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "늑대인간",
+                        "id": 22
+                    },
+                    "gender": {
+                        "type": "MALE",
+                        "name": "남성"
+                    },
+                    "faction": {
+                        "type": "ALLIANCE",
+                        "name": "얼라이언스"
+                    },
+                    "level": 23
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/hyjal/%EB%B1%80%EC%9A%94?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/2107-lu?namespace=profile-kr"
+                    },
+                    "name": "뱀요",
+                    "id": 152520479,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/2107?namespace=dynamic-kr"
+                        },
+                        "name": "하이잘",
+                        "id": 2107,
+                        "slug": "hyjal"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/11?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "드루이드",
+                        "id": 11
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/22?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "늑대인간",
+                        "id": 22
+                    },
+                    "gender": {
+                        "type": "MALE",
+                        "name": "남성"
+                    },
+                    "faction": {
+                        "type": "ALLIANCE",
+                        "name": "얼라이언스"
+                    },
+                    "level": 9
+                },
+                {
+                    "character": {
+                        "href": "https://kr.api.blizzard.com/profile/wow/character/hyjal/%EB%88%88%EB%B6%88?namespace=profile-kr"
+                    },
+                    "protected_character": {
+                        "href": "https://kr.api.blizzard.com/profile/user/wow/protected-character/2107-lu?namespace=profile-kr"
+                    },
+                    "name": "눈불",
+                    "id": 157103969,
+                    "realm": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/realm/2107?namespace=dynamic-kr"
+                        },
+                        "name": "하이잘",
+                        "id": 2107,
+                        "slug": "hyjal"
+                    },
+                    "playable_class": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-class/7?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "주술사",
+                        "id": 7
+                    },
+                    "playable_race": {
+                        "key": {
+                            "href": "https://kr.api.blizzard.com/data/wow/playable-race/11?namespace=static-9.1.0_39069-kr"
+                        },
+                        "name": "드레나이",
+                        "id": 11
+                    },
+                    "gender": {
+                        "type": "FEMALE",
+                        "name": "여성"
+                    },
+                    "faction": {
+                        "type": "ALLIANCE",
+                        "name": "얼라이언스"
+                    },
+                    "level": 3
+                }
+            ]
+        }
+    ],
+    "collections": {
+        "href": "https://kr.api.blizzard.com/profile/user/wow/collections?namespace=profile-kr"
+    }
+}
+

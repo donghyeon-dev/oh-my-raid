@@ -1,0 +1,150 @@
+Get Character SpecInf
+- URL
+	https://kr.api.blizzard.com/profile/wow/character/azshara/{characterName}?namespace=profile-kr&access_token=USu9y8VDHQ8tyFFsSB2Rts1ZtvxzxArwkc&locale=ko_KR
+- HTTP GET
+- parameter
+	namespace=profile-kr
+	locale=ko_KR
+	access_token
+- pathvariable
+	{characterName} URL Encoded
+
+###
+
+{
+    "_links": {
+        "self": {
+            "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89?namespace=profile-kr"
+        }
+    },
+    "id": 121906483,
+    "name": "현냉",
+    "gender": {
+        "type": "FEMALE",
+        "name": "여성"
+    },
+    "faction": {
+        "type": "HORDE",
+        "name": "호드"
+    },
+    "race": {
+        "key": {
+            "href": "https://kr.api.blizzard.com/data/wow/playable-race/8?namespace=static-9.1.0_39069-kr"
+        },
+        "name": "트롤",
+        "id": 8
+    },
+    "character_class": {
+        "key": {
+            "href": "https://kr.api.blizzard.com/data/wow/playable-class/8?namespace=static-9.1.0_39069-kr"
+        },
+        "name": "마법사",
+        "id": 8
+    },
+    "active_spec": {
+        "key": {
+            "href": "https://kr.api.blizzard.com/data/wow/playable-specialization/64?namespace=static-9.1.0_39069-kr"
+        },
+        "name": "냉기",
+        "id": 64
+    },
+    "realm": {
+        "key": {
+            "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+        },
+        "name": "아즈샤라",
+        "id": 205,
+        "slug": "azshara"
+    },
+    "guild": {
+        "key": {
+            "href": "https://kr.api.blizzard.com/data/wow/guild/azshara/precious?namespace=profile-kr"
+        },
+        "name": "Precious",
+        "id": 39127937,
+        "realm": {
+            "key": {
+                "href": "https://kr.api.blizzard.com/data/wow/realm/205?namespace=dynamic-kr"
+            },
+            "name": "아즈샤라",
+            "id": 205,
+            "slug": "azshara"
+        },
+        "faction": {
+            "type": "HORDE",
+            "name": "호드"
+        }
+    },
+    "level": 60,
+    "experience": 0,
+    "achievement_points": 11300,
+    "achievements": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/achievements?namespace=profile-kr"
+    },
+    "titles": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/titles?namespace=profile-kr"
+    },
+    "pvp_summary": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/pvp-summary?namespace=profile-kr"
+    },
+    "encounters": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/encounters?namespace=profile-kr"
+    },
+    "media": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/character-media?namespace=profile-kr"
+    },
+    "last_login_timestamp": 1627663716000,
+    "average_item_level": 232,
+    "equipped_item_level": 231,
+    "specializations": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/specializations?namespace=profile-kr"
+    },
+    "statistics": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/statistics?namespace=profile-kr"
+    },
+    "mythic_keystone_profile": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/mythic-keystone-profile?namespace=profile-kr"
+    },
+    "equipment": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/equipment?namespace=profile-kr"
+    },
+    "appearance": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/appearance?namespace=profile-kr"
+    },
+    "collections": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/collections?namespace=profile-kr"
+    },
+    "active_title": {
+        "key": {
+            "href": "https://kr.api.blizzard.com/data/wow/title/430?namespace=static-9.1.0_39069-kr"
+        },
+        "name": "백작",
+        "id": 430,
+        "display_string": "백작 {name}"
+    },
+    "reputations": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/reputations?namespace=profile-kr"
+    },
+    "quests": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/quests?namespace=profile-kr"
+    },
+    "achievements_statistics": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/achievements/statistics?namespace=profile-kr"
+    },
+    "professions": {
+        "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/professions?namespace=profile-kr"
+    },
+    "covenant_progress": {
+        "chosen_covenant": {
+            "key": {
+                "href": "https://kr.api.blizzard.com/data/wow/covenant/2?namespace=static-9.1.0_39069-kr"
+            },
+            "name": "벤티르",
+            "id": 2
+        },
+        "renown_level": 50,
+        "soulbinds": {
+            "href": "https://kr.api.blizzard.com/profile/wow/character/azshara/%ED%98%84%EB%83%89/soulbinds?namespace=profile-kr"
+        }
+    }
+}
