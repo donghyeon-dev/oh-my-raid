@@ -12,6 +12,6 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CovenantProgress {
 
-    private ChosenCovenant chosen_covenant;
-    private int renown_level;
+    private ChosenCovenant chosenCovenant;
+    private int renownLevel;
 }

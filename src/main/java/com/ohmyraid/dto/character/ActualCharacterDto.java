@@ -19,7 +19,7 @@ public class ActualCharacterDto {
 
     private String playbleClass;
 
-    private String activeSpec;
+    private String specialization ;
 
     private String race;
 
@@ -33,7 +33,7 @@ public class ActualCharacterDto {
 
     private String expansionOption;
 
-    private String expansionOptionLevel;
+    private int expansionOptionLevel;
 
 
 }
