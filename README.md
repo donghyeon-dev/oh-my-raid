@@ -7,6 +7,11 @@
 - 인벤 구인글은 인벤 쪽지로 상호작용
 - 어떤포지션 어떤 직업특이  필요한지 알 수 없음
 
+---
+
+사용한 API
+- Battle.net API((https://develop.battle.net/)
+
 사용기술
 - JPA
 - JUnit
