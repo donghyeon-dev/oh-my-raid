@@ -234,7 +234,7 @@ public class CharacterService {
             // 리스트가 하나니까 걍 꺼내
             requestList = wowAccountDto.get(0).getCharacters()
                     .stream()
-                    .filter(c -> c.getLevel() > 10)
+                    .filter(c -> c.getLevel() > 30)
                     .map(
                             c -> {
                                 ActualCharacterDto characterDto = new ActualCharacterDto();
@@ -255,7 +255,7 @@ public class CharacterService {
                 ActualCharacterDto characterDto = new ActualCharacterDto();
                 dto.getCharacters()
                         .stream()
-                        .filter(c -> c.getLevel() > 10)
+                        .filter(c -> c.getLevel() > 30)
                         .map(
                                 c -> {
                                     characterDto.setCharacterSeNumber(c.getId());
@@ -273,11 +273,27 @@ public class CharacterService {
         };
         log.debug("SpecInfReqDto is {}", requestList);
 
-        for(ActualCharacterDto characterDto : requestList) {
+        List<ActualCharacterDto> dtoList = new ArrayList<>();
+        for(ActualCharacterDto characterDto  : requestList) {
             SpecInfDto specInfRes = wowClient.getCharacterSpecInf(namespace, bzToken, locale, characterDto.getSlug(), characterDto.getName());
             log.debug("SpecInfRes is {}", specInfRes);
 
+            // 엔티티를 위한 정보를 dto 하나에 합치기
+            characterDto.setSpecialization(specInfRes.getActive_spec().getName());
+            characterDto.setEquippedItemLevel(specInfRes.getEquipped_item_level());
+            characterDto.setAverageItemLvel(specInfRes.getAverage_item_level());
+            characterDto.setExpansionOption(specInfRes.getCovenant_progress().getChosenCovenant().getName());
+            characterDto.setExpansionOptionLevel(specInfRes.getCovenant_progress().getRenownLevel());
+            dtoList.add(characterDto);
+
+            // Todo 정합쳐진 DTO를 통해 Entity에 입력
+
+
+
         }
+        log.debug("진짜진짜진짜Entity를 위한 DTO is {}", dtoList);
+
+
 
         return true;
     }
