@@ -60,6 +60,9 @@ dependencies {
 
     // JWT
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+
+    // ModelMapper
+    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.0'
 }
 
 dependencyManagement { // MavenBom: 필요한 dependency의 버전을 신경쓰지 않고 프로젝트에 dependency를 추가할 수 있다고 한다.
