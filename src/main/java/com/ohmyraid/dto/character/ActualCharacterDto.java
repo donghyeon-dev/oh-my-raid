@@ -3,15 +3,18 @@ package com.ohmyraid.dto.character;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
+/**
+ * CharacterEntity 의 DT 를 도와주는 DTO 클래스
+ */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActualCharacterDto {
 
-    private long characterSeNumber;
-
     private long characterId;
 
     private long accountId;
+
+    private long characterSeNumber;
 
     private String name;
 
@@ -19,7 +22,7 @@ public class ActualCharacterDto {
 
     private String playbleClass;
 
-    private String specialization ;
+    private String specialization;
 
     private String race;
 
