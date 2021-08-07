@@ -63,12 +63,14 @@ public class CharacterEntity {
     @Column(length = 10, nullable = false)
     private int averageItemLvel;
 
+    @Convert(converter = SlugConverter.class)
     @Column(length = 10, nullable = false)
     private String slug;
 
     @Column(length = 10, nullable = false)
     private LocalDateTime lastCrawledAt;
 
+    @Convert(converter = ExpansionOptionCoverter.class)
     @Column(length = 10, nullable = false)
     private String expansionOption;
 
