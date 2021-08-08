@@ -23,10 +23,20 @@ ext { // SpringCloudVersion을  SpringBoot Version에 맞춰 지정해준다.
 }
 
 dependencies {
+
+    //MapStruct lombok 보다 상위에 선언해야한다( GeetterSetter가 없을 경우엔 Builder로 사용하기 위해)
+    // 하지만 lombok-mapstruct-binding 을 추가해주면 그럴 필요가 없어진다~
+    implementation 'org.mapstruct:mapstruct:1.3.1.Final'
+    annotationProcessor "org.mapstruct:mapstruct-processor:1.3.1.Final"
+
     // Lombok
     compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
+    implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+
+
 
     // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter'
@@ -61,8 +71,6 @@ dependencies {
     // JWT
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
-    // ModelMapper
-    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.0'
 }
 
 dependencyManagement { // MavenBom: 필요한 dependency의 버전을 신경쓰지 않고 프로젝트에 dependency를 추가할 수 있다고 한다.
