@@ -3,6 +3,7 @@ package com.ohmyraid.service.character;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.dto.auth.SpecInfDto;
 import com.ohmyraid.dto.character.ActualCharacterDto;
 import com.ohmyraid.dto.wow_account.WowAccountDto;
@@ -57,10 +58,11 @@ public class CharacterService {
      */
     @Transactional
     public Boolean getTotalSummary() throws JsonProcessingException {
-        // 토큰가져오기
+        // 토큰가져오기 및 사용될 변수들 생성
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         String bzToken = redisUtils.getSession(token).getBzAccessToken();
         long accountId = redisUtils.getSession(token).getAccountId();
+        AccountEntity accountEntity = accountRepository.findByAccountId(accountId);
 
         // AccountSummary Feign 호출 및 파싱
         Map<String, Object> resultSummary = wowClient.getAccountProfileSummary(namespace, locale, bzToken, region);
@@ -83,10 +85,11 @@ public class CharacterService {
                                 characterDto.setAccountId(accountId);
                                 characterDto.setName(c.getName().toLowerCase());
                                 characterDto.setLevel(c.getLevel());
-                                characterDto.setPlaybleClass(c.getPlayableClass().getName());
+                                characterDto.setPlayableClass(c.getPlayableClass().getName());
                                 characterDto.setRace(c.getPlayableRace().getName());
                                 characterDto.setSlug(c.getRealm().getName());
                                 characterDto.setFaction(c.getFaction().getName());
+                                characterDto.setGender(c.getGender().getName());
                                 return characterDto;
                             })
                     .collect(Collectors.toList());
@@ -103,7 +106,7 @@ public class CharacterService {
                                     characterDto.setAccountId(accountId);
                                     characterDto.setName(c.getName().toLowerCase());
                                     characterDto.setLevel(c.getLevel());
-                                    characterDto.setPlaybleClass(c.getPlayableClass().getName());
+                                    characterDto.setPlayableClass(c.getPlayableClass().getName());
                                     characterDto.setRace(c.getPlayableRace().getName());
                                     characterDto.setSlug(c.getRealm().getName());
                                     characterDto.setFaction(c.getFaction().getName());
@@ -130,6 +133,20 @@ public class CharacterService {
             dtoList.add(characterDto);
 
             // Todo 정합쳐진 DTO를 통해 Entity에 입력
+//            CharacterEntity characterEntity = CharacterEntity.builder()
+//                    .accountEntity(accountEntity)
+//                    .averageItemLvel(characterDto.getAverageItemLvel())
+//                    .characterSeNumber(characterDto.getCharacterSeNumber())
+//                    .expansionOption(characterDto.getExpansionOption())
+//                    .expansionOptionLevel(characterDto.getExpansionOptionLevel())
+//                    .equippedItemLevel(characterDto.getEquippedItemLevel())
+//                    .faction(characterDto.getFaction())
+//                    .gender(characterDto.getGender())
+//                    .lastCrawledAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+//                    .level(characterDto.getLevel())
+//                    .playableClass(characterDto.getPlaybleClass())
+//                    .specialization(characterDto.getSpecialization())
+//                    .build()
 
 
         }
