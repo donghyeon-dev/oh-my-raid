@@ -6,7 +6,7 @@ public class ExpansionOptionCoverter implements AttributeConverter<String, Integ
 
     @Override
     public Integer convertToDatabaseColumn(String attribute) {
-        int value;
+        Integer value;
         switch (attribute) {
             case "키리안":
                 value = 1;

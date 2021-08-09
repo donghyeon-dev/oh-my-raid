@@ -64,8 +64,4 @@ public class CharacterEntityTest {
     }
 
 
-    @Test
-    void Etity_modelMapper_테스트() {
-
-    }
 }

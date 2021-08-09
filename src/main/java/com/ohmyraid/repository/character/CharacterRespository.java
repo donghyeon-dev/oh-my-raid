@@ -7,8 +7,14 @@ import java.util.List;
 
 public interface CharacterRespository extends JpaRepository<CharacterEntity, Long> {
     public List<CharacterEntity> findAllByName(String name);
+
     public CharacterEntity findByName(String name);
+
+    public CharacterEntity findByCharacterSeNumber(int seNumber);
+
     public CharacterEntity findByPlayableClass(String playableClass);
+
+    public List<CharacterEntity> findAllByAccountEntity_AccountIdOrderByEquippedItemLevel(long accountId);
 //    public List<CharacterEntity> findAllByAccountEntityAccountId(Long accountId);
 //    public List<CharacterLoginOpMapping> findAllByAccountEntityAccountId(Long accountId);
 }

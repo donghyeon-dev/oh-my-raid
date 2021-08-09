@@ -8,13 +8,13 @@ import com.ohmyraid.dto.auth.AuthDto;
 import com.ohmyraid.dto.auth.AuthRequestDto;
 import com.ohmyraid.dto.auth.CheckTokenDto;
 import com.ohmyraid.dto.auth.StoreAtReqDto;
+import com.ohmyraid.dto.login.LoginInpDto;
+import com.ohmyraid.dto.login.RedisDto;
 import com.ohmyraid.feign.BattlenetClient;
 import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.utils.CryptoUtils;
 import com.ohmyraid.utils.JwtUtils;
 import com.ohmyraid.utils.RedisUtils;
-import com.ohmyraid.dto.login.LoginInpDto;
-import com.ohmyraid.dto.login.RedisDto;
 import com.ohmyraid.utils.ThreadLocalUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -51,6 +49,7 @@ public class LoginService {
 
     /**
      * 로그인 서비스
+     *
      * @param inpVo
      * @return
      * @throws JsonProcessingException
@@ -62,14 +61,14 @@ public class LoginService {
         log.debug("AccountEntity is {}", accountEntity);
 
         // 조회되는 값이 없다면
-        if(ObjectUtils.isEmpty(accountEntity)){
+        if (ObjectUtils.isEmpty(accountEntity)) {
             throw new CommonServiceException(ErrorResult.LOGIN_FAIL_NO_ID);
         }
 
         // 비밀번호 유효성 검사
         boolean isPwVerify = CryptoUtils.isPwVerify(inpVo.getPassword(), accountEntity.getPassword());
-        log.debug("isPwVerify = {}",isPwVerify);
-        if(isPwVerify) {
+        log.debug("isPwVerify = {}", isPwVerify);
+        if (isPwVerify) {
             // Output Vo 작성
             String token = jwtUtils.createAccessToken(String.valueOf(accountEntity.getEmail()), accountEntity.getNickname());
             RedisDto redisDto = new RedisDto();
@@ -77,6 +76,7 @@ public class LoginService {
             redisDto.setNickname(accountEntity.getNickname());
             redisDto.setAccessToken(token);
             redisDto.setAccountId(accountEntity.getAccountId());
+            redisDto.setBzAccessToken(null);
 
             // 레디스에 세션 넣기
             redisUtils.putSession(token, redisDto);
@@ -89,6 +89,7 @@ public class LoginService {
     /**
      * ToDo 여기 있어야 할게 아님.... 나중에 BLIZZARD 연동 계정 정보 가져오기 이런 기능을 만들면 옮겨야함
      * oAuth Credential_Code 방식을 이용해 AccessToken을 가져온다.
+     *
      * @param code
      * @return
      */
@@ -108,11 +109,14 @@ public class LoginService {
         AuthDto tokenRes = battlenetClient.getAccessToken(authRequestDto, AUTH);
         log.debug("TokenRes is {}", tokenRes);
 
-      return tokenRes.getAccess_token();
-    };
+        return tokenRes.getAccess_token();
+    }
+
+    ;
 
     public Boolean storeAccessToken(StoreAtReqDto reqDto) throws JsonProcessingException {
-        String bzToken = reqDto.getAccessToken();;
+        String bzToken = reqDto.getAccessToken();
+        String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         log.debug("Bllizzard Token is {}", bzToken);
 
         CheckTokenDto body = new CheckTokenDto();
@@ -122,18 +126,17 @@ public class LoginService {
         Map<String, Object> checkTokenResult = battlenetClient.checkToken(body);
 
         // Feign 통신이 된다면
-        if( !ObjectUtils.isEmpty(checkTokenResult) ){
+        if (!ObjectUtils.isEmpty(checkTokenResult)) {
             int exp = (int) checkTokenResult.get("exp");
-            int now = (int) (System.currentTimeMillis()/1000);
-            if(exp > now ){
+            int now = (int) (System.currentTimeMillis() / 1000);
+            if (exp > now) {
                 // session에 bz AccessToken을 등록
-                String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
                 RedisDto redisDto = redisUtils.getSession(token);
-                redisDto.setBzAccessToken(reqDto.getAccessToken());
+                redisDto.setBzAccessToken(bzToken);
                 redisUtils.putSession(token, redisDto);
                 return true;
-            } else{
-                return false ;
+            } else {
+                return false;
             }
         } else {
             return false;

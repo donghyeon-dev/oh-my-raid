@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.ohmyraid.domain.account.AccountEntity;
+import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.dto.auth.SpecInfDto;
 import com.ohmyraid.dto.character.ActualCharacterDto;
 import com.ohmyraid.dto.wow_account.WowAccountDto;
 import com.ohmyraid.feign.RaiderClient;
 import com.ohmyraid.feign.WowClient;
+import com.ohmyraid.mapper.CharacterMapperImpl;
 import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.repository.character.CharacterRespository;
 import com.ohmyraid.utils.RedisUtils;
@@ -17,8 +19,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +62,7 @@ public class CharacterService {
      * @throws JsonProcessingException
      */
     @Transactional
-    public Boolean getTotalSummary() throws JsonProcessingException {
+    public Boolean getTotalSummary() throws JsonProcessingException, InterruptedException {
         // 토큰가져오기 및 사용될 변수들 생성
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         String bzToken = redisUtils.getSession(token).getBzAccessToken();
@@ -88,6 +93,7 @@ public class CharacterService {
                                 characterDto.setPlayableClass(c.getPlayableClass().getName());
                                 characterDto.setRace(c.getPlayableRace().getName());
                                 characterDto.setSlug(c.getRealm().getName());
+                                characterDto.setRealm(c.getRealm().getSlug());
                                 characterDto.setFaction(c.getFaction().getName());
                                 characterDto.setGender(c.getGender().getName());
                                 return characterDto;
@@ -99,7 +105,7 @@ public class CharacterService {
                 ActualCharacterDto characterDto = new ActualCharacterDto();
                 dto.getCharacters()
                         .stream()
-                        .filter(c -> c.getLevel() > 30)
+                        .filter(c -> c.getLevel() > 50)
                         .map(
                                 c -> {
                                     characterDto.setCharacterSeNumber(c.getId());
@@ -109,6 +115,7 @@ public class CharacterService {
                                     characterDto.setPlayableClass(c.getPlayableClass().getName());
                                     characterDto.setRace(c.getPlayableRace().getName());
                                     characterDto.setSlug(c.getRealm().getName());
+                                    characterDto.setRealm(c.getRealm().getSlug());
                                     characterDto.setFaction(c.getFaction().getName());
                                     return characterDto;
                                 });
@@ -121,38 +128,68 @@ public class CharacterService {
 
         List<ActualCharacterDto> dtoList = new ArrayList<>();
         for (ActualCharacterDto characterDto : requestList) {
-            SpecInfDto specDto = wowClient.getCharacterSpecInf(namespace, bzToken, locale, characterDto.getSlug(), characterDto.getName());
+            SpecInfDto specDto = wowClient.getCharacterSpecInf(namespace, bzToken, locale, characterDto.getRealm(), characterDto.getName());
             log.debug("SpecInfRes is {}", specDto);
+            if (!ObjectUtils.isEmpty(specDto.getCovenant_progress())) {
 
-            // 엔티티를 위한 정보를 dto 하나에 합치기
-            characterDto.setSpecialization(specDto.getActive_spec().getName());
-            characterDto.setEquippedItemLevel(specDto.getEquipped_item_level());
-            characterDto.setAverageItemLvel(specDto.getAverage_item_level());
-            characterDto.setExpansionOption(specDto.getCovenant_progress().getChosenCovenant().getName());
-            characterDto.setExpansionOptionLevel(specDto.getCovenant_progress().getRenownLevel());
-            dtoList.add(characterDto);
+                // 엔티티를 위한 정보를 dto 하나에 합치기
+                characterDto.setSpecialization(specDto.getActive_spec().getName());
+                characterDto.setEquippedItemLevel(specDto.getEquipped_item_level());
+                characterDto.setAverageItemLvel(specDto.getAverage_item_level());
+                characterDto.setExpansionOption(specDto.getCovenant_progress().getChosenCovenant().getName());
+                characterDto.setExpansionOptionLevel(specDto.getCovenant_progress().getRenownLevel());
+                dtoList.add(characterDto);
 
-            // Todo 정합쳐진 DTO를 통해 Entity에 입력
-//            CharacterEntity characterEntity = CharacterEntity.builder()
-//                    .accountEntity(accountEntity)
-//                    .averageItemLvel(characterDto.getAverageItemLvel())
-//                    .characterSeNumber(characterDto.getCharacterSeNumber())
-//                    .expansionOption(characterDto.getExpansionOption())
-//                    .expansionOptionLevel(characterDto.getExpansionOptionLevel())
-//                    .equippedItemLevel(characterDto.getEquippedItemLevel())
-//                    .faction(characterDto.getFaction())
-//                    .gender(characterDto.getGender())
-//                    .lastCrawledAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-//                    .level(characterDto.getLevel())
-//                    .playableClass(characterDto.getPlaybleClass())
-//                    .specialization(characterDto.getSpecialization())
-//                    .build()
+                // Todo 정합쳐진 DTO를 통해 Entity에 입력
+                CharacterEntity characterEntity = CharacterEntity.builder()
+                        .accountEntity(accountEntity)
+                        .characterSeNumber(characterDto.getCharacterSeNumber())
+                        .name(characterDto.getName())
+                        .level(characterDto.getLevel())
+                        .playableClass(characterDto.getPlayableClass())
+                        .specialization(characterDto.getSpecialization())
+                        .race(characterDto.getRace())
+                        .gender(characterDto.getGender())
+                        .faction(characterDto.getFaction())
+                        .equippedItemLevel(characterDto.getEquippedItemLevel())
+                        .averageItemLvel(characterDto.getAverageItemLvel())
+                        .slug(characterDto.getSlug())
+                        .lastCrawledAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .expansionOption(characterDto.getExpansionOption())
+                        .expansionOptionLevel(characterDto.getExpansionOptionLevel())
+                        .build();
 
-
+                characterRespository.save(characterEntity);
+            }
+            Thread.sleep(10000L);
         }
         log.debug("진짜진짜진짜Entity를 위한 DTO is {}", dtoList);
 
 
         return true;
+    }
+
+    /**
+     * 계정의 모든 캐릭터 정보를 가져온다.
+     *
+     * @return
+     * @throws JsonProcessingException
+     */
+    public List<ActualCharacterDto> getMyCharacter() throws JsonProcessingException {
+        // Token 및 acId 가져오기
+        String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
+        long accountId = redisUtils.getSession(token).getAccountId();
+        List<CharacterEntity> myCharacters =
+                characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevel(accountId);
+
+        CharacterMapperImpl mapper = new CharacterMapperImpl();
+
+        List<ActualCharacterDto> resultList = new ArrayList<>();
+        for (CharacterEntity entity : myCharacters) {
+            ActualCharacterDto dto = mapper.characterEntityToDto(entity);
+            resultList.add(dto);
+        }
+        return resultList;
+
     }
 }

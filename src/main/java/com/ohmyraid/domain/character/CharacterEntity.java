@@ -71,10 +71,10 @@ public class CharacterEntity {
     private LocalDateTime lastCrawledAt;
 
     @Convert(converter = ExpansionOptionCoverter.class)
-    @Column(length = 10, nullable = false)
+    @Column(length = 10, nullable = true)
     private String expansionOption;
 
-    @Column(length = 10, nullable = false)
-    private int expansionOptionLevel;
+    @Column(length = 10, nullable = true)
+    private Integer expansionOptionLevel;
 
 }
