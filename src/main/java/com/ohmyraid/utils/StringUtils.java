@@ -2,6 +2,7 @@ package com.ohmyraid.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ObjectUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
@@ -14,20 +15,19 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 public class StringUtils {
-    static final Logger logger = LoggerFactory.getLogger(StringUtils.class);
-
     public final static String EMPTY_STRING = "";
+    static final Logger logger = LoggerFactory.getLogger(StringUtils.class);
     private final static String WHITE_SPACE = " \t\n\r\f";
 
-    public static String objectToString(Object target){
-        if(target == null){
+    public static String objectToString(Object target) {
+        if (target == null) {
             return "";
         } else {
             return String.valueOf(target);
         }
     }
 
-    public static LocalDateTime stringToLocalDateTime(String date){
+    public static LocalDateTime stringToLocalDateTime(String date) {
         LocalDateTime time = ZonedDateTime.parse(date).toLocalDateTime();
         time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
@@ -307,7 +307,7 @@ public class StringUtils {
                 return false;
             }
         } else if (obj instanceof Map) {
-            if (((Map<? , ?>) obj).size() > 0) {
+            if (((Map<?, ?>) obj).size() > 0) {
                 return false;
             }
         } else {
@@ -559,5 +559,23 @@ public class StringUtils {
             // fileNm = fileNm.replaceAll("&", "");
         }
         return fileNm;
+    }
+
+    public static String isNullReturn(String something) {
+        if (ObjectUtils.isEmpty(something)) {
+            return null;
+        } else {
+            return something;
+        }
+    }
+
+    ;
+
+    public static Object isNullReturn(int something) {
+        if (ObjectUtils.isEmpty(something)) {
+            return null;
+        } else {
+            return something;
+        }
     }
 }

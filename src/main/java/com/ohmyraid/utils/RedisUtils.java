@@ -24,25 +24,27 @@ public class RedisUtils {
 
     /**
      * Redis Session에 값을 넣는다.
+     *
      * @param key
      * @param vo
      */
     public void putSession(String key, RedisDto vo) throws JsonProcessingException {
-        ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         String value = objectMapper.writeValueAsString(vo);
-        valueOperations.set(key,value);
-        redisTemplate.expireAt(key, Date.from(ZonedDateTime.now().plusHours(1).toInstant()));
+        valueOperations.set(key, value);
+        redisTemplate.expireAt(key, Date.from(ZonedDateTime.now().plusHours(10).toInstant())); // Todo Redis파기 10시간으로 늘림
         log.debug("putSession() && Key is {}, Value is {}", key, value);
     }
 
     /**
      * Redis Session에서 Key에 해당하는 값을 추출한다.
+     *
      * @param key
      * @return
      * @throws JsonProcessingException
      */
     public RedisDto getSession(String key) throws JsonProcessingException {
-        ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         String value = valueOperations.get(key);
         RedisDto outpVo = objectMapper.readValue(value, RedisDto.class);
 
