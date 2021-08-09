@@ -42,6 +42,8 @@ public class ActualCharacterDto {
 
     private String slug;
 
+    private String realm;
+
     private String faction;
 
     private String expansionOption;
