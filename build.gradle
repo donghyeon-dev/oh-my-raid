@@ -31,7 +31,6 @@ dependencies {
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'
-    compileOnly 'org.projectlombok:lombok'
     implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
