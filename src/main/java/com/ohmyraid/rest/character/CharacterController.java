@@ -2,7 +2,7 @@ package com.ohmyraid.rest.character;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.common.wrapper.ResultView;
-import com.ohmyraid.dto.character.ActualCharacterDto;
+import com.ohmyraid.dto.wow_account.ActualCharacterDto;
 import com.ohmyraid.service.character.CharacterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

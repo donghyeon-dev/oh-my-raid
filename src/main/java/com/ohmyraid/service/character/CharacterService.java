@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.dto.auth.SpecInfDto;
-import com.ohmyraid.dto.character.ActualCharacterDto;
+import com.ohmyraid.dto.wow_account.ActualCharacterDto;
 import com.ohmyraid.dto.wow_account.WowAccountDto;
 import com.ohmyraid.feign.RaiderClient;
 import com.ohmyraid.feign.WowClient;
@@ -87,7 +87,7 @@ public class CharacterService {
                             c -> {
                                 ActualCharacterDto characterDto = new ActualCharacterDto();
                                 characterDto.setCharacterSeNumber(c.getId());
-                                characterDto.setAccountId(accountId);
+                                characterDto.setAccountEntity(accountEntity);
                                 characterDto.setName(c.getName().toLowerCase());
                                 characterDto.setLevel(c.getLevel());
                                 characterDto.setPlayableClass(c.getPlayableClass().getName());
@@ -109,7 +109,7 @@ public class CharacterService {
                         .map(
                                 c -> {
                                     characterDto.setCharacterSeNumber(c.getId());
-                                    characterDto.setAccountId(accountId);
+                                    characterDto.setAccountEntity(accountEntity);
                                     characterDto.setName(c.getName().toLowerCase());
                                     characterDto.setLevel(c.getLevel());
                                     characterDto.setPlayableClass(c.getPlayableClass().getName());
