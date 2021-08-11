@@ -14,6 +14,7 @@
 
 사용기술
 - JPA
+- MapStruct
 - JUnit
 - Feign
 - Swagger
