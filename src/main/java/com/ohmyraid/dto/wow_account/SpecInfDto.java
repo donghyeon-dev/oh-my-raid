@@ -3,8 +3,6 @@ package com.ohmyraid.dto.wow_account;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.ohmyraid.dto.character.ActiveSpec;
-import com.ohmyraid.dto.character.CovenantProgress;
 import lombok.Data;
 
 @Data

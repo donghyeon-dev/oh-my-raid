@@ -23,6 +23,6 @@ public class InstancesDto {
     @ApiModelProperty(value = "인스턴스 던전 정보 DTO", name = "instance")
     private InstanceDto instance;
 
-    @ApiModelProperty(value = "난이 돤련 정보 DTO", name = "modes")
+    @ApiModelProperty(value = "난이도 관련 정보 DTO", name = "modes")
     private List<ModesDto> modes;
 }

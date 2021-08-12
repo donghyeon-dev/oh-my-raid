@@ -1,4 +1,4 @@
-package com.ohmyraid.dto.character;
+package com.ohmyraid.dto.wow_account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonRootName;

@@ -1,21 +1,17 @@
-package com.ohmyraid.dto.character;
-
+package com.ohmyraid.dto.wow_account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonRootName("chosen_covenant")
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class GearDto implements Serializable {
-    private static final long serialVersionUID = -2925893922100802694L;
+public class ChosenCovenant {
 
-
-    private int itemLevelEquipped;
-    private int itemLevelTotal;
-    private int artifact_traits;
+    private String name;
+    private int id;
 }
