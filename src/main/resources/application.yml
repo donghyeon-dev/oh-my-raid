@@ -24,11 +24,12 @@ spring:
     username: root
     password: root
   jpa:
-    hibernate:
-      ddl-auto: update
-      format_sql: true
     generate-ddl: true
     show-sql: true
+    properties:
+      hibernate:
+        ddl-auto: update
+        format_sql: true
   messages:
     cache-duration: -1
     basename: classpath:/i18n/messages
@@ -50,6 +51,8 @@ logging:
     com.ohmyraid: DEBUG
     org.hibernate.type.descriptor.sql: trace
     org.springframework.jdbc.datasource.init.ScriptUtils: DEBUG
+    org.hibernate.type.descriptor:
+      sql: trace
   file:
     path: logs
 
