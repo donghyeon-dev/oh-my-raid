@@ -17,5 +17,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RaidInfDto {
 
+    private long characterId;
+    
     private List<ExpansionsDto> expansions;
 }

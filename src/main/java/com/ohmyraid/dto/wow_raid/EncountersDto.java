@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 
 /**
  * BlahBlah Entity 의 DT 를 도와주는 DTO 클래스
@@ -27,7 +25,7 @@ public class EncountersDto {
     private int completed_count;
 
     @ApiModelProperty(value = "가장 최근에 잡은 시간", name = "last_kill_timestamp")
-    private LocalDateTime last_kill_timestamp;
+    private String last_kill_timestamp;
 
 
 }

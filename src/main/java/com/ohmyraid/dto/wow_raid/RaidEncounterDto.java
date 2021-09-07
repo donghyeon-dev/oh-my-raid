@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 
 /**
  * RaidEncounter Entity 의 DT 를 도와주는 DTO 클래스
@@ -30,6 +28,6 @@ public class RaidEncounterDto {
 
     private String progress;
 
-    private LocalDateTime lastCrawledAt;
+    private String lastCrawledAt;
 
 }
