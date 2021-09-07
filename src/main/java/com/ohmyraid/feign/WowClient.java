@@ -29,7 +29,7 @@ public interface WowClient {
                                    @PathVariable(name = "characterName") String characterName
     );
 
-    @GetMapping(value = "profile/wow/character/{slug}/{characterName}/encounters/raid")
+    @GetMapping(value = "profile/wow/character/{slug}/{characterName}/encounters/raids")
     RaidInfDto getRaidEncounter(@RequestParam(name = "namespace", defaultValue = "profile-kr") String namespace,
                                 @RequestParam(name = "access_token") String access_token,
                                 @RequestParam(name = "locale", defaultValue = "ko_KR") String locale,
