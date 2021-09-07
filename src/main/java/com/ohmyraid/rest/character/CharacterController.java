@@ -32,4 +32,10 @@ public class CharacterController {
     public ResultView<List<ActualCharacterDto>> getMyCharacter() throws JsonProcessingException {
         return new ResultView<List<ActualCharacterDto>>(characterService.getMyCharacter());
     }
+
+    @GetMapping("/raid-encounter")
+    @ApiOperation(value = "캐릭터의 레이드 정보 가져오기", notes = "내 캐릭터의 어둠땅 내의 모든 레이드 정보를 가져온다.")
+    public ResultView<Boolean> getRaidEncounter() throws Exception {
+        return new ResultView<>(characterService.getRaidEncounter());
+    }
 }

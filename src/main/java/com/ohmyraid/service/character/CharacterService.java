@@ -8,12 +8,13 @@ import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.dto.wow_account.ActualCharacterDto;
 import com.ohmyraid.dto.wow_account.SpecInfDto;
 import com.ohmyraid.dto.wow_account.WowAccountDto;
-import com.ohmyraid.feign.RaiderClient;
+import com.ohmyraid.dto.wow_raid.RaidInfDto;
 import com.ohmyraid.feign.WowClient;
 import com.ohmyraid.mapper.CharacterMapperImpl;
 import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.repository.character.CharacterRespository;
 import com.ohmyraid.utils.RedisUtils;
+import com.ohmyraid.utils.SlugUtils;
 import com.ohmyraid.utils.ThreadLocalUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,16 +36,11 @@ import java.util.stream.Collectors;
 public class CharacterService {
 
     private final CharacterRespository characterRespository;
-
     private final AccountRepository accountRepository;
-
-    private final RaiderClient raiderClient;
-
     private final WowClient wowClient;
-
     private final RedisUtils redisUtils;
-
     private final ObjectMapper mapper;
+    private final SlugUtils slugUtils;
 
     @Value("${bz.namespace}")
     private final String namespace = null;
@@ -56,6 +52,7 @@ public class CharacterService {
     private final String region = null;
 
     /**
+     * 블리자드 API를 통해
      * 계정의 캐릭터 종합 정보를 가져와서, 각 캐릭터의 기본정보를 DB에 저장한다.
      *
      * @return
@@ -140,7 +137,6 @@ public class CharacterService {
                 characterDto.setExpansionOptionLevel(specDto.getCovenant_progress().getRenownLevel());
                 dtoList.add(characterDto);
 
-                // Todo 정합쳐진 DTO를 통해 Entity에 입력
                 CharacterEntity characterEntity = CharacterEntity.builder()
                         .accountEntity(accountEntity)
                         .characterSeNumber(characterDto.getCharacterSeNumber())
@@ -161,7 +157,8 @@ public class CharacterService {
 
                 characterRespository.save(characterEntity);
             }
-            Thread.sleep(10000L);
+            // Battle.Net API의 특성상 텀을 두고 Request를 보내야한다.
+            Thread.sleep(2500L);
         }
         log.debug("진짜진짜진짜Entity를 위한 DTO is {}", dtoList);
 
@@ -170,6 +167,7 @@ public class CharacterService {
     }
 
     /**
+     * 블리자드 API를 통해
      * 계정의 모든 캐릭터 정보를 가져온다.
      *
      * @return
@@ -186,10 +184,66 @@ public class CharacterService {
 
         List<ActualCharacterDto> resultList = new ArrayList<>();
         for (CharacterEntity entity : myCharacters) {
+            // Entity to DTO 변환
             ActualCharacterDto dto = mapper.characterEntityToDto(entity);
             resultList.add(dto);
         }
         return resultList;
 
     }
+
+    /**
+     * 블리자드 API를 통해
+     * 캐릭터의 어둠땅 레이드 정보를 가져온다.
+     *
+     * @return
+     */
+    public Boolean getRaidEncounter() throws Exception {
+        // Token 및 acId 가져오기
+        String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
+        String bzToken = redisUtils.getSession(token).getBzAccessToken();
+        long accountId = redisUtils.getSession(token).getAccountId();
+        List<CharacterEntity> myCharacters =
+                characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevel(accountId);
+
+        // 캐릭터 정보들 Stream을 돌려 RaidEncounter List 생성
+        List<RaidInfDto> accountRaidInfList = myCharacters.stream().map(
+                c -> {
+                    RaidInfDto result =
+                            wowClient.getRaidEncounter(namespace, bzToken, locale, slugUtils.krSlugToEng(c.getSlug()),
+                                    c.getName());
+                    try {
+                        // BlizzardAPI의 빠른 호출 방지를 위한...
+                        Thread.sleep(2500L);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    result.setCharacterId(c.getCharacterId());
+                    return result;
+                }
+        ).collect(Collectors.toList());
+
+        // stream을 통해 평탄화
+        accountRaidInfList.stream()
+                .flatMap(a -> a.getExpansions().stream())
+                .filter(e -> e.getExpansion().getName().equals("Shadowlands"))
+                .collect(Collectors.toList());
+        log.debug("infList is {}", accountRaidInfList);
+
+//        accountRaidInfList.stream().filter(i -> i.getExpansions()
+//                .stream().filter(r -> r.getExpansion().getName().equals("어둠땅"))
+//                .collect(Collectors.toList());
+//        ).map(
+//                i -> {
+//                    RaidEncounterEntity entity = RaidEncounterEntity.builder()
+//                            .characterEntity(characterRespository.findCharacterEntityByCharacterId(i.getCharacterId()))
+//                            .difficulty(i.getExpansions())
+//                            .build()
+//                }
+//        )
+
+        return true;
+    }
+
+    ;
 }
