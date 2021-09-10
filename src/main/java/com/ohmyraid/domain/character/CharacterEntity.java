@@ -21,7 +21,7 @@ public class CharacterEntity {
     @Column(name = "character_id")
     private Long characterId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
     private AccountEntity accountEntity;
 
