@@ -135,7 +135,7 @@ public class SpecializationConverter implements AttributeConverter<String, Integ
             case 66:
                 value = "보호";
                 break;
-            case 78:
+            case 70:
                 value = "징벌";
                 break;
             case 71:

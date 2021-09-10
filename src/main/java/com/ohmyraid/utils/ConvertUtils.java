@@ -1,9 +1,11 @@
 package com.ohmyraid.utils;
 
+import com.ohmyraid.dto.wow_raid.ProgressDto;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 @Component
-public class SlugUtils {
+public class ConvertUtils {
 
     public String krSlugToEng(String krSlugName) {
         String engValue;
@@ -66,5 +68,22 @@ public class SlugUtils {
                 throw new IllegalStateException("Unexpected value: " + krSlugName);
         }
         return engValue;
+    }
+
+    /**
+     * 레이드의 진행상황을 표현해준다.
+     * EX) 1/10
+     *
+     * @param dto
+     * @return
+     */
+    public String progressToString(ProgressDto dto) {
+        if (ObjectUtils.isEmpty(dto)) {
+            throw new NullPointerException("In converting, ProgressDto is null");
+        }
+        String completed = String.valueOf(dto.getCompletedCount());
+        String total = String.valueOf(dto.getTotalCount());
+        return completed + "/" + total;
+
     }
 }
