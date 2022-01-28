@@ -1,0 +1,21 @@
+# Docker-compose to set omr dev environment
+
+version: '2'
+
+services:
+  database:
+    image: mysql
+    container_name: omr-mysql
+    ports:
+      - "43306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: omraid
+    command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+    volumes: # 이전에 컨테이너 내에 볼륨을 저장했어서 데이터도 같이 날라갔다..ㅠ
+      - /Users/autocat/dev/Personal/docker-mysql
+  redis:
+    image: redis
+    container_name: omr-redis
+    ports:
+      - "46379:6379"
+
