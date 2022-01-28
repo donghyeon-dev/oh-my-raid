@@ -20,9 +20,9 @@ spring:
     name: ohmyraid-api
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/omr
+    url: jdbc:mysql://localhost:43306/omr
     username: root
-    password: root
+    password: omraid
   jpa:
     generate-ddl: true
     show-sql: true
@@ -36,7 +36,7 @@ spring:
     encoding: UTF-8
   redis:
     host: localhost
-    port: 6379
+    port: 46379
   data:
     redis:
       repositories:
