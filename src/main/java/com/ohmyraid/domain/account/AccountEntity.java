@@ -16,13 +16,13 @@ public class AccountEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AutoIncrement
-    @Column(name="account_id")
+    @Column(name = "account_id")
     private Long accountId;
 
     @Column(length = 25, nullable = false, unique = true)
     private String email;
 
-    @Column(length = 20, nullable = false, updatable = true)
+    @Column(length = 60, nullable = false, updatable = true)
     private String password;
 
     @Column(length = 25, nullable = false, unique = true)
