@@ -217,7 +217,7 @@ public class CharacterService {
                                             c.getName());
                             try {
                                 // BlizzardAPI의 빠른 호출 방지를 위한...
-                                Thread.sleep(2500L);
+                                Thread.sleep(3000L);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -232,7 +232,16 @@ public class CharacterService {
         for (RaidInfDto infDto : accountRaidInfList) {
             if (infDto.getExpansions() != null) {
                 infDto.setExpansions(infDto.getExpansions().stream()
-                        .filter(e -> e != null && e.getExpansion().getName().equals("Shadowlands")) // Todo Shadowlands
+                        // 확장팩 범위는 어둠땅, 격아, 군단
+                        .filter(
+                                e -> e != null
+                                        && (e.getExpansion().getName().equals("Shadowlands")
+                                        || e.getExpansion().getName().equals("Battle for Azeroth")
+                                        || e.getExpansion().getName().equals("Legion")
+                                )
+                        )
+//                        .filter(e -> e != null && e.getExpansion().getName().equals("Battle for Azeroth"))
+//                        .filter(e -> e != null && e.getExpansion().getName().equals("Legion"))
                         .collect(Collectors.toList()));
             }
         }
@@ -240,7 +249,6 @@ public class CharacterService {
 
 
         // stream으론 답이 안나온다.. 중첩된 For문을 사용하는 수밖에...
-        int raidInfsize = accountRaidInfList.size();
         List<RaidEncounterDto> encounterDtoList = new ArrayList<>();
         for (RaidInfDto raidInfDto : accountRaidInfList) {
 
@@ -254,20 +262,23 @@ public class CharacterService {
                     .filter(e -> !ObjectUtils.isEmpty(e))
                     .collect(Collectors.toList());
             if (!ObjectUtils.isEmpty(expansionsList)) {
-                raidEncounterDto.setExpansionName(expansionsList.get(0).getExpansion().getName());
-                List<InstancesDto> instancesList = expansionsList.get(0).getInstances();
-                for (InstancesDto instancesDto : instancesList) {
-                    raidEncounterDto.setInstanceName(instancesDto.getInstance().getName());
-                    List<ModesDto> difficultyList = instancesDto.getModes().stream()
-                            .filter(m -> !m.getDifficulty().getType().equals("LFR")).collect(Collectors.toList());
-                    for (ModesDto modeDto : difficultyList) {
-                        raidEncounterDto.setDifficulty(modeDto.getDifficulty().getType());
-                        raidEncounterDto.setProgress(convertUtils.progressToString(modeDto.getProgress()));
-                    }
+                for (ExpansionsDto expansionDto : expansionsList) {
+                    raidEncounterDto.setExpansionName(expansionDto.getExpansion().getName());
+                    List<InstancesDto> instancesList = expansionDto.getInstances();
+                    for (InstancesDto instancesDto : instancesList) {
+                        raidEncounterDto.setInstanceName(instancesDto.getInstance().getName());
+                        List<ModesDto> difficultyList = instancesDto.getModes().stream()
+                                .filter(m -> !m.getDifficulty().getType().equals("LFR")).collect(Collectors.toList());
+                        for (ModesDto modeDto : difficultyList) {
+                            raidEncounterDto.setDifficulty(modeDto.getDifficulty().getType());
+                            raidEncounterDto.setProgress(convertUtils.progressToString(modeDto.getProgress()));
+                            encounterDtoList.add(raidEncounterDto);
+                        }
 
+                    }
                 }
-                encounterDtoList.add(raidEncounterDto);
             }
+
         }
 
         List<RaidEncounterEntity> raidEncounterEntities = new ArrayList<>();
@@ -286,7 +297,7 @@ public class CharacterService {
                         return entity;
                     })
                     .collect(Collectors.toList());
-            log.debug("encounterDtoList'is {}", encounterDtoList);
+            log.debug("raidEncounterEntities'is {}", raidEncounterEntities);
         }
         raidEncounterRepository.saveAll(raidEncounterEntities);
 
