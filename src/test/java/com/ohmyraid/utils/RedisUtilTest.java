@@ -14,8 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-// junit5에서 Assertion으로 변경됬다고함!!
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -35,49 +34,51 @@ public class RedisUtilTest {
     RedisUtils redisUtils;
 
     @Test
-    void 레디스_커넥션_테스트(){
-        String key = "key";
-        String data = "data";
+    void 레디스_커넥션_테스트() {
+        String insertKeyValue = "key";
+        String insertData = "data";
 
-        ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();;
-        valueOperations.set(key,data);
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(insertKeyValue, insertData);
 
-        String result = valueOperations.get(key);
+        String result = valueOperations.get(insertKeyValue);
         log.info("result is {}", result);
-        assertEquals(data,result);
+        assertEquals(insertData, result);
     }
 
     @Test
     void ObjectMapper_레디스_커넥션_테스트() throws JsonProcessingException {
-        String key = "key";
-        RedisDto outpVo = new RedisDto();
-        outpVo.setNickname("autocat");
-        outpVo.setEmail("donghyeondev@gmail.com");
-        outpVo.setAccessToken("accessToken");
+        String redisKey = "key";
+        RedisDto redisInput = new RedisDto();
+        redisInput.setNickname("autocat");
+        redisInput.setEmail("donghyeondev@gmail.com");
+        redisInput.setAccessToken("accessToken");
 
-        String value = objectMapper.writeValueAsString(outpVo);
+        String redisValue = objectMapper.writeValueAsString(redisInput);
 
-        ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();;
-        valueOperations.set(key,value);
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        ;
+        valueOperations.set(redisKey, redisValue);
 
-        String result = valueOperations.get(key);
-        log.info("result is {}", result);
-        assertEquals(value,result);
+        String selectedRedisSessionString = valueOperations.get(redisKey);
+
+        log.info("result is {}", selectedRedisSessionString);
+        assertEquals(redisValue, selectedRedisSessionString);
     }
 
     @Test
     void RedisUtils_레디스_커넥션_테스트() throws JsonProcessingException {
-        String key = "key";
-        RedisDto outpVo = new RedisDto();
-        outpVo.setNickname("autocat");
-        outpVo.setEmail("donghyeondev@gmail.com");
-        outpVo.setAccessToken("accessToken");
+        String redisKey = "userInfo";
+        RedisDto redisInput = new RedisDto();
+        redisInput.setNickname("autocat");
+        redisInput.setEmail("donghyeondev@gmail.com");
+        redisInput.setAccessToken("accessToken");
 
-        redisUtils.putSession(key,outpVo);
+        redisUtils.putSession(redisKey, redisInput);
 
-        RedisDto result = redisUtils.getSession(key);
-        log.info("result is {}", result);
-        assertEquals(outpVo,result);
+        RedisDto redisSessionDto = redisUtils.getSession(redisKey);
+        log.info("result is {}", redisSessionDto);
+        assertEquals(redisInput, redisSessionDto);
     }
 
 }
