@@ -25,10 +25,10 @@ public class RaidEncounterEntity {
     @JoinColumn(name = "character_id")
     CharacterEntity characterEntity;
 
-    @Column(length = 12, nullable = false)
+    @Column(length = 100, nullable = false)
     String expansionName;
 
-    @Column(length = 12, nullable = false)
+    @Column(length = 100, nullable = false)
     String instanceName;
 
     @Column(length = 12, nullable = false)

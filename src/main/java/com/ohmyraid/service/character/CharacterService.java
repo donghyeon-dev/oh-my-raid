@@ -132,6 +132,15 @@ public class CharacterService {
             log.debug("SpecInfRes is {}", specDto);
             if (!ObjectUtils.isEmpty(specDto.getCovenant_progress())) {
 
+                // insert를 하기 전 DB에 데이터 검증
+                CharacterEntity targetEntity = characterRespository.findCharacterByCharacterSeNumber(characterDto.getCharacterSeNumber());
+                Long targetCharacterId = null;
+                boolean isCreated = false;
+
+                if (!ObjectUtils.isEmpty(targetEntity)) {
+                    targetCharacterId = targetEntity.getCharacterId();
+                    isCreated = true;
+                }
                 // 엔티티를 위한 정보를 dto 하나에 합치기
                 characterDto.setSpecialization(specDto.getActive_spec().getName());
                 characterDto.setEquippedItemLevel(specDto.getEquipped_item_level());
@@ -142,6 +151,7 @@ public class CharacterService {
 
                 CharacterEntity characterEntity = CharacterEntity.builder()
                         .accountEntity(accountEntity)
+                        .characterId(isCreated ? targetCharacterId : null)
                         .characterSeNumber(characterDto.getCharacterSeNumber())
                         .name(characterDto.getName())
                         .level(characterDto.getLevel())
@@ -196,7 +206,7 @@ public class CharacterService {
 
     /**
      * 블리자드 API를 통해
-     * 캐릭터의 어둠땅 레이드 정보를 가져온다.
+     * 캐릭터의 어둠땅/격전의 아제로스 레이드 정보를 가져온다.
      *
      * @return
      */
@@ -228,16 +238,18 @@ public class CharacterService {
         // 필터링
         log.debug("accountRaidInfList is {}", accountRaidInfList);
         accountRaidInfList = accountRaidInfList.stream()
-                .filter(a -> a.getExpansions() != null && !ObjectUtils.isEmpty(a)).collect(Collectors.toList());
+                .filter(raidInfList -> raidInfList.getExpansions() != null && !ObjectUtils.isEmpty(raidInfList))
+                .collect(Collectors.toList());
+
         for (RaidInfDto infDto : accountRaidInfList) {
             if (infDto.getExpansions() != null) {
                 infDto.setExpansions(infDto.getExpansions().stream()
-                        // 확장팩 범위는 어둠땅, 격아, 군단
+                        // 확장팩 범위는 어둠땅
                         .filter(
                                 e -> e != null
                                         && (e.getExpansion().getName().equals("Shadowlands")
                                         || e.getExpansion().getName().equals("Battle for Azeroth")
-                                        || e.getExpansion().getName().equals("Legion")
+//                                        || e.getExpansion().getName().equals("Legion")
                                 )
                         )
 //                        .filter(e -> e != null && e.getExpansion().getName().equals("Battle for Azeroth"))
@@ -252,24 +264,33 @@ public class CharacterService {
         List<RaidEncounterDto> encounterDtoList = new ArrayList<>();
         for (RaidInfDto raidInfDto : accountRaidInfList) {
 
-            RaidEncounterDto raidEncounterDto = new RaidEncounterDto();
             long characterId = raidInfDto.getCharacterId();
 
-            raidEncounterDto.setCharacterId(characterId);
 
             List<ExpansionsDto> expansionsList = raidInfDto.getExpansions();
             expansionsList = expansionsList.stream()
-                    .filter(e -> !ObjectUtils.isEmpty(e))
+                    .filter(expansionDto -> !ObjectUtils.isEmpty(expansionDto))
                     .collect(Collectors.toList());
+
             if (!ObjectUtils.isEmpty(expansionsList)) {
                 for (ExpansionsDto expansionDto : expansionsList) {
-                    raidEncounterDto.setExpansionName(expansionDto.getExpansion().getName());
+                    String expansionName = expansionDto.getExpansion().getName();
+
+
                     List<InstancesDto> instancesList = expansionDto.getInstances();
                     for (InstancesDto instancesDto : instancesList) {
-                        raidEncounterDto.setInstanceName(instancesDto.getInstance().getName());
+                        String instanceName = instancesDto.getInstance().getName();
+
+
                         List<ModesDto> difficultyList = instancesDto.getModes().stream()
-                                .filter(m -> !m.getDifficulty().getType().equals("LFR")).collect(Collectors.toList());
+                                .filter(m -> !m.getDifficulty().getType().equals("LFR"))
+                                .collect(Collectors.toList()); // LFR = 공찾
                         for (ModesDto modeDto : difficultyList) {
+                            RaidEncounterDto raidEncounterDto = new RaidEncounterDto();
+                            raidEncounterDto.setCharacterId(characterId);
+                            raidEncounterDto.setExpansionName(expansionName);
+                            raidEncounterDto.setInstanceName(instanceName);
+
                             raidEncounterDto.setDifficulty(modeDto.getDifficulty().getType());
                             raidEncounterDto.setProgress(convertUtils.progressToString(modeDto.getProgress()));
                             encounterDtoList.add(raidEncounterDto);

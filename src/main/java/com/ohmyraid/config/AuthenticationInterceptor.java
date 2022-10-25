@@ -18,14 +18,15 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private final JwtUtils jwtUtils;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.debug("===============================  REQUEST RECEIVED  ===============================\n" +
                 ">>>>>>>>>>  Request URI \t : {}  <<<<<<<<<<", request.getRequestURI());
         // Header의 AccessToken의 유효성 검사
-        String header =  request.getHeader("Authorization");
+        String header = request.getHeader("Authorization");
         log.debug("AuthenticationInterceptor :: Authorization Value is {}", header);
-        if(!ObjectUtils.isEmpty(header)) {
+        if (!ObjectUtils.isEmpty(header)) {
             boolean isTokenValid = jwtUtils.isTokenValid(header);
             if (!isTokenValid) {
                 log.error("AuthenticationInterceptor :: AccessToken is INVALID");

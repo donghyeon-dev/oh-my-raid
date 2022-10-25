@@ -10,7 +10,7 @@ public interface CharacterRespository extends JpaRepository<CharacterEntity, Lon
 
     public CharacterEntity findByName(String name);
 
-    public CharacterEntity findByCharacterSeNumber(int seNumber);
+    public CharacterEntity findCharacterByCharacterSeNumber(int seNumber);
 
     public CharacterEntity findByPlayableClass(String playableClass);
 

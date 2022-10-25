@@ -47,6 +47,7 @@ public class RedisUtils {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         String value = valueOperations.get(key);
         RedisDto outpVo = objectMapper.readValue(value, RedisDto.class);
+        // Todo 해당 키값에 세션이 비어있다면?? 테스트해보자
 
         log.debug("getSession() Return is {}", outpVo);
         return outpVo;
