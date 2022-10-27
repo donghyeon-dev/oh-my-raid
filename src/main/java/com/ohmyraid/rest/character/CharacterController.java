@@ -34,8 +34,14 @@ public class CharacterController {
     }
 
     @GetMapping("/raid-encounter")
-    @ApiOperation(value = "캐릭터의 레이드 정보 가져오기", notes = "내 캐릭터의 어둠땅 내의 모든 레이드 정보를 가져온다.")
+    @ApiOperation(value = "캐릭터의 레이드 정보 가져오기", notes = "사용자 계정에 저장된 캐릭터들의 어둠땅/격전의아제로스 확장팩의 레이드 정보를 저장한다.")
     public ResultView<Boolean> getRaidEncounter() throws Exception {
         return new ResultView<>(characterService.getRaidEncounter());
     }
+
+//    @GetMapping("/raid-info")
+//    @ApiOperation(value = "캐릭터의 레이드 정보 가져오기", notes = "입력된 캐릭터의 어둠땅/격전의아제로스 확장팩의 레이드 정보를 저장한다.")
+//    public ResultView<RaidEncounterDto> getSpecificCharacterRaidInfo(@RequestParam String characterName) throws Exception {
+//        return new ResultView<RaidEncounterDto>(characterService.getSpecificCharacterRaidInfo(characterName));
+//    }
 }

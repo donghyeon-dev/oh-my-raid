@@ -196,7 +196,7 @@ public class CharacterService {
 
         List<ActualCharacterDto> resultList = new ArrayList<>();
         for (CharacterEntity entity : myCharacters) {
-            // Entity to DTO 변환
+//            Entity to DTO 변환
             ActualCharacterDto dto = mapper.characterEntityToDto(entity);
             resultList.add(dto);
         }
@@ -309,6 +309,7 @@ public class CharacterService {
                     .map(a -> {
                         RaidEncounterEntity entity = RaidEncounterEntity.builder()
                                 .characterEntity(characterRespository.findCharacterEntityByCharacterId(a.getCharacterId()))
+//                                .encounterId()
                                 .difficulty(a.getDifficulty())
                                 .expansionName(a.getExpansionName())
                                 .instanceName(a.getInstanceName())
@@ -318,12 +319,17 @@ public class CharacterService {
                         return entity;
                     })
                     .collect(Collectors.toList());
-            log.debug("raidEncounterEntities'is {}", raidEncounterEntities);
+            log.debug("raidEuncounterEntities'is {}", raidEncounterEntities);
         }
         raidEncounterRepository.saveAll(raidEncounterEntities);
 
         return true;
     }
+
+//    public RaidEncounterDto getSpecificCharacterRaidInfo(String characterName) throws Exception {
+//
+//        return new RaidEncounterDto();
+//    }
 
     ;
 }

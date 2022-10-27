@@ -44,6 +44,9 @@ spring:
   jwt:
     secret-key: ohmyaraidapi
     issuer: ohmyraid
+  mvc: # Spring Boot 2.6버전 이후에 matching-strategy값이 ant_apth_mather= > path_pattern_parser로 변경되면서 오류가 발생하여 추가
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 logging:
   level:
