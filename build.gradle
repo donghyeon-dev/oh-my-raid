@@ -82,6 +82,8 @@ dependencies {
 
     // JWT
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
 
 }
@@ -93,7 +95,7 @@ dependencyManagement { // MavenBom: 필요한 dependency의 버전을 신경쓰�
 }
 
 test {
-//    useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 //querydsl 추가 시작
