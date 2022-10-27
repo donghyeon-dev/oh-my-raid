@@ -87,7 +87,7 @@ public class CharacterService {
                             c -> {
                                 ActualCharacterDto characterDto = new ActualCharacterDto();
                                 characterDto.setCharacterSeNumber(c.getId());
-                                characterDto.setAccountEntity(accountEntity);
+                                characterDto.setAccountId(accountEntity.getAccountId());
                                 characterDto.setName(c.getName().toLowerCase());
                                 characterDto.setLevel(c.getLevel());
                                 characterDto.setPlayableClass(c.getPlayableClass().getName());
@@ -109,7 +109,7 @@ public class CharacterService {
                         .map(
                                 c -> {
                                     characterDto.setCharacterSeNumber(c.getId());
-                                    characterDto.setAccountEntity(accountEntity);
+                                    characterDto.setAccountId(accountEntity.getAccountId());
                                     characterDto.setName(c.getName().toLowerCase());
                                     characterDto.setLevel(c.getLevel());
                                     characterDto.setPlayableClass(c.getPlayableClass().getName());

@@ -1,7 +1,6 @@
 package com.ohmyraid.dto.wow_account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.ohmyraid.domain.account.AccountEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +18,7 @@ public class ActualCharacterDto {
 
     private long characterId;
 
-    private AccountEntity accountEntity;
+    private long accountId;
 
     private int characterSeNumber;
 

@@ -15,6 +15,7 @@ public interface CharacterMapper {
     CharacterEntity characterDtoToEntity(ActualCharacterDto characterDto);
 
     @Mapping(target = "realm", ignore = true)
+    @Mapping(source = "accountEntity.accountId", target = "accountId")
     ActualCharacterDto characterEntityToDto(CharacterEntity characterEntity);
 
 
