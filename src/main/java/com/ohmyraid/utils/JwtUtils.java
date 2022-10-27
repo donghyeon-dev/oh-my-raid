@@ -1,13 +1,13 @@
 package com.ohmyraid.utils;
 
-import com.ohmyraid.common.result.CommonNoAuthenticationException;
 import com.ohmyraid.common.result.CommonNoSessionException;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Slf4j
@@ -31,14 +31,15 @@ public class JwtUtils {
         // Access Token 생성
         String accessToken = Jwts.builder().setIssuer(ISSUER).setIssuedAt(new Date())
                 .claim("LoginId", id).claim("UserName", name)
-                .signWith(SignatureAlgorithm.HS512,SECRET_KEY)
-                .setExpiration(new Date(System.currentTimeMillis()+36000000)) //10시간
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + 36000000)) //10시간
                 .compact();
         return accessToken;
     }
 
     /**
      * 토큰 만료시간 검사
+     *
      * @param token
      * @return
      */
@@ -48,7 +49,7 @@ public class JwtUtils {
                     .getBody().getExpiration();
             log.debug("JwtUtils :: isTokenExpired return is {}", expiration);
             return expiration.after(new Date());
-        }catch(ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             log.error("Token is Expired");
             throw new CommonNoSessionException();
         }
