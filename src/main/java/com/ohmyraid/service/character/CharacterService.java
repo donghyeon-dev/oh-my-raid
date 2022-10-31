@@ -311,9 +311,18 @@ public class CharacterService {
             raidEncounterEntities = encounterDtoList.stream()
                     .filter(a -> a.getDifficulty() != null && !ObjectUtils.isEmpty(a.getDifficulty()))
                     .map(a -> {
+                        RaidEncounterDto encounterDto = new RaidEncounterDto();
+                        encounterDto.setCharacterId(a.getCharacterId());
+                        encounterDto.setDifficulty(a.getDifficulty());
+                        encounterDto.setInstanceName(a.getInstanceName());
+                        encounterDto.setExpansionName(a.getExpansionName());
+                        encounterDto = raidEncounterRepository.findRaidEncounterEntityByDto(encounterDto);
+
+                        long encounterId = !ObjectUtils.isEmpty(encounterDto) ? encounterDto.getEncounterId() : null;
+
                         RaidEncounterEntity entity = RaidEncounterEntity.builder()
                                 .characterEntity(characterRespository.findCharacterEntityByCharacterId(a.getCharacterId()))
-//                                .encounterId()
+                                .encounterId(encounterId)
                                 .difficulty(a.getDifficulty())
                                 .expansionName(a.getExpansionName())
                                 .instanceName(a.getInstanceName())
@@ -332,7 +341,7 @@ public class CharacterService {
 
     public List<CharacterRaidInfoDto> getSpecificCharacterRaidInfo(long characterId) throws Exception {
 
-        return raidEncounterRepository.findEncounterByCharacterId(characterId);
+        return raidEncounterRepository.findCharacterRaidInfoByCharacterId(characterId);
     }
 
     ;
