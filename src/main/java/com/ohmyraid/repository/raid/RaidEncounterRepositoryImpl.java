@@ -5,6 +5,7 @@ import com.ohmyraid.domain.raid.QRaidEncounterEntity;
 import com.ohmyraid.domain.raid.RaidEncounterEntity;
 import com.ohmyraid.dto.character.CharacterRaidInfoDto;
 import com.ohmyraid.dto.character.QCharacterRaidInfoDto;
+import com.ohmyraid.dto.wow_raid.RaidEncounterDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -27,7 +28,7 @@ public class RaidEncounterRepositoryImpl implements RaidEncounterRepositoryCusto
     }
 
     @Override
-    public List<CharacterRaidInfoDto> findEncounterByCharacterId(long characterId) {
+    public List<CharacterRaidInfoDto> findCharacterRaidInfoByCharacterId(long characterId) {
         QRaidEncounterEntity raidEncounterEntity = QRaidEncounterEntity.raidEncounterEntity;
         QCharacterEntity characterEntity = QCharacterEntity.characterEntity;
         return queryFactory
@@ -43,8 +44,22 @@ public class RaidEncounterRepositoryImpl implements RaidEncounterRepositoryCusto
                         raidEncounterEntity.progress
                 ))
                 .from(raidEncounterEntity)
-                .innerJoin(characterEntity).on(raidEncounterEntity.characterEntity.characterId.eq(characterEntity.characterId)
+                .innerJoin(characterEntity)
+                .on(raidEncounterEntity.characterEntity.characterId.eq(characterEntity.characterId)
                         .and(characterEntity.characterId.eq(characterId)))
                 .fetch();
+    }
+
+    @Override
+    public RaidEncounterDto findRaidEncounterEntityByDto(RaidEncounterDto requestDto) {
+        QRaidEncounterEntity raidEncounterEntity = QRaidEncounterEntity.raidEncounterEntity;
+
+        queryFactory.selectFrom(raidEncounterEntity)
+                .where(raidEncounterEntity.characterEntity.characterId.eq(requestDto.getCharacterId())
+                        .and(raidEncounterEntity.difficulty.eq(requestDto.getDifficulty()))
+                        .and(raidEncounterEntity.instanceName.eq(requestDto.getInstanceName()))
+                        .and(raidEncounterEntity.expansionName.eq(requestDto.getExpansionName()))
+                ).fetchOne();
+        return null;
     }
 }
