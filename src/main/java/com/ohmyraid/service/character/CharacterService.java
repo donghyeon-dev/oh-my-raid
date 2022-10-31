@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.domain.raid.RaidEncounterEntity;
+import com.ohmyraid.dto.character.CharacterRaidInfoDto;
 import com.ohmyraid.dto.wow_account.ActualCharacterDto;
 import com.ohmyraid.dto.wow_account.SpecInfDto;
 import com.ohmyraid.dto.wow_account.WowAccountDto;
@@ -18,6 +19,7 @@ import com.ohmyraid.repository.raid.RaidEncounterRepository;
 import com.ohmyraid.utils.ConvertUtils;
 import com.ohmyraid.utils.RedisUtils;
 import com.ohmyraid.utils.ThreadLocalUtils;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,6 +46,8 @@ public class CharacterService {
     private final RedisUtils redisUtils;
     private final ObjectMapper mapper;
     private final ConvertUtils convertUtils;
+
+    private final JPAQueryFactory queryFactory;
 
     @Value("${bz.namespace}")
     private final String namespace = null;
@@ -82,7 +86,7 @@ public class CharacterService {
             // 리스트가 하나니까 걍 꺼내
             requestList = wowAccountDto.get(0).getCharacters()
                     .stream()
-                    .filter(c -> c.getLevel() > 30)
+                    .filter(c -> c.getLevel() > 50)
                     .map(
                             c -> {
                                 ActualCharacterDto characterDto = new ActualCharacterDto();
@@ -326,10 +330,10 @@ public class CharacterService {
         return true;
     }
 
-//    public RaidEncounterDto getSpecificCharacterRaidInfo(String characterName) throws Exception {
-//
-//        return new RaidEncounterDto();
-//    }
+    public List<CharacterRaidInfoDto> getSpecificCharacterRaidInfo(long characterId) throws Exception {
+
+        return raidEncounterRepository.findEncounterByCharacterId(characterId);
+    }
 
     ;
 }
