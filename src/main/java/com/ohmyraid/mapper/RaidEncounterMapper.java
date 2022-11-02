@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface RaidEncounterMapper {
 
-    RaidEncounterMapper INSTANCEINSTANCE = Mappers.getMapper(RaidEncounterMapper.class);
+    RaidEncounterMapper INSTANCE = Mappers.getMapper(RaidEncounterMapper.class);
 
     @Mapping(source = "characterId", target = "characterEntity.characterId")
     RaidEncounterEntity raidEncounterDtoToEntity(RaidEncounterDto characterDto);

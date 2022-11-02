@@ -2,13 +2,26 @@ package com.ohmyraid.dto.party;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
+/**
+ * PartyInfoEntity Entity 의 DT 를 도와주는 DTO 클래스
+ */
 @Data
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@AllArgsConstructor
+@Builder
 public class PartyInpDto {
+
+    @ApiModelProperty(value = "파티아이디", name = "partyId")
+    private Long partyId;
+
+    @ApiModelProperty(value = "레이드인스턴스명", name = "instanceName")
+    private String instanceName;
 
     @ApiModelProperty(value = "제목", name = "subject")
     private String subject;
@@ -16,7 +29,7 @@ public class PartyInpDto {
     @ApiModelProperty(value = "난이도", name = "difficulty")
     private String difficulty;
 
-    @ApiModelProperty( value = "인원수", name = "requiredMemers")
+    @ApiModelProperty(value = "인원수", name = "requiredMemers")
     private int requiredMembers;
 
     @ApiModelProperty(value = "탐수", name = "times")
@@ -33,4 +46,8 @@ public class PartyInpDto {
 
     @ApiModelProperty(value = "모집기간", name = "recruitUntil")
     private String recruitUntil;
+
+    @ApiModelProperty(value = "생성자계정ID", name = "createAccountId")
+    private long createAccountId;
+
 }
