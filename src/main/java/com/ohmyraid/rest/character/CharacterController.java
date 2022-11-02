@@ -42,7 +42,7 @@ public class CharacterController {
     }
 
     @GetMapping("/{characterId}/raid-info")
-    @ApiOperation(value = "본인 캐릭터의 레이드 정보 가져오기", notes = "입력된 캐릭터의 어둠땅/격전의아제로스 확장팩의 레이드 정보를 반환한다.")
+    @ApiOperation(value = "본인계정의 특정 캐릭터 레이드 정보 가져오기", notes = "선택왼 캐릭터의 레이드 정보를 반환한다.")
     public ResultView<List<CharacterRaidInfoDto>> getSpecificCharacterRaidInfo(@PathVariable long characterId) throws Exception {
         return new ResultView<List<CharacterRaidInfoDto>>(characterService.getSpecificCharacterRaidInfo(characterId));
     }
