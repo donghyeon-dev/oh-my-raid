@@ -31,7 +31,7 @@ public class RaidEncounterEntity {
     @Column(length = 100, nullable = false)
     String instanceName;
 
-    @Column(length = 12, nullable = false)
+    @Column(length = 13, nullable = false)
     String difficulty;
 
     @Column(length = 12, nullable = false)

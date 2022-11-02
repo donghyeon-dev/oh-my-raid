@@ -210,7 +210,7 @@ public class CharacterService {
 
     /**
      * 블리자드 API를 통해
-     * 캐릭터의 어둠땅/격전의 아제로스 레이드 정보를 가져온다.
+     * 캐릭터의 레이드 정보를 가져온다.
      *
      * @return
      */
@@ -244,23 +244,24 @@ public class CharacterService {
         accountRaidInfList = accountRaidInfList.stream()
                 .filter(raidInfList -> raidInfList.getExpansions() != null && !ObjectUtils.isEmpty(raidInfList))
                 .collect(Collectors.toList());
-
-        for (RaidInfDto infDto : accountRaidInfList) {
-            if (infDto.getExpansions() != null) {
-                infDto.setExpansions(infDto.getExpansions().stream()
-                        // 확장팩 범위는 어둠땅
-                        .filter(
-                                e -> e != null
-                                        && (e.getExpansion().getName().equals("Shadowlands")
-                                        || e.getExpansion().getName().equals("Battle for Azeroth")
-//                                        || e.getExpansion().getName().equals("Legion")
-                                )
-                        )
-//                        .filter(e -> e != null && e.getExpansion().getName().equals("Battle for Azeroth"))
-//                        .filter(e -> e != null && e.getExpansion().getName().equals("Legion"))
-                        .collect(Collectors.toList()));
-            }
-        }
+/**
+ for (RaidInfDto infDto : accountRaidInfList) {
+ if (infDto.getExpansions() != null) {
+ infDto.setExpansions(infDto.getExpansions().stream()
+ // 확장팩 범위는 어둠땅
+ .filter(
+ e -> e != null
+ && (e.getExpansion().getName().equals("Shadowlands")
+ || e.getExpansion().getName().equals("Battle for Azeroth")
+ || e.getExpansion().getName().equals("Legion")
+ )
+ )
+ //                        .filter(e -> e != null && e.getExpansion().getName().equals("Battle for Azeroth"))
+ //                        .filter(e -> e != null && e.getExpansion().getName().equals("Legion"))
+ .collect(Collectors.toList()));
+ }
+ }
+ **/
         ;
 
 
@@ -318,7 +319,7 @@ public class CharacterService {
                         encounterDto.setExpansionName(a.getExpansionName());
                         encounterDto = raidEncounterRepository.findRaidEncounterEntityByDto(encounterDto);
 
-                        long encounterId = !ObjectUtils.isEmpty(encounterDto) ? encounterDto.getEncounterId() : null;
+                        long encounterId = !ObjectUtils.isEmpty(encounterDto) ? encounterDto.getEncounterId() : 0L;
 
                         RaidEncounterEntity entity = RaidEncounterEntity.builder()
                                 .characterEntity(characterRespository.findCharacterEntityByCharacterId(a.getCharacterId()))

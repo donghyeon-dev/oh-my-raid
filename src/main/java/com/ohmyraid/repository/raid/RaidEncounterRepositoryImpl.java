@@ -5,6 +5,7 @@ import com.ohmyraid.domain.raid.QRaidEncounterEntity;
 import com.ohmyraid.domain.raid.RaidEncounterEntity;
 import com.ohmyraid.dto.character.CharacterRaidInfoDto;
 import com.ohmyraid.dto.character.QCharacterRaidInfoDto;
+import com.ohmyraid.dto.wow_raid.QRaidEncounterDto;
 import com.ohmyraid.dto.wow_raid.RaidEncounterDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -54,12 +55,22 @@ public class RaidEncounterRepositoryImpl implements RaidEncounterRepositoryCusto
     public RaidEncounterDto findRaidEncounterEntityByDto(RaidEncounterDto requestDto) {
         QRaidEncounterEntity raidEncounterEntity = QRaidEncounterEntity.raidEncounterEntity;
 
-        queryFactory.selectFrom(raidEncounterEntity)
+        return queryFactory
+                .select(new QRaidEncounterDto(
+                        raidEncounterEntity.encounterId,
+                        raidEncounterEntity.characterEntity.characterId.as("characterId"),
+                        raidEncounterEntity.expansionName,
+                        raidEncounterEntity.instanceName,
+                        raidEncounterEntity.difficulty,
+                        raidEncounterEntity.progress,
+                        raidEncounterEntity.lastCrawledAt
+                ))
+                .from(raidEncounterEntity)
                 .where(raidEncounterEntity.characterEntity.characterId.eq(requestDto.getCharacterId())
                         .and(raidEncounterEntity.difficulty.eq(requestDto.getDifficulty()))
                         .and(raidEncounterEntity.instanceName.eq(requestDto.getInstanceName()))
                         .and(raidEncounterEntity.expansionName.eq(requestDto.getExpansionName()))
                 ).fetchOne();
-        return null;
+
     }
 }
