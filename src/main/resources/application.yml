@@ -18,6 +18,8 @@ bz:
 spring:
   application:
     name: ohmyraid-api
+  main: # 클래스로더 리플렉션에서 Swagger의 RequestMapping 들 수집관련해서 오류가 있었음
+    allow-bean-definition-overriding: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:43306/omr
@@ -44,7 +46,7 @@ spring:
   jwt:
     secret-key: ohmyraidApiSecretkeyWithJwtThatManageTokenValidate
     issuer: ohmyraid
-  mvc: # Spring Boot 2.6버전 이후에 matching-strategy값이 ant_apth_mather= > path_pattern_parser로 변경되면서 오류가 발생하여 추가
+  mvc: # Spring Boot 2.6버전 이후에 matching-strategy값이 ant_apth_mather= > path_pattern_parser로 변경되면서 오류가 발생하여 추가 --> Spring Actuator와 함께 사용할때는 절대 작동하지 않는다.
     pathmatch:
       matching-strategy: ant_path_matcher
 

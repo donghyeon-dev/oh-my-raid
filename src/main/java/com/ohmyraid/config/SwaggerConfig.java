@@ -22,7 +22,7 @@ import java.util.Set;
 public class SwaggerConfig {
 
     @Bean
-    public Docket api(){
+    public Docket api() {
 
         // 스웨거창에 헤더 추가
         ParameterBuilder parameterBuilder = new ParameterBuilder();
@@ -47,9 +47,10 @@ public class SwaggerConfig {
 
     /**
      * APIINFO 설정
+     *
      * @return
      */
-    private ApiInfo apiInfo(){
+    private ApiInfo apiInfo() {
         return new ApiInfo(
                 "Oh-My-Raid REST API", // Title
                 "OMR Project API", // Description
