@@ -9,9 +9,10 @@ services:
     ports:
       - "43306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: omraid
+      MYSQL_ROOT_PASSWORD: ${OMR_MYSQL_PASSWORD}
+      TZ : Asia/Seoul #docker compose yml 자체에 TimeZone을 박아놓는것도 방법이다.
     command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
-    volumes: # 이전에 컨테이너 내에 볼륨을 저장했어서 데이터도 같이 날라갔다..ㅠ
+    volumes:
       - /Users/autocat/dev/Personal/docker-mysql
   redis:
     image: redis

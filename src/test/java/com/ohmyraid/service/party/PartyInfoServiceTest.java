@@ -31,9 +31,9 @@ class PartyInfoServiceTest {
         partyInpDto.setSubject("용군단 아얼 미나리 길드 정규 공격대 인원 모집합니다!");
         partyInpDto.setDifficulty("MYTHIC");
         partyInpDto.setMemberCapacity("확고");
-        partyInpDto.setRecruitUntil(datetimeUtils.stringToLocalDateTime("2022-11-02 13:00:00"));
+        partyInpDto.setRecruitUntil(("2022-11-02 13:00:00"));
         partyInpDto.setRequiredMembers(5);
-        partyInpDto.setStartAt(datetimeUtils.stringToLocalDateTime("2022-11-27 19:00:00"));
+        partyInpDto.setStartAt(("2022-11-27 19:00:00"));
         partyInpDto.setTimes(5);
         partyInpDto.setContents("안녕하세요!\n" +
                 "아즈샤라 얼라에서 기사/죽기 하고 있는 나리라구/나리님 입니다.\n" +
