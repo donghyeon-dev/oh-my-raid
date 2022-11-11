@@ -66,11 +66,10 @@ public class CharacterService {
      * @throws JsonProcessingException
      */
     @Transactional
-    public Boolean getTotalSummary() throws JsonProcessingException, InterruptedException {
+    public Boolean getTotalSummary(long accountId) throws JsonProcessingException, InterruptedException {
         // 토큰가져오기 및 사용될 변수들 생성
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         String bzToken = redisUtils.getSession(token).getBzAccessToken();
-        long accountId = redisUtils.getSession(token).getAccountId();
         AccountEntity accountEntity = accountRepository.findByAccountId(accountId);
 
         // AccountSummary Feign 호출 및 파싱
@@ -189,10 +188,9 @@ public class CharacterService {
      * @return
      * @throws JsonProcessingException
      */
-    public List<ActualCharacterDto> getMyCharacter() throws JsonProcessingException {
+    public List<ActualCharacterDto> getMyCharacter(long accountId) throws JsonProcessingException {
         // Token 및 acId 가져오기
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
-        long accountId = redisUtils.getSession(token).getAccountId();
         List<CharacterEntity> myCharacters =
                 characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevel(accountId);
 
@@ -214,11 +212,10 @@ public class CharacterService {
      *
      * @return
      */
-    public Boolean getRaidEncounter() throws Exception {
+    public Boolean getRaidEncounter(long accountId) throws Exception {
         // Token 및 acId 가져오기
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         String bzToken = redisUtils.getSession(token).getBzAccessToken();
-        long accountId = redisUtils.getSession(token).getAccountId();
         List<CharacterEntity> myCharacters =
                 characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevel(accountId);
 
@@ -340,9 +337,9 @@ public class CharacterService {
         return true;
     }
 
-    public List<CharacterRaidInfoDto> getSpecificCharacterRaidInfo(long characterId) throws Exception {
+    public List<CharacterRaidInfoDto> getSpecificCharacterRaidInfo(long characterId, long accountId) throws Exception {
 
-        return raidEncounterRepository.findCharacterRaidInfoByCharacterId(characterId);
+        return raidEncounterRepository.findCharacterRaidInfoByCharacterId(characterId, accountId);
     }
 
     ;

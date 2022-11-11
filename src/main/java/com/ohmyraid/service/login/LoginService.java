@@ -65,9 +65,8 @@ public class LoginService {
             throw new CommonServiceException(ErrorResult.LOGIN_FAIL_NO_ID);
         }
 
-        // 비밀번호 유효성 검사
+
         boolean isPwVerify = CryptoUtils.isPwVerify(inpVo.getPassword(), accountEntity.getPassword());
-        log.debug("isPwVerify = {}", isPwVerify);
         if (isPwVerify) {
             // Output Vo 작성
             String token = jwtUtils.createAccessToken(String.valueOf(accountEntity.getEmail()), accountEntity.getNickname());
@@ -78,7 +77,6 @@ public class LoginService {
             redisDto.setAccountId(accountEntity.getAccountId());
             redisDto.setBzAccessToken(null);
 
-            // 레디스에 세션 넣기
             redisUtils.putSession(token, redisDto);
             return redisDto;
         } else {
@@ -94,10 +92,8 @@ public class LoginService {
      * @return
      */
     public String getAccessToken(String code) throws JsonProcessingException {
-        //Auth Value발급을 위해 환경변수에서 clientId와 ClientSecret을 가져와 인코딩한다.
         String AUTH = CryptoUtils.getAuthValue();
 
-        // RequestDto정의
         AuthRequestDto authRequestDto = AuthRequestDto.builder()
                 .grant_type(GRANT_TYPE)
                 .redirect_uri(REDIRECT_URI)
@@ -105,7 +101,6 @@ public class LoginService {
                 .code(code)
                 .build();
 
-        // 토큰요청 ToDo 여기서 Exception이 난다면 어떻게 처리해야할까...
         AuthDto tokenRes = battlenetClient.getAccessToken(authRequestDto, AUTH);
         log.debug("TokenRes is {}", tokenRes);
 
@@ -122,10 +117,8 @@ public class LoginService {
         CheckTokenDto body = new CheckTokenDto();
         body.setRegion("KR");
         body.setToken(bzToken);
-        log.debug("RequestBody is {}", body);
         Map<String, Object> checkTokenResult = battlenetClient.checkToken(body);
 
-        // Feign 통신이 된다면
         if (!ObjectUtils.isEmpty(checkTokenResult)) {
             int exp = (int) checkTokenResult.get("exp");
             int now = (int) (System.currentTimeMillis() / 1000);

@@ -29,7 +29,7 @@ public class RaidEncounterRepositoryImpl implements RaidEncounterRepositoryCusto
     }
 
     @Override
-    public List<CharacterRaidInfoDto> findCharacterRaidInfoByCharacterId(long characterId) {
+    public List<CharacterRaidInfoDto> findCharacterRaidInfoByCharacterId(long characterId, long accountId) {
         QRaidEncounterEntity raidEncounterEntity = QRaidEncounterEntity.raidEncounterEntity;
         QCharacterEntity characterEntity = QCharacterEntity.characterEntity;
         return queryFactory
@@ -47,7 +47,9 @@ public class RaidEncounterRepositoryImpl implements RaidEncounterRepositoryCusto
                 .from(raidEncounterEntity)
                 .innerJoin(characterEntity)
                 .on(raidEncounterEntity.characterEntity.characterId.eq(characterEntity.characterId)
-                        .and(characterEntity.characterId.eq(characterId)))
+                        .and(characterEntity.characterId.eq(characterId))
+                        .and(characterEntity.accountEntity.accountId.eq(accountId))
+                )
                 .fetch();
     }
 
