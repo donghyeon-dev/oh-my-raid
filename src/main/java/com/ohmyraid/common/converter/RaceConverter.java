@@ -78,6 +78,9 @@ public class RaceConverter implements AttributeConverter<String, Integer> {
             case "기계노움":
                 value = 37;
                 break;
+            case "드렉티르":
+                value = 38;
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + attribute);
         }
@@ -157,6 +160,9 @@ public class RaceConverter implements AttributeConverter<String, Integer> {
                 break;
             case 37:
                 value = "기계노움";
+                break;
+            case 38:
+                value = "드랙티르";
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + value);

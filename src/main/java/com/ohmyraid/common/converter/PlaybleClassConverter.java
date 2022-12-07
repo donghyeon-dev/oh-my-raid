@@ -44,6 +44,9 @@ public class PlaybleClassConverter implements AttributeConverter<String, Integer
             case "악마사냥꾼":
                 value = 12;
                 break;
+            case "기원사":
+                value = 13;
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + attribute);
         }
@@ -91,6 +94,9 @@ public class PlaybleClassConverter implements AttributeConverter<String, Integer
                 break;
             case 12:
                 value = "악마사냥꾼";
+                break;
+            case 13:
+                value = "기원사";
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + value);
