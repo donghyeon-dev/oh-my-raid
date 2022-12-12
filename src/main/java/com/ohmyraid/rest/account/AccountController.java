@@ -4,12 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.common.wrapper.ResultView;
 import com.ohmyraid.dto.account.SignUpInpDto;
 import com.ohmyraid.dto.account.SignUpResDto;
+import com.ohmyraid.dto.wow_account.ActualCharacterDto;
 import com.ohmyraid.service.account.AccountService;
 import com.ohmyraid.service.character.CharacterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/account")
@@ -29,9 +32,21 @@ public class AccountController {
     }
 
     @GetMapping(value = "{accountId}/sync")
-    @ApiOperation(value = "/profile/user/wow?", notes = "계정의 캐릭터 정보를 동기화한다.")
+    @ApiOperation(value = "/profile/user/wow?", notes = "해당 계정의 캐릭터 정보를 동기화한다.")
     public ResultView<Boolean> getTotalSummary(@PathVariable long accountId) throws JsonProcessingException, InterruptedException {
         return new ResultView<>(characterService.getTotalSummary(accountId));
+    }
+
+    @GetMapping(value = "/{accountId}/characters")
+    @ApiOperation(value = "계정의 전체 캐릭터 간략보기", notes = "내 계정의 모든 캐릭터의 정보를 조회한다.")
+    public ResultView<List<ActualCharacterDto>> getMyCharacter(@PathVariable long accountId) throws JsonProcessingException {
+        return new ResultView<List<ActualCharacterDto>>(characterService.getMyCharacter(accountId));
+    }
+
+    @GetMapping("/{accountId}/raid-encounter")
+    @ApiOperation(value = "캐릭터의 레이드 정보 동기화", notes = "사용자 계정에 저장된 캐릭터들의 레이드들의 정보를 동기화한다.")
+    public ResultView<Boolean> getRaidEncounter(@PathVariable long accountId) throws Exception {
+        return new ResultView<>(characterService.getRaidEncounter(accountId));
     }
 
 }

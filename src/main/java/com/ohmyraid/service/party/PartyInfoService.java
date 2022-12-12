@@ -46,6 +46,7 @@ public class PartyInfoService {
                 .difficulty(inpDto.getDifficulty())
                 .requiredMembers(inpDto.getRequiredMembers())
                 .times(inpDto.getTimes())
+                .instanceName(inpDto.getInstanceName())
                 .memberCapacity(inpDto.getMemberCapacity())
                 .contents(inpDto.getContents())
                 .createAccountId(accountRepository.findAllByEmail(email))

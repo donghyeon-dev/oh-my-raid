@@ -56,9 +56,9 @@ public class PlaybleClassConverter implements AttributeConverter<String, Integer
     ;
 
     @Override
-    public String convertToEntityAttribute(Integer dbdata) {
+    public String convertToEntityAttribute(Integer data) {
         String value = "";
-        switch (dbdata) {
+        switch (data) {
             case 1:
                 value = "전사";
                 break;

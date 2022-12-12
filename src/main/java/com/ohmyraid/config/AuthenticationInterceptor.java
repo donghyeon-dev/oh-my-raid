@@ -33,7 +33,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 throw new CommonNoAuthenticationException();
             }
         } else {
-            return false;
+            throw new CommonNoAuthenticationException();
         }
 
         return true;

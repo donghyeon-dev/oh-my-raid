@@ -89,9 +89,9 @@ public class RaceConverter implements AttributeConverter<String, Integer> {
     }
 
     @Override
-    public String convertToEntityAttribute(Integer dbData) {
+    public String convertToEntityAttribute(Integer data) {
         String value = "";
-        switch (dbData) {
+        switch (data) {
             case 1:
                 value = "인간";
                 break;
