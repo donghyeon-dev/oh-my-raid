@@ -33,7 +33,7 @@ public class LoginController {
      * @return
      */
     @GetMapping(value = "/oauth")
-    @ApiOperation(value = "oauth", notes = "oAuth Credential Code를 통해 AccessToken 발급")
+    @ApiOperation(value = "Blizzard oauth 인증", notes = "oAuth Credential Code를 통해 AccessToken 발급")
     public ResultView<String> oauth(@RequestParam(value = "code") String code) throws JsonProcessingException {
         log.debug("Code is {}", code);
 
@@ -41,7 +41,7 @@ public class LoginController {
     }
 
     @PostMapping(value = "/oauth/storeAccessToken")
-    @ApiOperation(value = "storeAccessToken", notes = "AccessToken을 해당 세션에 저장한다.")
+    @ApiOperation(value = "BlizzardAccessToken 저장", notes = "AccessToken을 해당 세션에 저장한다.")
     public ResultView<Boolean> storeAccessToken(@RequestBody StoreAtReqDto reqDto) throws JsonProcessingException {
         return new ResultView<>(loginService.storeAccessToken(reqDto));
     }

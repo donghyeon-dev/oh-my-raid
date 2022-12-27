@@ -14,7 +14,7 @@ public class ThreadLocalUtils {
 
     private static ThreadLocal<Map<Object, Object>> threadLocal = new ThreadLocal();
 
-    public static ThreadInfDto getThreadInfo(){
+    public static ThreadInfDto getThreadInfo() {
         return (ThreadInfDto) get(Constant.ThreadLocal.THREAD_INF);
 
     }
@@ -34,6 +34,7 @@ public class ThreadLocalUtils {
     }
 
     public static void clear() {
+        // remove()를 통해 제거하지 않는다면 스레드 풀을 재사용하여 문제가 발생할 수 있음
         log.debug("ThreadLocal clean");
         threadLocal.remove();
     }

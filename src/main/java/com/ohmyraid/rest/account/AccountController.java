@@ -32,7 +32,7 @@ public class AccountController {
     }
 
     @GetMapping(value = "{accountId}/sync")
-    @ApiOperation(value = "/profile/user/wow?", notes = "해당 계정의 캐릭터 정보를 동기화한다.")
+    @ApiOperation(value = "계정의 전체 캐릭터정보 동기화", notes = "해당 계정의 캐릭터 정보를 동기화한다.")
     public ResultView<Boolean> getTotalSummary(@PathVariable long accountId) throws JsonProcessingException, InterruptedException {
         return new ResultView<>(characterService.getTotalSummary(accountId));
     }
