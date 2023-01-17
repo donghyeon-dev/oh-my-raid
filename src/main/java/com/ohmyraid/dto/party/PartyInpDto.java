@@ -47,6 +47,9 @@ public class PartyInpDto {
     @ApiModelProperty(value = "모집기간", name = "recruitUntil")
     private String recruitUntil;
 
+    @ApiModelProperty(value = "서버", name = "slug")
+    private String slug;
+
     @ApiModelProperty(value = "생성자계정ID", name = "createAccountId")
     private long createAccountId;
 

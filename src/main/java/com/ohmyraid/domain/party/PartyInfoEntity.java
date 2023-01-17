@@ -42,7 +42,10 @@ public class PartyInfoEntity {
     @Column(length = 1000, nullable = false)
     private String contents;
 
-    @OneToOne
+    @Column(length = 10, nullable = true)
+    private String slug;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
     private AccountEntity createAccountId;
 

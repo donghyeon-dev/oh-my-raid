@@ -13,4 +13,7 @@ public interface PartyInfoMapper {
 
     @Mapping(source = "createAccountId", target = "createAccountId.accountId")
     PartyInfoEntity partInfoDtoToEntity(PartyInpDto partyInpDto);
+
+    @Mapping(source = "createAccountId.accountId", target = "createAccountId")
+    PartyInpDto entityToDto(PartyInfoEntity entity);
 }

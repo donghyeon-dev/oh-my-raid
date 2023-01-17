@@ -1,15 +1,25 @@
 package com.ohmyraid.service.party;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.ohmyraid.config.Constant;
+import com.ohmyraid.dto.account.ThreadInfDto;
+import com.ohmyraid.dto.login.RedisDto;
 import com.ohmyraid.dto.party.PartyInpDto;
 import com.ohmyraid.repository.party.PartyInfoRepository;
 import com.ohmyraid.utils.DatetimeUtils;
+import com.ohmyraid.utils.RedisUtils;
+import com.ohmyraid.utils.ThreadLocalUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import javax.transaction.Transactional;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -25,51 +35,73 @@ class PartyInfoServiceTest {
     @Autowired
     private DatetimeUtils datetimeUtils;
 
+    @Autowired
+    private RedisUtils redisUtils;
+
     @Test
-    void PartInfo_Insert_테스트() throws JsonProcessingException {
+    @Transactional
+    void PartyInfo_Insert_테스트() throws JsonProcessingException {
+
+        ThreadInfDto threadInfDto = new ThreadInfDto();
+        // accessToken은 항상 수정해줘야함 => 뭔가 자동화를 시킬만한게 없을까?
+        String token = "\"eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJvaG15cmFpZCIsImlhdCI6MTY3MzkxNzA5NiwiTG9naW5JZCI6ImRvbmdoeWVvbmRldkBnbWFpbC5jb20iLCJVc2VyTmFtZSI6ImF1dG9jYXQiLCJleHAiOjE2NzM5NTMwOTZ9.SSpdTQoxVtECwfC9vVfV2zkCAEZg7GC8tyLfihUH0z0\"";
+        threadInfDto.setAccessToken(token);
+        ThreadLocalUtils.add(Constant.THREAD_INF, threadInfDto);
+        RedisDto redisDto = new RedisDto();
+        redisDto.setEmail("donghyeondev@gmail.com");
+        redisDto.setAccessToken(token);
+        redisUtils.putSession(token, redisDto);
+
         PartyInpDto partyInpDto = new PartyInpDto();
-        partyInpDto.setSubject("용군단 아얼 미나리 길드 정규 공격대 인원 모집합니다!");
+        partyInpDto.setSubject("정공인원 모집 (목,금) 저녁 9시 3탐 진행");
         partyInpDto.setDifficulty("MYTHIC");
         partyInpDto.setMemberCapacity("확고");
         partyInpDto.setInstanceName("헌신자의 금고");
-        partyInpDto.setRecruitUntil(("2022-11-02 13:00:00"));
+        partyInpDto.setRecruitUntil(("2023-02-26 13:00:00"));
         partyInpDto.setRequiredMembers(5);
-        partyInpDto.setStartAt(("2022-11-27 19:00:00"));
+        partyInpDto.setStartAt(("2023-03-01 19:00:00"));
         partyInpDto.setTimes(5);
-        partyInpDto.setContents("안녕하세요!\n" +
-                "아즈샤라 얼라에서 기사/죽기 하고 있는 나리라구/나리님 입니다.\n" +
-                "용군단 대비 공대원 모집합니다.\n" +
+        partyInpDto.setSlug("아즈샤라");
+        partyInpDto.setContents("신세기 구르비 공대 인원 모집 합니다.\n" +
                 "\n" +
-                "■ 레이드 일정 : 일 월 20:00~00:00 4탐 /  연장 따윈 일체 없음. / 공휴일 무조건 챙김.\n" +
-                "템룰- 골팟 올분\n" +
                 "\n" +
-                "■ 구인 클래스\n" +
+                "현재 영웅 7넴 킬\n" +
+                "목요일 영웅,  금요일 신화 트라이 로 진행예정\n" +
+                "(일정파밍 후엔// 신화만 목,금 진행)\n" +
+                "대신에 평일 여러번 영웅팟 막공 운영 예정입니다.\n" +
+                "(단톡방 공지)\n" +
                 "\n" +
-                "원딜 - 조드 흑마 암사\n" +
-                "힐러 - 복술\n" +
                 "\n" +
-                "■ 길드 기반 최정예 노리는 공대입니다. 따라서 길드 가입이 필수입니다.\n" +
+                "근딜 (풍운, 딜죽)\n" +
+                "원딜 (법사,기원사)\n" +
+                "힐러 (신기, 복술, 신사, 기원사) \n" +
                 "\n" +
-                "■ 정말 화목하고 실력있는 공장님 계셔서 공대 분위기 너무 좋습니다.\n" +
-                " \n" +
-                "■ 아즈샤라 얼라이언스에서 재미있게 하실분들 환영합니다. 길드 차원에서 영약/음식/반투스등 모든 것 다 지원하고 물약, 룬만 챙기시면 됩니다.\n" +
                 "\n" +
-                "■ 실수적고 1인분 이상 가능 하신분 이시면 좋겠습니다.\n" +
-                " \n" +
-                "■ 문의는 인게임 우편이나 인벤 우편으로 해주시고 본캐닉/지원캐릭터 닉 적어주시면 감사하겠습니다. 부담없이 지원해주세요!\n" +
+                " 언제든 즐겁게 스트레스 안 받으시고 \n" +
+                "목, 금 공대일정과 , 그외 막공일정\n" +
+                "평일 쐐기 위주로 같이 즐기실분 모십니다~\n" +
                 "\n" +
-                "차후 소비용품 가격이 안정화되면 길드차원에서 각종 소비용품 지원 가능합니다. (기름, 마부, 보석 등등) " +
-                "디코, 인스타 디엠도 가능합니다\n" +
-                "디코 : 나리#0369\n" +
-                "인스타 : nari_twitch\n" +
                 "\n" +
-                "많은 지원 부탁드릴게요! \uD83D\uDE0A");
+                "저희는 라이트 합니다! \n" +
+                "\n" +
+                "\n" +
+                " 간혹  참가 하지 못 하시더라도 ~ 괜찮습니다.\n" +
+                "길드원, 공대원과 함께 즐기실 분 모십니다!!\n" +
+                "\n" +
+                "\n" +
+                "*바다이야기 길드원도 모집합니다 ^^*");
 
-//        PartyInfoMapperImpl mapper = new PartyInfoMapperImpl();
-//        PartyInfoEntity partyInfoEntity = mapper.partInfoDtoToEntity(partyInpDto);
         partyInfoService.insertPartyInfo(partyInpDto);
+
+        // partyInfoService.getPartyInfo(2);
 
     }
 
+    @Test
+    void getPartyInfoListByAccountId_Test() {
+        List<PartyInpDto> partyInpDtoList = partyInfoService.getPartyInfoListByAccountId(1);
+        System.out.println("partyInpDtoList => " + partyInpDtoList);
+        assertEquals(partyInpDtoList.get(0).getSubject(), "구한다 제목ㅋ");
+    }
 
 }
