@@ -1,4 +1,4 @@
-package com.ohmyraid.service;
+package com.ohmyraid.service.character;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.extension.ExtendWith;

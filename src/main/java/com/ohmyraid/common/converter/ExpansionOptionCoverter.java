@@ -7,6 +7,7 @@ public class ExpansionOptionCoverter implements AttributeConverter<String, Integ
     @Override
     public Integer convertToDatabaseColumn(String attribute) {
         Integer value;
+        if (attribute == null) return null;
         switch (attribute) {
             case "키리안":
                 value = 1;
@@ -29,6 +30,7 @@ public class ExpansionOptionCoverter implements AttributeConverter<String, Integ
     @Override
     public String convertToEntityAttribute(Integer dbData) {
         String value = "";
+        if (dbData == null) return null;
         switch (dbData) {
             case 1:
                 value = "키리안";

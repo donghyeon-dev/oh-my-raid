@@ -1,8 +1,8 @@
 package com.ohmyraid.config;
 
+import com.ohmyraid.dto.account.ThreadInfDto;
 import com.ohmyraid.utils.StringUtils;
 import com.ohmyraid.utils.ThreadLocalUtils;
-import com.ohmyraid.dto.account.ThreadInfDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,16 +18,16 @@ public class RequestInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 프리핸들러에서 헤더의 Authorization(토큰)을 추출하여 쓰레드로컬에 넣는다.
-        if(ThreadLocalUtils.isExist("token")){
+        if (ThreadLocalUtils.isExist("token")) {
             log.debug("ThreadLocal is cleared");
             ThreadLocalUtils.clear();
         }
         String token = "";
-        if(StringUtils.isNotEmpty(request.getHeader("Authorization"))) {
+        if (StringUtils.isNotEmpty(request.getHeader("Authorization"))) {
             token = request.getHeader("Authorization");
             ThreadInfDto threadInfDto = new ThreadInfDto();
             threadInfDto.setAccessToken(token);
-            ThreadLocalUtils.add("ThreadInf", threadInfDto);
+            ThreadLocalUtils.add(Constant.THREAD_INF, threadInfDto);
             log.debug("Token is Exists. ThreadInf is added inside of ThreadLocal");
         }
 

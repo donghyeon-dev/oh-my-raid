@@ -110,6 +110,9 @@ public class SpecializationConverter implements AttributeConverter<String, Integ
             case "복수":
                 value = 581;
                 break;
+            case "보존":
+                value = 1468;
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + attribute);
         }
@@ -221,6 +224,9 @@ public class SpecializationConverter implements AttributeConverter<String, Integ
                 break;
             case 581:
                 value = "복수";
+                break;
+            case 1468:
+                value = "보존";
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + value);

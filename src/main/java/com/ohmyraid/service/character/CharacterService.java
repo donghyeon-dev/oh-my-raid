@@ -82,7 +82,6 @@ public class CharacterService {
         // SpecInf 호출을 하기 전 데이터 재파싱
         List<ActualCharacterDto> requestList = new ArrayList<>();
         if (size == 1) {
-            // 리스트가 하나니까 걍 꺼내
             requestList = wowAccountDto.get(0).getCharacters()
                     .stream()
                     .filter(c -> c.getLevel() > 50)
@@ -133,46 +132,47 @@ public class CharacterService {
         for (ActualCharacterDto characterDto : requestList) {
             SpecInfDto specDto = wowClient.getCharacterSpecInf(namespace, bzToken, locale, characterDto.getRealm(), characterDto.getName());
             log.debug("SpecInfRes is {}", specDto);
+
+            // insert를 하기 전 DB에 데이터 검증
+            CharacterEntity targetEntity = characterRespository.findCharacterByCharacterSeNumber(characterDto.getCharacterSeNumber());
+            Long targetCharacterId = null;
+            boolean isCreated = false;
+
+            if (!ObjectUtils.isEmpty(targetEntity)) {
+                targetCharacterId = targetEntity.getCharacterId();
+                isCreated = true;
+            }
+            // 엔티티를 위한 정보를 dto 하나에 합치기
+            characterDto.setSpecialization(specDto.getActive_spec().getName());
+            characterDto.setEquippedItemLevel(specDto.getEquipped_item_level());
+            characterDto.setAverageItemLvel(specDto.getAverage_item_level());
             if (!ObjectUtils.isEmpty(specDto.getCovenant_progress())) {
-
-                // insert를 하기 전 DB에 데이터 검증
-                CharacterEntity targetEntity = characterRespository.findCharacterByCharacterSeNumber(characterDto.getCharacterSeNumber());
-                Long targetCharacterId = null;
-                boolean isCreated = false;
-
-                if (!ObjectUtils.isEmpty(targetEntity)) {
-                    targetCharacterId = targetEntity.getCharacterId();
-                    isCreated = true;
-                }
-                // 엔티티를 위한 정보를 dto 하나에 합치기
-                characterDto.setSpecialization(specDto.getActive_spec().getName());
-                characterDto.setEquippedItemLevel(specDto.getEquipped_item_level());
-                characterDto.setAverageItemLvel(specDto.getAverage_item_level());
                 characterDto.setExpansionOption(specDto.getCovenant_progress().getChosenCovenant().getName());
                 characterDto.setExpansionOptionLevel(specDto.getCovenant_progress().getRenownLevel());
-                dtoList.add(characterDto);
-
-                CharacterEntity characterEntity = CharacterEntity.builder()
-                        .accountEntity(accountEntity)
-                        .characterId(isCreated ? targetCharacterId : null)
-                        .characterSeNumber(characterDto.getCharacterSeNumber())
-                        .name(characterDto.getName())
-                        .level(characterDto.getLevel())
-                        .playableClass(characterDto.getPlayableClass())
-                        .specialization(characterDto.getSpecialization())
-                        .race(characterDto.getRace())
-                        .gender(characterDto.getGender())
-                        .faction(characterDto.getFaction())
-                        .equippedItemLevel(characterDto.getEquippedItemLevel())
-                        .averageItemLvel(characterDto.getAverageItemLvel())
-                        .slug(characterDto.getSlug())
-                        .lastCrawledAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                        .expansionOption(characterDto.getExpansionOption())
-                        .expansionOptionLevel(characterDto.getExpansionOptionLevel())
-                        .build();
-
-                characterRespository.save(characterEntity);
             }
+            ;
+            dtoList.add(characterDto);
+
+            CharacterEntity characterEntity = CharacterEntity.builder()
+                    .accountEntity(accountEntity)
+                    .characterId(isCreated ? targetCharacterId : null)
+                    .characterSeNumber(characterDto.getCharacterSeNumber())
+                    .name(characterDto.getName())
+                    .level(characterDto.getLevel())
+                    .playableClass(characterDto.getPlayableClass())
+                    .specialization(characterDto.getSpecialization())
+                    .race(characterDto.getRace())
+                    .gender(characterDto.getGender())
+                    .faction(characterDto.getFaction())
+                    .equippedItemLevel(characterDto.getEquippedItemLevel())
+                    .averageItemLvel(characterDto.getAverageItemLvel())
+                    .slug(characterDto.getSlug())
+                    .lastCrawledAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                    .expansionOption(characterDto.getExpansionOption())
+                    .expansionOptionLevel(characterDto.getExpansionOptionLevel())
+                    .build();
+
+            characterRespository.save(characterEntity);
             // Battle.Net API의 특성상 텀을 두고 Request를 보내야한다.
             Thread.sleep(2500L);
         }

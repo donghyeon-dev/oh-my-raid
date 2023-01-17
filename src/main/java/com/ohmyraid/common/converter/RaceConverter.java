@@ -78,7 +78,7 @@ public class RaceConverter implements AttributeConverter<String, Integer> {
             case "기계노움":
                 value = 37;
                 break;
-            case "드렉티르":
+            case "드랙티르":
                 value = 38;
                 break;
             default:
