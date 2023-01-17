@@ -23,12 +23,12 @@ public class ThreadLocalTest {
     private static ThreadLocal<Map<Object, Object>> threadLocal = new ThreadLocal();
 
     @Test
-    public void ThreadLocal_add_test(){
+    public void ThreadLocal_add_test() {
         log.debug("ThreadLocal_add_test :: Started");
 
         Map<Object, Object> threadInfo = new HashMap<>();
         threadLocal.set(threadInfo);
-        threadLocal.get().put("token","abcdef");
+        threadLocal.get().put("token", "abcdef");
 
         String token = threadLocal.get().get("token").toString();
 
@@ -36,12 +36,12 @@ public class ThreadLocalTest {
     }
 
     @Test
-    public void ThreadLocal_CustomUtilTest(){
+    public void ThreadLocal_CustomUtilTest() {
         ThreadInfDto threadInfDto = new ThreadInfDto();
         threadInfDto.setAccessToken("abcdef");
-        ThreadLocalUtils.add(Constant.ThreadLocal.THREAD_INF, threadInfDto);
+        ThreadLocalUtils.add(Constant.THREAD_INF, threadInfDto);
 
-        log.debug("Thread's ThreadInfoVo is {}",ThreadLocalUtils.getThreadInfo());
+        log.debug("Thread's ThreadInfoVo is {}", ThreadLocalUtils.getThreadInfo());
     }
 
 }

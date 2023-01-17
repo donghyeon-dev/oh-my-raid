@@ -15,7 +15,7 @@ public class ThreadLocalUtils {
     private static ThreadLocal<Map<Object, Object>> threadLocal = new ThreadLocal();
 
     public static ThreadInfDto getThreadInfo() {
-        return (ThreadInfDto) get(Constant.ThreadLocal.THREAD_INF);
+        return (ThreadInfDto) get(Constant.THREAD_INF);
 
     }
 

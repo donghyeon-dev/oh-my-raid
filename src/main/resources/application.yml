@@ -65,7 +65,7 @@ project:
   interceptor:
     authentication:
       add-path: /**
-      exclude-path: /swagger-ui.html,/swagger-ui.html/**,/account/signup,/login,/error,/null/swagger-resources/**,/swagger*,/swagger*/**,/webjars/**,/login/**
+      exclude-path: /swagger-ui.html,/swagger-ui.html/**,/account/signup,/login,/error,/null/swagger-resources/**,/swagger*,/swagger*/**,/webjars/**,/login/**,party/**
 
 # Swagger 설정
 #springfox:
