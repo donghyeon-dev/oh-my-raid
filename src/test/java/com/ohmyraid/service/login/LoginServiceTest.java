@@ -1,4 +1,4 @@
-package com.ohmyraid.service;
+package com.ohmyraid.service.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ohmyraid.dto.login.LoginInpDto;
@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -26,10 +25,10 @@ public class LoginServiceTest {
     private static final Logger log = LoggerFactory.getLogger(LoginServiceTest.class);
 
     @Autowired
-     MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @Autowired
-     ObjectMapper objectMapper;
+    ObjectMapper objectMapper;
 
     @Test
     void InvalidPassword__sholud_pass_with_error_result() throws Exception {
@@ -38,9 +37,9 @@ public class LoginServiceTest {
         inpVo.setPassword("test123");
 
         mockMvc.perform(post("/login")
-                .header("Origin","*")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(inpVo))
+                        .header("Origin", "*")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(inpVo))
                 )
                 .andDo(print());
     }
@@ -52,10 +51,10 @@ public class LoginServiceTest {
         inpVo.setPassword("test123");
 
         mockMvc.perform(post("/login")
-                .header("Origin","*")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(inpVo))
-        )
+                        .header("Origin", "*")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(inpVo))
+                )
                 .andDo(print());
     }
 }
