@@ -342,5 +342,9 @@ public class CharacterService {
         return raidEncounterRepository.findCharacterRaidInfoByCharacterId(characterId, accountId);
     }
 
+    public List<CharacterRaidInfoDto> getSpecificCharacterEncounterInfo(long characterId) {
+        return null;
+    }
+
     ;
 }

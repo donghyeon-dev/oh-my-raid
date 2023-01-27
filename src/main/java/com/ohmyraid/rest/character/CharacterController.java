@@ -23,8 +23,14 @@ public class CharacterController {
 
 
     @GetMapping("/{accountId}/{characterId}/raid-info")
-    @ApiOperation(value = "본인계정의 특정 캐릭터 레이드 정보 가져오기", notes = "선택왼 캐릭터의 레이드 정보를 반환한다.")
+    @ApiOperation(value = "본인계정의 특정 캐릭터 레이드 정보 가져오기", notes = "선택된 캐릭터의 레이드 정보를 반환한다.")
     public ResultView<List<CharacterRaidInfoDto>> getSpecificCharacterRaidInfo(@PathVariable long characterId, @PathVariable long accountId) throws Exception {
         return new ResultView<List<CharacterRaidInfoDto>>(characterService.getSpecificCharacterRaidInfo(characterId, accountId));
+    }
+
+    @GetMapping("/{characterId}")
+    @ApiOperation(value = "특정 캐릭터의 전체 정보 가져오기", notes = "선택된 캐릭터의 캐릭터정보/레이드 정보를 반환한다.")
+    public ResultView<List<CharacterRaidInfoDto>> getSpecificCharacterEncounterInfo(@PathVariable long characterId) throws Exception {
+        return new ResultView<List<CharacterRaidInfoDto>>(characterService.getSpecificCharacterEncounterInfo(characterId));
     }
 }

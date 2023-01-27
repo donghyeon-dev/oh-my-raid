@@ -1,6 +1,7 @@
 package com.ohmyraid.service.character;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,18 @@ public class CharacterServiceTest {
     ObjectMapper mapper;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private CharacterService characterService;
+
+    @Test
+    void getSpecificCharacterEncounterInfo() {
+        //given
+        long characterId = 6;
+        String expansionName = "Battle For Azeroth";
+        //when
+
+        //then
+    }
 
 
 }
