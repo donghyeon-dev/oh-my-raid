@@ -14,9 +14,14 @@ services:
     command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
     volumes:
       - /Users/autocat/dev/Personal/docker-mysql
+
   redis:
     image: redis
     container_name: omr-redis
     ports:
       - "46379:6379"
 
+  #Grafana
+
+
+  #Prometheus
