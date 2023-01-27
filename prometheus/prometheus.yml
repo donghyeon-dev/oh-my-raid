@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 5s # 5초마다 메트릭을 수집(default 1m)
+  evaluation_interval: 1m # 1분마다 규칙을 판단(default 1m)
+  external_labels:
+    monitor: 'omr-monitoring'
+
+#규칙로딩 및 위에 설정한 interval에 따라 규칙을 판단하는데 그 규칙들을 적는것같
+rule_files:
+
+# 매트릭을 수집할 엔드포이트로 여기선 Prometheus 서버 자신을 가르킨다.
+scrape_configs:
+  - job_name: 'prometheus' # 이 설정에서 수집한 타임시리즈에 job_name으로 잡의 이름을 설정한다
+    # metrics_path의 기본경로는 '/metrics/ 이고 schme 의 기본값은 'http'이다
+    static_configs:
+      - targets: ['host.docker.internal:9090'] # 도커 내부라면 host.docker.internal
+  - job_name: 'omr'
+    metrics_path: '/actuator/metrics'
+    static_configs:
+      - targets: ['127.0.0.1:8880']
+      - targets: ['docker.host.internal:8880']
+      - targets: ['localhost:8880']

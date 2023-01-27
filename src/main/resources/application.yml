@@ -65,7 +65,7 @@ project:
   interceptor:
     authentication:
       add-path: /**
-      exclude-path: /swagger-ui.html,/swagger-ui.html/**,/account/signup,/login,/error,/null/swagger-resources/**,/swagger*,/swagger*/**,/webjars/**,/login/**,party/**
+      exclude-path: /favicon.ico,/,/csrf,/swagger-ui.html,/swagger-ui.html/**,/account/signup,/login,/error,/null/swagger-resources/**,/swagger*,/swagger*/**,/webjars/**,/login/**,/party/**,/metrics,/actuator/**
 
 # Swagger 설정
 #springfox:
@@ -85,3 +85,17 @@ feign:
         loggerLevel: basic
         connectTimeout: 5000
         readTimeout: 5000
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: ${spring.application.name}

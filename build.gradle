@@ -33,8 +33,9 @@ dependencies {
 
     //MapStruct lombok 보다 상위에 선언해야한다( GeetterSetter가 없을 경우엔 Builder로 사용하기 위해)
     // 하지만 lombok-mapstruct-binding 을 추가해주면 그럴 필요가 없어진다~
-    implementation 'org.mapstruct:mapstruct:1.4.1.Final'
     annotationProcessor "org.mapstruct:mapstruct-processor:1.3.1.Final"
+    implementation 'org.mapstruct:mapstruct:1.4.1.Final'
+
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'
@@ -49,6 +50,7 @@ dependencies {
     }
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     //Redis
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.7.0'
@@ -85,6 +87,11 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
+    // Micrometer Prometheus
+    implementation 'io.micrometer:micrometer-core:1.9.3'
+    implementation 'io.micrometer:micrometer-registry-prometheus:1.9.3'
+
+
 
 }
 
@@ -108,13 +115,20 @@ querydsl {
 sourceSets {
     main.java.srcDir querydslDir
 }
-compileQuerydsl{
-    options.annotationProcessorPath = configurations.querydsl
-}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
     querydsl.extendsFrom compileClasspath
+}
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+/**comileQuerydsl.doFirst 추가*/
+compileQuerydsl.doFirst {
+    if(file(querydslDir).exists() )
+        delete(file(querydslDir))
 }
 //querydsl 추가 끝
