@@ -3,7 +3,7 @@ package com.ohmyraid.service.party;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.domain.party.PartyInfoEntity;
 import com.ohmyraid.dto.party.PartyInpDto;
-import com.ohmyraid.mapper.PartyInfoMapperImpl;
+import com.ohmyraid.mapper.PartyInfoMapper;
 import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.repository.character.CharacterRespository;
 import com.ohmyraid.repository.party.PartyInfoRepository;
@@ -73,11 +73,11 @@ public class PartyInfoService {
 
         List<PartyInfoEntity> partyInfoEntities = partyRepository.findPartyInfoEntitiesByCreateAccountId_AccountId(accountId);
 
-        PartyInfoMapperImpl mapper = new PartyInfoMapperImpl();
+//        PartyInfoMapperImpl mapper = new PartyInfoMapperImpl();
 
         List<PartyInpDto> partyInpDtos = new ArrayList<>();
         for (PartyInfoEntity entity : partyInfoEntities) {
-            PartyInpDto dto = mapper.entityToDto(entity);
+            PartyInpDto dto = PartyInfoMapper.INSTANCE.entityToDto(entity);
             partyInpDtos.add(dto);
         }
 

@@ -12,7 +12,7 @@ import com.ohmyraid.dto.wow_account.SpecInfDto;
 import com.ohmyraid.dto.wow_account.WowAccountDto;
 import com.ohmyraid.dto.wow_raid.*;
 import com.ohmyraid.feign.WowClient;
-import com.ohmyraid.mapper.CharacterMapperImpl;
+import com.ohmyraid.mapper.CharacterMapper;
 import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.repository.character.CharacterRespository;
 import com.ohmyraid.repository.raid.RaidEncounterRepository;
@@ -194,12 +194,11 @@ public class CharacterService {
         List<CharacterEntity> myCharacters =
                 characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevel(accountId);
 
-        CharacterMapperImpl mapper = new CharacterMapperImpl();
 
         List<ActualCharacterDto> resultList = new ArrayList<>();
         for (CharacterEntity entity : myCharacters) {
 //            Entity to DTO 변환
-            ActualCharacterDto dto = mapper.characterEntityToDto(entity);
+            ActualCharacterDto dto = CharacterMapper.INSTANCE.characterEntityToDto(entity);
             resultList.add(dto);
         }
         return resultList;
@@ -241,24 +240,6 @@ public class CharacterService {
         accountRaidInfList = accountRaidInfList.stream()
                 .filter(raidInfList -> raidInfList.getExpansions() != null && !ObjectUtils.isEmpty(raidInfList))
                 .collect(Collectors.toList());
-/**
- for (RaidInfDto infDto : accountRaidInfList) {
- if (infDto.getExpansions() != null) {
- infDto.setExpansions(infDto.getExpansions().stream()
- // 확장팩 범위는 어둠땅
- .filter(
- e -> e != null
- && (e.getExpansion().getName().equals("Shadowlands")
- || e.getExpansion().getName().equals("Battle for Azeroth")
- || e.getExpansion().getName().equals("Legion")
- )
- )
- //                        .filter(e -> e != null && e.getExpansion().getName().equals("Battle for Azeroth"))
- //                        .filter(e -> e != null && e.getExpansion().getName().equals("Legion"))
- .collect(Collectors.toList()));
- }
- }
- **/
         ;
 
 
@@ -337,9 +318,23 @@ public class CharacterService {
         return true;
     }
 
+    /**
+     * 특정 캐릭터의 레이드 정보를 가져온다.
+     *
+     * @param characterId
+     * @param accountId
+     * @return
+     * @throws Exception
+     */
     public List<CharacterRaidInfoDto> getSpecificCharacterRaidInfo(long characterId, long accountId) throws Exception {
 
         return raidEncounterRepository.findCharacterRaidInfoByCharacterId(characterId, accountId);
+    }
+
+
+    public List<CharacterRaidInfoDto> getSpecificCharacterEncounterInfo(long characterId) {
+
+        return null;
     }
 
     ;
