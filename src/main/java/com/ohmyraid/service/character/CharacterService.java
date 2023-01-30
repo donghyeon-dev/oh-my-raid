@@ -3,6 +3,8 @@ package com.ohmyraid.service.character;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.ohmyraid.common.result.CommonServiceException;
+import com.ohmyraid.common.result.ErrorResult;
 import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.domain.raid.RaidEncounterEntity;
@@ -70,6 +72,9 @@ public class CharacterService {
         // 토큰가져오기 및 사용될 변수들 생성
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         String bzToken = redisUtils.getSession(token).getBzAccessToken();
+        if (ObjectUtils.isEmpty(bzToken)) {
+            throw new CommonServiceException(ErrorResult.NO_BZ_TOKEN);
+        }
         AccountEntity accountEntity = accountRepository.findByAccountId(accountId);
 
         // AccountSummary Feign 호출 및 파싱
@@ -215,6 +220,9 @@ public class CharacterService {
         // Token 및 acId 가져오기
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         String bzToken = redisUtils.getSession(token).getBzAccessToken();
+        if (ObjectUtils.isEmpty(bzToken)) {
+            throw new CommonServiceException(ErrorResult.NO_BZ_TOKEN);
+        }
         List<CharacterEntity> myCharacters =
                 characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevel(accountId);
 

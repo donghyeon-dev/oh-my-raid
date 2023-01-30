@@ -9,10 +9,11 @@ public enum ErrorResult implements Result {
     BAD_REQUEST("ESYS004", "service.fail.badrq.msg"), // 서버가 인식할 수 없는 요청 구문입니다.
     NO_SESSION("ESYS005", "service.fail.session.msg"), // 세션이 존재하지 않습니다.
     NO_URL_AUTH("ESYS006", "service.fail.auth.msg"), // 접근 권한이 없습니다.
-    DUP_ID("ESVC007","signup.fail.dup.id.msg"), // 아이디가 중복됩니다
+    DUP_ID("ESVC007", "signup.fail.dup.id.msg"), // 아이디가 중복됩니다
     DUP_NN("ESVC008", "signup.fail.dup.nn.msg"), // 닉네임이 중복됩니다.
     LOGIN_FAIL_INVALID_PW("ESVC009", "login.fail.invalid.pw.msg"), // 아이디 혹은 비밀번호를 확인해주세요.
-    LOGIN_FAIL_NO_ID("ESVC010","login.fail.no.id.msg") // 존재하지 않는 이메일입니다
+    LOGIN_FAIL_NO_ID("ESVC010", "login.fail.no.id.msg"), // 존재하지 않는 이메일입니다
+    NO_BZ_TOKEN("ESVC011", "login.fail.no.bztoken.msg") // 블리자드API 토큰이 존재하지 않습니다.
     ;
 
     private String resultCode;
