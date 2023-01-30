@@ -58,7 +58,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://localhost:5000", "http://localhost:9090");
+                .allowedOrigins("http://localhost:3000", "http://localhost:3030", "http://localhost:5000", "http://host.docker.internal:9090");
     }
 
     @Bean
@@ -98,6 +98,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns(addPath)
                 .excludePathPatterns(excludePath);
     }
+
 
     @Bean
     public WebMvcRequestHandlerProvider webMvcRequestHandlerProvider(

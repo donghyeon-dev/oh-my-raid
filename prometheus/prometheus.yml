@@ -1,3 +1,4 @@
+# docker run -p 9090:9090 -v /Users/autocat/dev/Personal/omr/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
 global:
   scrape_interval: 5s # 5초마다 메트릭을 수집(default 1m)
   evaluation_interval: 1m # 1분마다 규칙을 판단(default 1m)
@@ -12,10 +13,8 @@ scrape_configs:
   - job_name: 'prometheus' # 이 설정에서 수집한 타임시리즈에 job_name으로 잡의 이름을 설정한다
     # metrics_path의 기본경로는 '/metrics/ 이고 schme 의 기본값은 'http'이다
     static_configs:
-      - targets: ['host.docker.internal:9090'] # 도커 내부라면 host.docker.internal
+      - targets: ['localhost:9090']
   - job_name: 'omr'
-    metrics_path: '/actuator/metrics'
+    metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['127.0.0.1:8880']
-      - targets: ['docker.host.internal:8880']
-      - targets: ['localhost:8880']
+      - targets: ['host.docker.internal:8880'] # 도커 내부에서 localhost로 접속하기 위해선 이와 같은 DNS로 연결해야함
