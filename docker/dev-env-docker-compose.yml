@@ -1,8 +1,8 @@
 # Docker-compose to set omr dev environment
 
 version: '2'
-
 services:
+  #Mysql
   database:
     image: mysql
     container_name: omr-mysql
@@ -14,14 +14,33 @@ services:
     command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
     volumes:
       - /Users/autocat/dev/Personal/docker-mysql
-
+  #Redis
   redis:
     image: redis
     container_name: omr-redis
     ports:
       - "46379:6379"
-
-  #Grafana
-
-
   #Prometheus
+  prometheus:
+    container_name: omr-prometheus
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - /Users/autocat/dev/Personal/omr/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    restart: always
+  #Grafana
+  grafana:
+    container_name: omr-grafana
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - /Users/autocat/dev/Personal/docker-volume/grafana:/config_files
+    restart: always
+    depends_on:
+      - prometheus
+    privileged: true
+
