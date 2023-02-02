@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper//(uses = {CharacterResolver.class})
 public interface CharacterMapper {
 
@@ -17,6 +19,10 @@ public interface CharacterMapper {
     @Mapping(target = "realm", ignore = true)
     @Mapping(source = "accountEntity.accountId", target = "accountId")
     ActualCharacterDto characterEntityToDto(CharacterEntity characterEntity);
+
+    List<ActualCharacterDto> characterEntitiesToDtoList(List<CharacterEntity> characterEntity);
+
+    List<CharacterEntity> dtoListToCharacterEntities(List<ActualCharacterDto> characterEntity);
 
 
 }

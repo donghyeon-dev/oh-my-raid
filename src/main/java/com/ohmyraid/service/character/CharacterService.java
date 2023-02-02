@@ -48,7 +48,6 @@ public class CharacterService {
     private final RedisUtils redisUtils;
     private final ObjectMapper mapper;
     private final ConvertUtils convertUtils;
-
     private final JPAQueryFactory queryFactory;
 
     @Value("${bz.namespace}")
@@ -79,58 +78,13 @@ public class CharacterService {
 
         // AccountSummary Feign 호출 및 파싱
         Map<String, Object> resultSummary = wowClient.getAccountProfileSummary(namespace, locale, bzToken, region);
-        List<WowAccountDto> wowAccountDto = mapper.convertValue(resultSummary.get("wow_accounts")
-                , TypeFactory.defaultInstance().constructCollectionType(List.class, WowAccountDto.class));
+        List<WowAccountDto> wowAccountDto = mapper.convertValue(resultSummary.get("wow_accounts"),
+                TypeFactory.defaultInstance().constructCollectionType(List.class, WowAccountDto.class));
         log.debug("wowAccountDto is {}", wowAccountDto);
-        int size = wowAccountDto.size();
 
         // SpecInf 호출을 하기 전 데이터 재파싱
-        List<ActualCharacterDto> requestList = new ArrayList<>();
-        if (size == 1) {
-            requestList = wowAccountDto.get(0).getCharacters()
-                    .stream()
-                    .filter(c -> c.getLevel() > 50)
-                    .map(
-                            c -> {
-                                ActualCharacterDto characterDto = new ActualCharacterDto();
-                                characterDto.setCharacterSeNumber(c.getId());
-                                characterDto.setAccountId(accountEntity.getAccountId());
-                                characterDto.setName(c.getName().toLowerCase());
-                                characterDto.setLevel(c.getLevel());
-                                characterDto.setPlayableClass(c.getPlayableClass().getName());
-                                characterDto.setRace(c.getPlayableRace().getName());
-                                characterDto.setSlug(c.getRealm().getName());
-                                characterDto.setRealm(c.getRealm().getSlug());
-                                characterDto.setFaction(c.getFaction().getName());
-                                characterDto.setGender(c.getGender().getName());
-                                return characterDto;
-                            })
-                    .collect(Collectors.toList());
-        } else {
-            // 리스트가 여러개라면 반복문을 통해 reqDto를 뽑아낸다.
-            for (WowAccountDto dto : wowAccountDto) {
-                ActualCharacterDto characterDto = new ActualCharacterDto();
-                dto.getCharacters()
-                        .stream()
-                        .filter(c -> c.getLevel() > 50)
-                        .map(
-                                c -> {
-                                    characterDto.setCharacterSeNumber(c.getId());
-                                    characterDto.setAccountId(accountEntity.getAccountId());
-                                    characterDto.setName(c.getName().toLowerCase());
-                                    characterDto.setLevel(c.getLevel());
-                                    characterDto.setPlayableClass(c.getPlayableClass().getName());
-                                    characterDto.setRace(c.getPlayableRace().getName());
-                                    characterDto.setSlug(c.getRealm().getName());
-                                    characterDto.setRealm(c.getRealm().getSlug());
-                                    characterDto.setFaction(c.getFaction().getName());
-                                    return characterDto;
-                                });
-                requestList.add(characterDto);
-            }
-            ;
-        }
-        ;
+        List<ActualCharacterDto> requestList = wowAccountToActualCharacter(wowAccountDto, accountId);
+
         log.debug("SpecInfReqDto is {}", requestList);
 
         List<ActualCharacterDto> dtoList = new ArrayList<>();
@@ -200,12 +154,8 @@ public class CharacterService {
                 characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevel(accountId);
 
 
-        List<ActualCharacterDto> resultList = new ArrayList<>();
-        for (CharacterEntity entity : myCharacters) {
-//            Entity to DTO 변환
-            ActualCharacterDto dto = CharacterMapper.INSTANCE.characterEntityToDto(entity);
-            resultList.add(dto);
-        }
+        List<ActualCharacterDto> resultList = CharacterMapper.INSTANCE.characterEntitiesToDtoList(myCharacters);
+        
         return resultList;
 
     }
@@ -225,73 +175,10 @@ public class CharacterService {
         }
         List<CharacterEntity> myCharacters =
                 characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevel(accountId);
-
-        // 캐릭터 정보들 Stream을 돌려 RaidEncounter List 생성
-        List<RaidInfDto> accountRaidInfList = myCharacters.stream()
-                .map(
-                        c -> {
-                            RaidInfDto result =
-                                    wowClient.getRaidEncounter(namespace, bzToken, locale, convertUtils.krSlugToEng(c.getSlug()),
-                                            c.getName());
-                            try {
-                                // BlizzardAPI의 빠른 호출 방지를 위한...
-                                Thread.sleep(3000L);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            result.setCharacterId(c.getCharacterId());
-                            return result;
-                        }
-                ).collect(Collectors.toList());
-        // 필터링
-        log.debug("accountRaidInfList is {}", accountRaidInfList);
-        accountRaidInfList = accountRaidInfList.stream()
-                .filter(raidInfList -> raidInfList.getExpansions() != null && !ObjectUtils.isEmpty(raidInfList))
-                .collect(Collectors.toList());
-        ;
+        List<ActualCharacterDto> actualCharacterDtos = CharacterMapper.INSTANCE.characterEntitiesToDtoList(myCharacters);
 
 
-        // stream으론 답이 안나온다.. 중첩된 For문을 사용하는 수밖에...
-        List<RaidEncounterDto> encounterDtoList = new ArrayList<>();
-        for (RaidInfDto raidInfDto : accountRaidInfList) {
-
-            long characterId = raidInfDto.getCharacterId();
-
-
-            List<ExpansionsDto> expansionsList = raidInfDto.getExpansions();
-            expansionsList = expansionsList.stream()
-                    .filter(expansionDto -> !ObjectUtils.isEmpty(expansionDto))
-                    .collect(Collectors.toList());
-
-            if (!ObjectUtils.isEmpty(expansionsList)) {
-                for (ExpansionsDto expansionDto : expansionsList) {
-                    String expansionName = expansionDto.getExpansion().getName();
-
-
-                    List<InstancesDto> instancesList = expansionDto.getInstances();
-                    for (InstancesDto instancesDto : instancesList) {
-                        String instanceName = instancesDto.getInstance().getName();
-
-
-                        List<ModesDto> difficultyList = instancesDto.getModes().stream()
-                                .filter(m -> !m.getDifficulty().getType().equals("LFR"))
-                                .collect(Collectors.toList()); // LFR = 공찾
-                        for (ModesDto modeDto : difficultyList) {
-                            RaidEncounterDto raidEncounterDto = new RaidEncounterDto();
-                            raidEncounterDto.setCharacterId(characterId);
-                            raidEncounterDto.setExpansionName(expansionName);
-                            raidEncounterDto.setInstanceName(instanceName);
-
-                            raidEncounterDto.setDifficulty(modeDto.getDifficulty().getType());
-                            raidEncounterDto.setProgress(convertUtils.progressToString(modeDto.getProgress()));
-                            encounterDtoList.add(raidEncounterDto);
-                        }
-
-                    }
-                }
-            }
-
-        }
+        List<RaidEncounterDto> encounterDtoList = accountRaidInfoToRaidEncounter(actualCharacterDtos, bzToken);
 
         List<RaidEncounterEntity> raidEncounterEntities = new ArrayList<>();
         if (!ObjectUtils.isEmpty(encounterDtoList)) {
@@ -346,4 +233,102 @@ public class CharacterService {
     }
 
     ;
+
+
+    List<ActualCharacterDto> wowAccountToActualCharacter(List<WowAccountDto> wowAccountDto, long accountId) {
+        List<ActualCharacterDto> requestList = new ArrayList<>();
+        for (WowAccountDto dto : wowAccountDto) {
+            ActualCharacterDto characterDto = new ActualCharacterDto();
+            dto.getCharacters()
+                    .stream()
+                    .filter(c -> c.getLevel() > 50)
+                    .map(
+                            c -> {
+                                characterDto.setCharacterSeNumber(c.getId());
+                                characterDto.setAccountId(accountId);
+                                characterDto.setName(c.getName().toLowerCase());
+                                characterDto.setLevel(c.getLevel());
+                                characterDto.setPlayableClass(c.getPlayableClass().getName());
+                                characterDto.setRace(c.getPlayableRace().getName());
+                                characterDto.setSlug(c.getRealm().getName());
+                                characterDto.setRealm(c.getRealm().getSlug());
+                                characterDto.setFaction(c.getFaction().getName());
+                                return characterDto;
+                            });
+            requestList.add(characterDto);
+        }
+        ;
+
+        return requestList;
+    }
+
+    List<RaidEncounterDto> accountRaidInfoToRaidEncounter(List<ActualCharacterDto> actualCharacterDtos, String bzToken) {
+        List<RaidEncounterDto> encounterDtoList = new ArrayList<>();
+
+        // 캐릭터 정보들 Stream을 돌려 RaidEncounter List 생성
+        List<RaidInfDto> accountRaidInfList = actualCharacterDtos.stream()
+                .map(
+                        c -> {
+                            RaidInfDto result =
+                                    wowClient.getRaidEncounter(namespace, bzToken, locale, convertUtils.krSlugToEng(c.getSlug()),
+                                            c.getName());
+                            try {
+                                // BlizzardAPI의 빠른 호출 방지를 위한...
+                                Thread.sleep(3000L);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            result.setCharacterId(c.getCharacterId());
+                            return result;
+                        }
+                ).collect(Collectors.toList());
+        // 필터링
+        log.debug("accountRaidInfList is {}", accountRaidInfList);
+        accountRaidInfList = accountRaidInfList.stream()
+                .filter(raidInfList -> raidInfList.getExpansions() != null && !ObjectUtils.isEmpty(raidInfList))
+                .collect(Collectors.toList());
+
+        // stream으론 답이 안나온다.. 중첩된 For문을 사용하는 수밖에...
+
+        for (RaidInfDto raidInfDto : accountRaidInfList) {
+
+            long characterId = raidInfDto.getCharacterId();
+
+
+            List<ExpansionsDto> expansionsList = raidInfDto.getExpansions();
+            expansionsList = expansionsList.stream()
+                    .filter(expansionDto -> !ObjectUtils.isEmpty(expansionDto))
+                    .collect(Collectors.toList());
+
+            if (!ObjectUtils.isEmpty(expansionsList)) {
+                for (ExpansionsDto expansionDto : expansionsList) {
+                    String expansionName = expansionDto.getExpansion().getName();
+
+
+                    List<InstancesDto> instancesList = expansionDto.getInstances();
+                    for (InstancesDto instancesDto : instancesList) {
+                        String instanceName = instancesDto.getInstance().getName();
+
+
+                        List<ModesDto> difficultyList = instancesDto.getModes().stream()
+                                .filter(m -> !m.getDifficulty().getType().equals("LFR"))
+                                .collect(Collectors.toList()); // LFR = 공찾
+                        for (ModesDto modeDto : difficultyList) {
+                            RaidEncounterDto raidEncounterDto = new RaidEncounterDto();
+                            raidEncounterDto.setCharacterId(characterId);
+                            raidEncounterDto.setExpansionName(expansionName);
+                            raidEncounterDto.setInstanceName(instanceName);
+
+                            raidEncounterDto.setDifficulty(modeDto.getDifficulty().getType());
+                            raidEncounterDto.setProgress(convertUtils.progressToString(modeDto.getProgress()));
+                            encounterDtoList.add(raidEncounterDto);
+                        }
+
+                    }
+                }
+            }
+
+        }
+        return encounterDtoList;
+    }
 }
