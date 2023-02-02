@@ -22,7 +22,7 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:43306/omr
+    url: jdbc:mysql://localhost:43306/omr?serverTimezone=Asia/Seoul
     username: root
     password: omraid
   jpa:
