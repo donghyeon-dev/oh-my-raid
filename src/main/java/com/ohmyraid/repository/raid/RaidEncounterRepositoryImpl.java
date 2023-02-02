@@ -1,6 +1,6 @@
 package com.ohmyraid.repository.raid;
 
-import com.ohmyraid.domain.character.QCharacterEntity;
+import com.ohmyraid.domain.character.QCharacterEntity ;
 import com.ohmyraid.domain.raid.QRaidEncounterEntity;
 import com.ohmyraid.domain.raid.RaidEncounterEntity;
 import com.ohmyraid.dto.character.CharacterRaidInfoDto;

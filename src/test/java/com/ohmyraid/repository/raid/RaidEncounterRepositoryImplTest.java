@@ -40,7 +40,7 @@ class RaidEncounterRepositoryImplTest {
     @Test
     void findByENcounterID_QueryDSL테스트() {
         // 187 NORMAL BattleForAzeroth Crucible of Storms 8/8 1
-        long encounterId = 181;
+        long encounterId = 558;
         RaidEncounterEntity targetEntity = repository.findByEncounterId(encounterId);
 
 

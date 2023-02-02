@@ -9,4 +9,6 @@ public interface PartyInfoRepository extends JpaRepository<PartyInfoEntity, Long
 
     public List<PartyInfoEntity> findPartyInfoEntitiesByCreateAccountId_AccountId(long createAccountId);
 
+    public PartyInfoEntity findPartyInfoEntityByPartyId(long partyId);
+
 }

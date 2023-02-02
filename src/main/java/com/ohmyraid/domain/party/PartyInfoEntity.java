@@ -56,4 +56,18 @@ public class PartyInfoEntity {
     private LocalDateTime recruitUntil;
 
 
+    public void update(String instanceName, String difficulty, int requiredMembers, int times, String memberCapacity,
+                       String subject, String contents, String slug, LocalDateTime startAt, LocalDateTime recruitUntil) {
+        this.instanceName = instanceName;
+        this.difficulty = difficulty;
+        this.requiredMembers = requiredMembers;
+        this.times = times;
+        this.memberCapacity = memberCapacity;
+        this.subject = subject;
+        this.contents = contents;
+        this.slug = slug;
+        this.startAt = startAt;
+        this.recruitUntil = recruitUntil;
+    }
+
 }

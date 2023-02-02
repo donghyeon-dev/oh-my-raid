@@ -1,8 +1,11 @@
 package com.ohmyraid.service.party;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.ohmyraid.common.result.CommonInvalidInputException;
+import com.ohmyraid.common.result.CommonServiceException;
+import com.ohmyraid.common.result.ErrorResult;
 import com.ohmyraid.domain.party.PartyInfoEntity;
-import com.ohmyraid.dto.party.PartyInpDto;
+import com.ohmyraid.dto.party.PartyInfoDto;
 import com.ohmyraid.mapper.PartyInfoMapper;
 import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.repository.character.CharacterRespository;
@@ -13,6 +16,7 @@ import com.ohmyraid.utils.ThreadLocalUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +41,7 @@ public class PartyInfoService {
      * @param inpDto
      * @return
      */
-    public long insertPartyInfo(PartyInpDto inpDto) throws JsonProcessingException {
+    public long insertPartyInfo(PartyInfoDto inpDto) throws JsonProcessingException {
 
         // 쓰레드로컬에서 토큰 가져오기
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
@@ -69,20 +73,59 @@ public class PartyInfoService {
      * @param accountId
      * @return
      */
-    public List<PartyInpDto> getPartyInfoListByAccountId(long accountId) {
-
+    public List<PartyInfoDto> getPartyInfoListByAccountId(long accountId) {
         List<PartyInfoEntity> partyInfoEntities = partyRepository.findPartyInfoEntitiesByCreateAccountId_AccountId(accountId);
 
-//        PartyInfoMapperImpl mapper = new PartyInfoMapperImpl();
-
-        List<PartyInpDto> partyInpDtos = new ArrayList<>();
+        List<PartyInfoDto> partyInfoDtos = new ArrayList<>();
         for (PartyInfoEntity entity : partyInfoEntities) {
-            PartyInpDto dto = PartyInfoMapper.INSTANCE.entityToDto(entity);
-            partyInpDtos.add(dto);
+            PartyInfoDto dto = PartyInfoMapper.INSTANCE.entityToDto(entity);
+            partyInfoDtos.add(dto);
         }
 
-        return partyInpDtos;
+        return partyInfoDtos;
     }
 
 
+    /**
+     * 파티정보글을 수정한다
+     * 작성자만 수정이 가능하다.
+     *
+     * @param partyInfoDto
+     * @return
+     */
+    public long updatePartyInfo(PartyInfoDto partyInfoDto) throws JsonProcessingException {
+
+        String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
+        long sessionAccountId = redisUtils.getSession(token).getAccountId();
+
+        //예외
+        if (partyInfoDto.getCreateAccountId() != sessionAccountId) {
+            throw new CommonServiceException(ErrorResult.NO_URL_AUTH);
+        }
+
+        PartyInfoEntity partyInfoEntity = partyRepository.findPartyInfoEntityByPartyId(partyInfoDto.getPartyId());
+        partyInfoEntity.update(partyInfoDto.getInstanceName(), partyInfoDto.getDifficulty(), partyInfoDto.getRequiredMembers(),
+                partyInfoDto.getTimes(), partyInfoDto.getMemberCapacity(), partyInfoDto.getSubject(), partyInfoDto.getContents(),
+                partyInfoDto.getSlug(), datetimeUtils.stringToLocalDateTime(partyInfoDto.getStartAt()),
+                datetimeUtils.stringToLocalDateTime(partyInfoDto.getRecruitUntil()));
+
+        return partyRepository.save(partyInfoEntity).getPartyId();
+    }
+
+    /**
+     * 특정 PartyId의 파티글을 반환한다.
+     *
+     * @param partyId
+     * @return
+     */
+    public PartyInfoDto getPartyInfoByPartyId(long partyId) {
+        if (ObjectUtils.isEmpty(partyId)) {
+            throw new CommonInvalidInputException();
+        }
+
+        PartyInfoEntity partyInfoEntity = partyRepository.findPartyInfoEntityByPartyId(partyId);
+        PartyInfoDto partyInfoDto = PartyInfoMapper.INSTANCE.entityToDto(partyInfoEntity);
+
+        return partyInfoDto;
+    }
 }

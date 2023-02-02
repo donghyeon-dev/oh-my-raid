@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.config.Constant;
 import com.ohmyraid.dto.account.ThreadInfDto;
 import com.ohmyraid.dto.login.RedisDto;
-import com.ohmyraid.dto.party.PartyInpDto;
+import com.ohmyraid.dto.party.PartyInfoDto;
 import com.ohmyraid.repository.party.PartyInfoRepository;
 import com.ohmyraid.utils.DatetimeUtils;
 import com.ohmyraid.utils.RedisUtils;
@@ -52,17 +52,17 @@ class PartyInfoServiceTest {
         redisDto.setAccessToken(token);
         redisUtils.putSession(token, redisDto);
 
-        PartyInpDto partyInpDto = new PartyInpDto();
-        partyInpDto.setSubject("정공인원 모집 (목,금) 저녁 9시 3탐 진행");
-        partyInpDto.setDifficulty("MYTHIC");
-        partyInpDto.setMemberCapacity("확고");
-        partyInpDto.setInstanceName("헌신자의 금고");
-        partyInpDto.setRecruitUntil(("2023-02-26 13:00:00"));
-        partyInpDto.setRequiredMembers(5);
-        partyInpDto.setStartAt(("2023-03-01 19:00:00"));
-        partyInpDto.setTimes(5);
-        partyInpDto.setSlug("아즈샤라");
-        partyInpDto.setContents("신세기 구르비 공대 인원 모집 합니다.\n" +
+        PartyInfoDto partyInfoDto = new PartyInfoDto();
+        partyInfoDto.setSubject("정공인원 모집 (목,금) 저녁 9시 3탐 진행");
+        partyInfoDto.setDifficulty("MYTHIC");
+        partyInfoDto.setMemberCapacity("확고");
+        partyInfoDto.setInstanceName("헌신자의 금고");
+        partyInfoDto.setRecruitUntil(("2023-02-26 13:00:00"));
+        partyInfoDto.setRequiredMembers(5);
+        partyInfoDto.setStartAt(("2023-03-01 19:00:00"));
+        partyInfoDto.setTimes(5);
+        partyInfoDto.setSlug("아즈샤라");
+        partyInfoDto.setContents("신세기 구르비 공대 인원 모집 합니다.\n" +
                 "\n" +
                 "\n" +
                 "현재 영웅 7넴 킬\n" +
@@ -91,7 +91,7 @@ class PartyInfoServiceTest {
                 "\n" +
                 "*바다이야기 길드원도 모집합니다 ^^*");
 
-        partyInfoService.insertPartyInfo(partyInpDto);
+        partyInfoService.insertPartyInfo(partyInfoDto);
 
         // partyInfoService.getPartyInfo(2);
 
@@ -99,9 +99,9 @@ class PartyInfoServiceTest {
 
     @Test
     void getPartyInfoListByAccountId_Test() {
-        List<PartyInpDto> partyInpDtoList = partyInfoService.getPartyInfoListByAccountId(1);
-        System.out.println("partyInpDtoList => " + partyInpDtoList);
-        assertEquals(partyInpDtoList.get(0).getSubject(), "구한다 제목ㅋ");
+        List<PartyInfoDto> partyInfoDtoList = partyInfoService.getPartyInfoListByAccountId(1);
+        System.out.println("partyInpDtoList => " + partyInfoDtoList);
+        assertEquals(partyInfoDtoList.get(0).getSubject(), "구한다 제목ㅋ");
     }
 
 }

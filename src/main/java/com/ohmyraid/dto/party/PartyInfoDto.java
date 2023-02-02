@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @Builder
-public class PartyInpDto {
+public class PartyInfoDto {
 
     @ApiModelProperty(value = "파티아이디", name = "partyId")
     private Long partyId;
