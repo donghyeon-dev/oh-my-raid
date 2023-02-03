@@ -43,3 +43,5 @@ logs/
 /logs
 /logs/
 /src/main/generated/com/ohmyraid/mapper/**
+
+.DS_Store

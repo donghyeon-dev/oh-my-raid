@@ -148,14 +148,13 @@ public class CharacterService {
      * @throws JsonProcessingException
      */
     public List<ActualCharacterDto> getMyCharacter(long accountId) throws JsonProcessingException {
-        // Token 및 acId 가져오기
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         List<CharacterEntity> myCharacters =
                 characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevel(accountId);
 
 
         List<ActualCharacterDto> resultList = CharacterMapper.INSTANCE.characterEntitiesToDtoList(myCharacters);
-        
+
         return resultList;
 
     }
@@ -167,7 +166,6 @@ public class CharacterService {
      * @return
      */
     public Boolean getRaidEncounter(long accountId) throws Exception {
-        // Token 및 acId 가져오기
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         String bzToken = redisUtils.getSession(token).getBzAccessToken();
         if (ObjectUtils.isEmpty(bzToken)) {
