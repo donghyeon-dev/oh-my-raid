@@ -2,6 +2,7 @@ package com.ohmyraid.service.party;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.config.Constant;
+import com.ohmyraid.domain.party.PartyInfoEntity;
 import com.ohmyraid.dto.account.ThreadInfDto;
 import com.ohmyraid.dto.login.RedisDto;
 import com.ohmyraid.dto.party.PartyInfoDto;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -102,6 +104,22 @@ class PartyInfoServiceTest {
         List<PartyInfoDto> partyInfoDtoList = partyInfoService.getPartyInfoListByAccountId(1);
         System.out.println("partyInpDtoList => " + partyInfoDtoList);
         assertEquals(partyInfoDtoList.get(0).getSubject(), "구한다 제목ㅋ");
+    }
+
+    @Test
+    void PartyInfo_update_테스트() {
+        LocalDateTime recruitUntil = LocalDateTime.of(2023, 1, 3, 14, 5);
+        //given
+        PartyInfoEntity partyInfoEntity = partyInfoRepository.findPartyInfoEntityByPartyId(1);
+        //when
+        partyInfoEntity.update("나스리아 성채", "HEROIC", 16, 3
+                , "무관", "민공대머시기머시기 모집중", "내용내용임", "아즈샤라"
+                , LocalDateTime.of(2023, 1, 3, 17, 30), recruitUntil);
+        partyInfoRepository.save(partyInfoEntity);
+        //then
+        assertEquals(partyInfoRepository.findPartyInfoEntityByPartyId(1).getRecruitUntil(),
+                recruitUntil);
+
     }
 
 }
