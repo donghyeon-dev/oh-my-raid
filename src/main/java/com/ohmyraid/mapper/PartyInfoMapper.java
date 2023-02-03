@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface PartyInfoMapper {
 
@@ -16,4 +18,8 @@ public interface PartyInfoMapper {
 
     @Mapping(source = "createAccountId.accountId", target = "createAccountId")
     PartyInfoDto entityToDto(PartyInfoEntity entity);
+
+    List<PartyInfoDto> entityListToDtoList(List<PartyInfoEntity> entity);
+
+    List<PartyInfoEntity> dtoListToEntityList(List<PartyInfoDto> partyInfoDto);
 }

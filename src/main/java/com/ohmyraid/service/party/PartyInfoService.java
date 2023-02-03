@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,9 +42,7 @@ public class PartyInfoService {
      */
     public long insertPartyInfo(PartyInfoDto inpDto) throws JsonProcessingException {
 
-        // 쓰레드로컬에서 토큰 가져오기
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
-        // 레디스를 통해 email 가져오기
         String email = redisUtils.getSession(token).getEmail();
 
         // 엔티티 추가
@@ -76,13 +73,7 @@ public class PartyInfoService {
     public List<PartyInfoDto> getPartyInfoListByAccountId(long accountId) {
         List<PartyInfoEntity> partyInfoEntities = partyRepository.findPartyInfoEntitiesByCreateAccountId_AccountId(accountId);
 
-        List<PartyInfoDto> partyInfoDtos = new ArrayList<>();
-        for (PartyInfoEntity entity : partyInfoEntities) {
-            PartyInfoDto dto = PartyInfoMapper.INSTANCE.entityToDto(entity);
-            partyInfoDtos.add(dto);
-        }
-
-        return partyInfoDtos;
+        return PartyInfoMapper.INSTANCE.entityListToDtoList(partyInfoEntities);
     }
 
 
