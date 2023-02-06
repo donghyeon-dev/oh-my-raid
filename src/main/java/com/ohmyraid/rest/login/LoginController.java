@@ -2,14 +2,16 @@ package com.ohmyraid.rest.login;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.common.wrapper.ResultView;
-import com.ohmyraid.dto.auth.StoreAtReqDto;
 import com.ohmyraid.dto.login.LoginInpDto;
 import com.ohmyraid.dto.login.RedisDto;
 import com.ohmyraid.service.login.LoginService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/login")
@@ -32,17 +34,5 @@ public class LoginController {
      * @param code
      * @return
      */
-    @GetMapping(value = "/oauth")
-    @ApiOperation(value = "Blizzard oauth 인증", notes = "oAuth Credential Code를 통해 AccessToken 발급")
-    public ResultView<String> oauth(@RequestParam(value = "code") String code) throws JsonProcessingException {
-        log.debug("Code is {}", code);
-
-        return new ResultView<>(loginService.getAccessToken(code));
-    }
-
-    @PostMapping(value = "/oauth/storeAccessToken")
-    @ApiOperation(value = "BlizzardAccessToken 저장", notes = "AccessToken을 해당 세션에 저장한다.")
-    public ResultView<Boolean> storeAccessToken(@RequestBody StoreAtReqDto reqDto) throws JsonProcessingException {
-        return new ResultView<>(loginService.storeAccessToken(reqDto));
-    }
+    
 }

@@ -4,25 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.common.result.CommonServiceException;
 import com.ohmyraid.common.result.ErrorResult;
 import com.ohmyraid.domain.account.AccountEntity;
-import com.ohmyraid.dto.auth.AuthDto;
-import com.ohmyraid.dto.auth.AuthRequestDto;
-import com.ohmyraid.dto.auth.CheckTokenDto;
-import com.ohmyraid.dto.auth.StoreAtReqDto;
 import com.ohmyraid.dto.login.LoginInpDto;
 import com.ohmyraid.dto.login.RedisDto;
-import com.ohmyraid.feign.BattlenetClient;
 import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.utils.CryptoUtils;
 import com.ohmyraid.utils.JwtUtils;
 import com.ohmyraid.utils.RedisUtils;
-import com.ohmyraid.utils.ThreadLocalUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -31,20 +22,9 @@ public class LoginService {
 
     private final AccountRepository accountRepository;
 
-    private final BattlenetClient battlenetClient;
-
     private final JwtUtils jwtUtils;
 
     private final RedisUtils redisUtils;
-
-    @Value("${bz.redirect-uri}")
-    private final String REDIRECT_URI = null;
-
-    @Value("${bz.grant-type}")
-    private final String GRANT_TYPE = null;
-
-    @Value("${bz.scope}")
-    private final String SCOPE = null;
 
 
     /**
@@ -84,56 +64,5 @@ public class LoginService {
         }
     }
 
-    /**
-     * ToDo 여기 있어야 할게 아님.... 나중에 BLIZZARD 연동 계정 정보 가져오기 이런 기능을 만들면 옮겨야함
-     * oAuth Credential_Code 방식을 이용해 AccessToken을 가져온다.
-     *
-     * @param code
-     * @return
-     */
-    public String getAccessToken(String code) throws JsonProcessingException {
-        String AUTH = CryptoUtils.getAuthValue();
-
-        AuthRequestDto authRequestDto = AuthRequestDto.builder()
-                .grant_type(GRANT_TYPE)
-                .redirect_uri(REDIRECT_URI)
-                .scope(SCOPE)
-                .code(code)
-                .build();
-
-        AuthDto tokenRes = battlenetClient.getAccessToken(authRequestDto, AUTH);
-        log.debug("TokenRes is {}", tokenRes);
-
-        return tokenRes.getAccess_token();
-    }
-
-    ;
-
-    public Boolean storeAccessToken(StoreAtReqDto reqDto) throws JsonProcessingException {
-        String bzToken = reqDto.getAccessToken();
-        String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
-        log.debug("Bllizzard Token is {}", bzToken);
-
-        CheckTokenDto body = new CheckTokenDto();
-        body.setRegion("KR");
-        body.setToken(bzToken);
-        Map<String, Object> checkTokenResult = battlenetClient.checkToken(body);
-
-        if (!ObjectUtils.isEmpty(checkTokenResult)) {
-            int exp = (int) checkTokenResult.get("exp");
-            int now = (int) (System.currentTimeMillis() / 1000);
-            if (exp > now) {
-                // session에 bz AccessToken을 등록
-                RedisDto redisDto = redisUtils.getSession(token);
-                redisDto.setBzAccessToken(bzToken);
-                redisUtils.putSession(token, redisDto);
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
 
 }
