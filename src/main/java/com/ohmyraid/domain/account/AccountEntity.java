@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.*;
 
@@ -28,6 +29,15 @@ public class AccountEntity {
     @Column(length = 25, nullable = false, unique = true)
     private String nickname;
 
+    public void updatePassword(String password) {
+        if (!ObjectUtils.isEmpty(password))
+            this.password = password;
+    }
+
+    public void updateNickname(String nickname) {
+        if (!ObjectUtils.isEmpty(nickname))
+            this.nickname = nickname;
+    }
 }
 
 

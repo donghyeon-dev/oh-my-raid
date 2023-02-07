@@ -12,6 +12,6 @@ public class LoginInpDto {
     @ApiModelProperty(example = "donghyeondev@gmail.com")
     private String email;
 
-    @ApiModelProperty(example = "qkrgus0712!")
+    @ApiModelProperty(value = "비밀번호", name = "password")
     private String password;
 }

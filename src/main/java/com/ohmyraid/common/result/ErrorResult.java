@@ -13,7 +13,8 @@ public enum ErrorResult implements Result {
     DUP_NN("ESVC008", "signup.fail.dup.nn.msg"), // 닉네임이 중복됩니다.
     LOGIN_FAIL_INVALID_PW("ESVC009", "login.fail.invalid.pw.msg"), // 아이디 혹은 비밀번호를 확인해주세요.
     LOGIN_FAIL_NO_ID("ESVC010", "login.fail.no.id.msg"), // 존재하지 않는 이메일입니다
-    NO_BZ_TOKEN("ESVC011", "login.fail.no.bztoken.msg") // 블리자드API 토큰이 존재하지 않습니다.
+    NO_BZ_TOKEN("ESVC011", "login.fail.no.bztoken.msg"), // 블리자드API 토큰이 존재하지 않습니다.
+    INVALID_PASSWORD("ESVC012", "login.fail.invalid.pw") // 비밀번호가 일치하지 않습니다.
     ;
 
     private String resultCode;
