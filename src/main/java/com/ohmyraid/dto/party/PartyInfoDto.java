@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * PartyInfoEntity Entity 의 DT 를 도와주는 DTO 클래스
  */
@@ -42,10 +44,10 @@ public class PartyInfoDto {
     private String contents;
 
     @ApiModelProperty(value = "출발시간", name = "startAt")
-    private String startAt;
+    private LocalDateTime startAt;
 
     @ApiModelProperty(value = "모집기간", name = "recruitUntil")
-    private String recruitUntil;
+    private LocalDateTime recruitUntil;
 
     @ApiModelProperty(value = "서버", name = "slug")
     private String slug;

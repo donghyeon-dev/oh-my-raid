@@ -27,7 +27,6 @@ public class PartyInfoService {
 
     private final PartyInfoRepository partyRepository;
     private final AccountRepository accountRepository;
-
     private final CharacterRespository characterRespository;
 
     private final DatetimeUtils datetimeUtils;
@@ -56,8 +55,8 @@ public class PartyInfoService {
                 .contents(inpDto.getContents())
                 .slug(inpDto.getSlug())
                 .createAccountId(accountRepository.findAllByEmail(email))
-                .startAt(datetimeUtils.stringToLocalDateTime(inpDto.getStartAt()))
-                .recruitUntil((datetimeUtils.stringToLocalDateTime(inpDto.getRecruitUntil())))
+                .startAt(inpDto.getStartAt())
+                .recruitUntil((inpDto.getRecruitUntil()))
                 .build();
         return partyRepository.save(partyInfoEntity).getPartyId();
 
@@ -97,8 +96,8 @@ public class PartyInfoService {
         PartyInfoEntity partyInfoEntity = partyRepository.findPartyInfoEntityByPartyId(partyInfoDto.getPartyId());
         partyInfoEntity.update(partyInfoDto.getInstanceName(), partyInfoDto.getDifficulty(), partyInfoDto.getRequiredMembers(),
                 partyInfoDto.getTimes(), partyInfoDto.getMemberCapacity(), partyInfoDto.getSubject(), partyInfoDto.getContents(),
-                partyInfoDto.getSlug(), datetimeUtils.stringToLocalDateTime(partyInfoDto.getStartAt()),
-                datetimeUtils.stringToLocalDateTime(partyInfoDto.getRecruitUntil()));
+                partyInfoDto.getSlug(), partyInfoDto.getStartAt(),
+                partyInfoDto.getRecruitUntil());
 
         return partyRepository.save(partyInfoEntity).getPartyId();
     }
