@@ -1,6 +1,6 @@
 package com.ohmyraid.service.party;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ohmyraid.config.Constant;
 import com.ohmyraid.domain.party.PartyInfoEntity;
 import com.ohmyraid.dto.account.ThreadInfDto;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -35,14 +36,20 @@ class PartyInfoServiceTest {
     private PartyInfoRepository partyInfoRepository;
 
     @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
     private DatetimeUtils datetimeUtils;
 
     @Autowired
     private RedisUtils redisUtils;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     @Test
     @Transactional
-    void PartyInfo_Insert_테스트() throws JsonProcessingException {
+    void PartyInfo_Insert_테스트() throws Exception {
 
         ThreadInfDto threadInfDto = new ThreadInfDto();
         // accessToken은 항상 수정해줘야함 => 뭔가 자동화를 시킬만한게 없을까?
@@ -59,9 +66,9 @@ class PartyInfoServiceTest {
         partyInfoDto.setDifficulty("MYTHIC");
         partyInfoDto.setMemberCapacity("확고");
         partyInfoDto.setInstanceName("헌신자의 금고");
-        partyInfoDto.setRecruitUntil(("2023-02-26 13:00:00"));
+        partyInfoDto.setRecruitUntil(LocalDateTime.of(2023, 2, 26, 13, 0, 0));
         partyInfoDto.setRequiredMembers(5);
-        partyInfoDto.setStartAt(("2023-03-01 19:00:00"));
+        partyInfoDto.setStartAt(LocalDateTime.of(2023, 3, 1, 19, 0, 0));
         partyInfoDto.setTimes(5);
         partyInfoDto.setSlug("아즈샤라");
         partyInfoDto.setContents("신세기 구르비 공대 인원 모집 합니다.\n" +

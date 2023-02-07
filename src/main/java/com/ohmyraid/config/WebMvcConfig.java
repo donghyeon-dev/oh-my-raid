@@ -58,7 +58,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://localhost:3030", "http://localhost:5000", "http://host.docker.internal:9090");
+                .allowedMethods("*")
+                .allowedOrigins("http://localhost:3000", "http://localhost:3030", "http://localhost:5000", "http://host.docker.internal:9090", "http://localhost:8880");
     }
 
     @Bean
