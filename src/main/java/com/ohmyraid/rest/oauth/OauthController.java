@@ -17,14 +17,14 @@ public class OauthController {
 
     private final OauthService oauthService;
 
-    @GetMapping(value = "/oauth")
+    @GetMapping(value = "")
     @ApiOperation(value = "Blizzard oauth 인증", notes = "oAuth Credential Code를 통해 AccessToken 발급")
     public ResultView<String> oauth(@RequestParam(value = "code") String code) throws JsonProcessingException {
         log.debug("Code is {}", code);
         return new ResultView<>(oauthService.getAccessToken(code));
     }
 
-    @PostMapping(value = "/oauth/storeAccessToken")
+    @PostMapping(value = "/storeAccessToken")
     @ApiOperation(value = "BlizzardAccessToken 저장", notes = "AccessToken을 해당 세션에 저장한다.")
     public ResultView<Boolean> storeAccessToken(@RequestBody StoreAtReqDto reqDto) throws JsonProcessingException {
         return new ResultView<>(oauthService.storeAccessToken(reqDto));

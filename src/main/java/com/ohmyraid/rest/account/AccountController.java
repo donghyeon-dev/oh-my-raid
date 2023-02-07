@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.common.wrapper.ResultView;
 import com.ohmyraid.dto.account.SignUpInpDto;
 import com.ohmyraid.dto.account.SignUpResDto;
+import com.ohmyraid.dto.account.UpdatePasswordDto;
 import com.ohmyraid.dto.wow_account.ActualCharacterDto;
 import com.ohmyraid.service.account.AccountService;
 import com.ohmyraid.service.character.CharacterService;
@@ -29,6 +30,20 @@ public class AccountController {
     public ResultView<SignUpResDto> signUp(
             @RequestBody SignUpInpDto signUpInpDto) {
         return new ResultView<>(accountService.signUp(signUpInpDto));
+    }
+
+    @ApiOperation(value = "비밀번호 변경", notes = "패스워드를 변경한다.")
+    @PostMapping(value = "/update-password")
+    public ResultView<Long> updatePassword(
+            @RequestBody UpdatePasswordDto updatePasswordDto) throws JsonProcessingException {
+        return new ResultView<>(accountService.updatePassword(updatePasswordDto));
+    }
+
+    @ApiOperation(value = "닉네임 변경", notes = "닉네임을 변경한다.")
+    @PostMapping(value = "/update-nickname")
+    public ResultView<Long> updateNickname(
+            @RequestBody UpdatePasswordDto updatePasswordDto) throws JsonProcessingException {
+        return new ResultView<>(accountService.updatePassword(updatePasswordDto));
     }
 
     @GetMapping(value = "{accountId}/sync")

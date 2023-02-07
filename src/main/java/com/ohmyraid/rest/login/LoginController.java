@@ -27,12 +27,4 @@ public class LoginController {
 
         return new ResultView<>(loginService.signIn(loginInpDto));
     }
-
-    /**
-     * ToDo 여기 있어야 할게 아님.... 나중에 BLIZZARD연동? 내 계정 정보 가져오기? 이런 기능을 만들면 옮겨야함 + Return도 수정해야함
-     *
-     * @param code
-     * @return
-     */
-    
 }
