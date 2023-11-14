@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Authorization_code를 사용해 Token을 받아오는 Feign Interface
  */
-@FeignClient(name="OAU", url = "https://kr.battle.net")
+@FeignClient(name="OAU", url = "https://oauth.battle.net")
 public interface BattlenetClient {
 
     @PostMapping(value = "/oauth/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
