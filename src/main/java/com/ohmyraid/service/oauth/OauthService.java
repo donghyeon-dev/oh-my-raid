@@ -1,6 +1,8 @@
 package com.ohmyraid.service.oauth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.ohmyraid.common.result.CommonExceptionHandler;
+import com.ohmyraid.common.result.ErrorResult;
 import com.ohmyraid.dto.auth.AuthDto;
 import com.ohmyraid.dto.auth.AuthRequestDto;
 import com.ohmyraid.dto.auth.CheckTokenDto;
@@ -80,4 +82,26 @@ public class OauthService {
             return false;
         }
     }
+
+    /**
+     * Client Credential로 액세스 토큰을 얻는 메서드입니다.
+     *
+     * <p>
+     * 본 메서드는 BattlenetClient를 이용하여 Client Credential에 대한 액세스 토큰을 얻습니다.
+     * 액세스 토큰이 비어있는 경우, 이를 로그에 기록하고 IllegalStateException를 발생시킵니다.
+     * </p>
+     *
+     * @return blizzardAuthResponse의 액세스 토큰을 반환합니다.
+     * @throws IllegalStateException 액세스 토큰 요청의 결과가 비어있을 경우 예외를 발생시킵니다.
+     */
+    public String getAccessTokenWithClientCredential(){
+
+        AuthDto blizzardAuthResponse = battlenetClient.getAccessTokenByClientCredential(CryptoUtils.getAuthValue());
+        if(ObjectUtils.isEmpty(blizzardAuthResponse)){
+            log.error("battlenetClient.getAccessTokenByClientCredential response is empty.");
+            throw new IllegalStateException("Result of requsting access token is empty");
+        }
+
+        return blizzardAuthResponse.getAccess_token();
+    };
 }

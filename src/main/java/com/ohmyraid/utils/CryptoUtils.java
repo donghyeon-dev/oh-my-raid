@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 
@@ -16,14 +17,16 @@ public class CryptoUtils {
     static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
 
     public static String encryptPw(String plainPw) {
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
-        String encodedPw = passwordEncoder.encode(plainPw);
-        log.debug("cryptedPw is {}", encodedPw);
-        return encodedPw;
+        if(StringUtils.hasText(plainPw)) {
+            String encodedPw = passwordEncoder.encode(plainPw);
+            return encodedPw;
+        } else {
+            log.error("There is no password to encrypt.");
+            throw new IllegalArgumentException("There is no string to encrypt.");
+        }
     }
 
     public static boolean isPwVerify(String plaiPw, String encryptedPw) {
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
         return passwordEncoder.matches(plaiPw, encryptedPw);
 
     }
@@ -38,12 +41,13 @@ public class CryptoUtils {
         String clientId = System.getenv("BLIZZARD_CLIENT_ID");
         String clientSecret = System.getenv("BLIZZARD_CLIENT_SECRET");
 
-        if (!ObjectUtils.isEmpty(clientId) && !ObjectUtils.isEmpty(clientSecret)) {
+        if (StringUtils.hasText(clientId) && StringUtils.hasText(clientSecret)) {
             result = clientId + ":" + clientSecret;
             result = "Basic " + Base64Utils.encodeToString(result.getBytes(StandardCharsets.UTF_8));
             return result;
         } else {
-            return result;
+            log.error("There is no clientId or clientSecret");
+            throw new IllegalArgumentException("There is no client parameter");
         }
     }
 }

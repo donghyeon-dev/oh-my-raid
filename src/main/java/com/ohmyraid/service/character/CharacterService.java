@@ -133,7 +133,7 @@ public class CharacterService {
 
             characterRespository.save(characterEntity);
             // Battle.Net API의 특성상 텀을 두고 Request를 보내야한다.
-            Thread.sleep(2500L);
+//            Thread.sleep(2500L);
         }
         log.debug("진짜진짜진짜Entity를 위한 DTO is {}", dtoList);
 
@@ -150,7 +150,7 @@ public class CharacterService {
     public List<ActualCharacterDto> getMyCharacter(long accountId) throws JsonProcessingException {
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         List<CharacterEntity> myCharacters =
-                characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevel(accountId);
+                characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevelDesc(accountId);
 
 
         List<ActualCharacterDto> resultList = CharacterMapper.INSTANCE.characterEntitiesToDtoList(myCharacters);
@@ -172,7 +172,7 @@ public class CharacterService {
             throw new CommonServiceException(ErrorResult.NO_BZ_TOKEN);
         }
         List<CharacterEntity> myCharacters =
-                characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevel(accountId);
+                characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevelDesc(accountId);
         List<ActualCharacterDto> actualCharacterDtos = CharacterMapper.INSTANCE.characterEntitiesToDtoList(myCharacters);
 
 
@@ -270,12 +270,12 @@ public class CharacterService {
                             RaidInfDto result =
                                     wowClient.getRaidEncounter(namespace, bzToken, locale, convertUtils.krSlugToEng(c.getSlug()),
                                             c.getName());
-                            try {
-                                // BlizzardAPI의 빠른 호출 방지를 위한...
-                                Thread.sleep(3000L);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+//                            try {
+//                                // BlizzardAPI의 빠른 호출 방지를 위한...
+//                                Thread.sleep(3000L);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
                             result.setCharacterId(c.getCharacterId());
                             return result;
                         }
