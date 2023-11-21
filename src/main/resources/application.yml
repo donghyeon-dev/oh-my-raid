@@ -7,9 +7,10 @@ server:
       enabled: true
       force: true
 
-bz:
-  redirect-uri: http://localhost:3030/oauth
-  grant-type: authorization_code
+bz: # 이 항목들은 상수화로 해도 될듯함
+  redirect-uri: http://localhost:3000/oauth
+  normal-grant-type: client_credentials
+  summary-grant-type: authorization_code
   scope: wow.profile
   namespace: profile-kr
   locale: ko_KR
