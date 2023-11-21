@@ -22,7 +22,8 @@ public interface BattlenetClient {
     AuthDto getAccessToken(@RequestBody AuthRequestDto body,
                                        @RequestHeader(value = "Authorization") String authHeader);
     @PostMapping(value = "/oauth/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    AuthDto getAccessTokenByClientCredential(@RequestHeader(value = "Authorization") String authHeader);
+    AuthDto getAccessTokenByClientCredential(@RequestHeader(value = "Authorization") String authHeader,
+                                             @RequestBody AuthRequestDto authDto);
 
     @PostMapping(value = "/oauth/check_token" , consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     Map<String, Object> checkToken(@RequestBody CheckTokenDto body);

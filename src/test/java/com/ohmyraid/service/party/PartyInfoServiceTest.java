@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ohmyraid.config.Constant;
 import com.ohmyraid.domain.party.PartyInfoEntity;
 import com.ohmyraid.dto.account.ThreadInfDto;
-import com.ohmyraid.dto.login.RedisDto;
+import com.ohmyraid.dto.login.UserSessionDto;
 import com.ohmyraid.dto.party.PartyInfoDto;
 import com.ohmyraid.repository.party.PartyInfoRepository;
 import com.ohmyraid.utils.DatetimeUtils;
@@ -56,10 +56,10 @@ class PartyInfoServiceTest {
         String token = "\"eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJvaG15cmFpZCIsImlhdCI6MTY3MzkxNzA5NiwiTG9naW5JZCI6ImRvbmdoeWVvbmRldkBnbWFpbC5jb20iLCJVc2VyTmFtZSI6ImF1dG9jYXQiLCJleHAiOjE2NzM5NTMwOTZ9.SSpdTQoxVtECwfC9vVfV2zkCAEZg7GC8tyLfihUH0z0\"";
         threadInfDto.setAccessToken(token);
         ThreadLocalUtils.add(Constant.THREAD_INF, threadInfDto);
-        RedisDto redisDto = new RedisDto();
-        redisDto.setEmail("donghyeondev@gmail.com");
-        redisDto.setAccessToken(token);
-        redisUtils.putSession(token, redisDto);
+        UserSessionDto userSessionDto = new UserSessionDto();
+        userSessionDto.setEmail("donghyeondev@gmail.com");
+        userSessionDto.setAccessToken(token);
+        redisUtils.storeObjectToRedis(token, userSessionDto);
 
         PartyInfoDto partyInfoDto = new PartyInfoDto();
         partyInfoDto.setSubject("정공인원 모집 (목,금) 저녁 9시 3탐 진행");

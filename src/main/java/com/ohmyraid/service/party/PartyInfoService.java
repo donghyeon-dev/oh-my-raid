@@ -5,6 +5,7 @@ import com.ohmyraid.common.result.CommonInvalidInputException;
 import com.ohmyraid.common.result.CommonServiceException;
 import com.ohmyraid.common.result.ErrorResult;
 import com.ohmyraid.domain.party.PartyInfoEntity;
+import com.ohmyraid.dto.login.UserSessionDto;
 import com.ohmyraid.dto.party.PartyInfoDto;
 import com.ohmyraid.mapper.PartyInfoMapper;
 import com.ohmyraid.repository.account.AccountRepository;
@@ -42,7 +43,7 @@ public class PartyInfoService {
     public long insertPartyInfo(PartyInfoDto inpDto) throws JsonProcessingException {
 
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
-        String email = redisUtils.getSession(token).getEmail();
+        String email = redisUtils.getRedisValue(token, UserSessionDto.class).getEmail();
 
         // 엔티티 추가
         PartyInfoEntity partyInfoEntity = PartyInfoEntity.builder()
@@ -86,7 +87,7 @@ public class PartyInfoService {
     public long updatePartyInfo(PartyInfoDto partyInfoDto) throws JsonProcessingException {
 
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
-        long sessionAccountId = redisUtils.getSession(token).getAccountId();
+        long sessionAccountId = redisUtils.getRedisValue(token, UserSessionDto.class).getAccountId();
 
         //예외
         if (partyInfoDto.getCreateAccountId() != sessionAccountId) {

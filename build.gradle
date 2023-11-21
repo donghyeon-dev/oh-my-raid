@@ -126,9 +126,9 @@ compileQuerydsl{
     options.annotationProcessorPath = configurations.querydsl
 }
 
-/**comileQuerydsl.doFirst 추가*/
-compileQuerydsl.doFirst {
-    if(file(querydslDir).exists() )
-        delete(file(querydslDir))
+// Disable Gradle's skip task `compileQuerydsl` because of UP-TO-DATE
+// Whenever restart project though there is no diff in this project, always compileQuerydsl
+tasks.named("compileQuerydsl"){
+    outputs.upToDateWhen {false}
 }
 //querydsl 추가 끝

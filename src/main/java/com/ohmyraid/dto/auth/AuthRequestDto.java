@@ -12,11 +12,5 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AuthRequestDto implements Serializable {
 
-    private String redirect_uri;
-
-    private String scope;
-
     private String grant_type;
-
-    private String code;
 }

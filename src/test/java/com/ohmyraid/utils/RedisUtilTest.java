@@ -2,7 +2,7 @@ package com.ohmyraid.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ohmyraid.dto.login.RedisDto;
+import com.ohmyraid.dto.login.UserSessionDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ public class RedisUtilTest {
     @Test
     void ObjectMapper_레디스_커넥션_테스트() throws JsonProcessingException {
         String redisKey = "key";
-        RedisDto redisInput = new RedisDto();
+        UserSessionDto redisInput = new UserSessionDto();
         redisInput.setNickname("autocat");
         redisInput.setEmail("donghyeondev@gmail.com");
         redisInput.setAccessToken("accessToken");
@@ -69,14 +69,14 @@ public class RedisUtilTest {
     @Test
     void RedisUtils_레디스_커넥션_테스트() throws JsonProcessingException {
         String redisKey = "userInfo";
-        RedisDto redisInput = new RedisDto();
+        UserSessionDto redisInput = new UserSessionDto();
         redisInput.setNickname("autocat");
         redisInput.setEmail("donghyeondev@gmail.com");
         redisInput.setAccessToken("accessToken");
 
-        redisUtils.putSession(redisKey, redisInput);
+        redisUtils.storeObjectToRedis(redisKey, redisInput);
 
-        RedisDto redisSessionDto = redisUtils.getSession(redisKey);
+        UserSessionDto redisSessionDto = redisUtils.getRedisValue(redisKey, UserSessionDto.class);
         log.info("result is {}", redisSessionDto);
         assertEquals(redisInput, redisSessionDto);
     }

@@ -8,5 +8,7 @@ public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
 
     public AccountEntity findAllByEmail(String email);
 
+    public AccountEntity findAllByNickname(String nickname);
+
     public AccountEntity findByAccountId(long id);
 }

@@ -1,17 +1,21 @@
 package com.ohmyraid.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 /**
- * oauth/token의 결과물을 받아오는 DTO
+ * BlizzardAccessToken stored in Redis DTO
  */
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class AuthDto implements Serializable {
-
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class AuthDto {
 
     private String access_token;
 

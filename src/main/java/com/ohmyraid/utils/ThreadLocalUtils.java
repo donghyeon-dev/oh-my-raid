@@ -20,7 +20,6 @@ public class ThreadLocalUtils {
     }
 
     public static void add(Object key, Object object) {
-        log.debug("ThreadLocal add");
         getAll().put(key, object);
     }
 
@@ -35,7 +34,6 @@ public class ThreadLocalUtils {
 
     public static void clear() {
         // remove()를 통해 제거하지 않는다면 스레드 풀을 재사용하여 문제가 발생할 수 있음
-        log.debug("ThreadLocal clean");
         threadLocal.remove();
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.ohmyraid.common.result.CommonServiceException;
 import com.ohmyraid.common.result.ErrorResult;
+import com.ohmyraid.config.Constant;
 import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.domain.raid.RaidEncounterEntity;
@@ -70,7 +71,7 @@ public class CharacterService {
     public Boolean getTotalSummary(long accountId) throws JsonProcessingException, InterruptedException {
         // 토큰가져오기 및 사용될 변수들 생성
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
-        String bzToken = redisUtils.getSession(token).getBzAccessToken();
+        String bzToken = redisUtils.getRedisValue(Constant.BLIZZARD_TOKEN, String.class);
         if (ObjectUtils.isEmpty(bzToken)) {
             throw new CommonServiceException(ErrorResult.NO_BZ_TOKEN);
         }
@@ -167,7 +168,7 @@ public class CharacterService {
      */
     public Boolean getRaidEncounter(long accountId) throws Exception {
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
-        String bzToken = redisUtils.getSession(token).getBzAccessToken();
+        String bzToken = redisUtils.getRedisValue(token, String.class);
         if (ObjectUtils.isEmpty(bzToken)) {
             throw new CommonServiceException(ErrorResult.NO_BZ_TOKEN);
         }
