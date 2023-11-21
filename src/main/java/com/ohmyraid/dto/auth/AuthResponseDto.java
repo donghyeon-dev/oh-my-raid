@@ -1,12 +1,9 @@
 package com.ohmyraid.dto.auth;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 /**
  * BlizzardAccessToken stored in Redis DTO
@@ -15,7 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AuthDto {
+public class AuthResponseDto {
 
     private String access_token;
 
@@ -23,5 +20,5 @@ public class AuthDto {
 
     private int expires_in;
 
-    private String sub;
+    private String scope;
 }

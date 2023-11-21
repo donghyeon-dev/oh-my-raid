@@ -51,7 +51,7 @@ public class RedisUtils {
             expiredAt = Date.from(ZonedDateTime.now().plusHours(24).toInstant());
         } else {
             // 현재까진 UserSessionDto
-            objectMapper.writeValueAsString(value);
+            redisValueString = objectMapper.writeValueAsString(value);
             expiredAt = Date.from(ZonedDateTime.now().plusHours(10).toInstant()); // Todo[Test를위한 만료기한 변경 (1hr to 10hr)]
         }
         valueOperations.set(redisKey, redisValueString);

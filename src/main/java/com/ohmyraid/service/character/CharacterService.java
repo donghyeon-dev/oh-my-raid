@@ -10,6 +10,7 @@ import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.domain.raid.RaidEncounterEntity;
 import com.ohmyraid.dto.character.CharacterRaidInfoDto;
+import com.ohmyraid.dto.login.UserSessionDto;
 import com.ohmyraid.dto.wow_account.ActualCharacterDto;
 import com.ohmyraid.dto.wow_account.SpecInfDto;
 import com.ohmyraid.dto.wow_account.WowAccountDto;
@@ -52,13 +53,13 @@ public class CharacterService {
     private final JPAQueryFactory queryFactory;
 
     @Value("${bz.namespace}")
-    private final String namespace = null;
+    private String namespace;
 
     @Value("${bz.locale}")
-    private final String locale = null;
+    private String locale;
 
     @Value("${bz.region}")
-    private final String region = null;
+    private String region;
 
     /**
      * 블리자드 API를 통해
@@ -71,7 +72,7 @@ public class CharacterService {
     public Boolean getTotalSummary(long accountId) throws JsonProcessingException, InterruptedException {
         // 토큰가져오기 및 사용될 변수들 생성
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
-        String bzToken = redisUtils.getRedisValue(Constant.BLIZZARD_TOKEN, String.class);
+        String bzToken = redisUtils.getRedisValue(token, UserSessionDto.class).getBlizzardAccessToken();
         if (ObjectUtils.isEmpty(bzToken)) {
             throw new CommonServiceException(ErrorResult.NO_BZ_TOKEN);
         }
@@ -168,7 +169,7 @@ public class CharacterService {
      */
     public Boolean getRaidEncounter(long accountId) throws Exception {
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
-        String bzToken = redisUtils.getRedisValue(token, String.class);
+        String bzToken = redisUtils.getRedisValue(Constant.BLIZZARD_TOKEN, String.class);
         if (ObjectUtils.isEmpty(bzToken)) {
             throw new CommonServiceException(ErrorResult.NO_BZ_TOKEN);
         }

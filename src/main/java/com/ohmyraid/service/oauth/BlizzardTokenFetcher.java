@@ -1,12 +1,10 @@
 package com.ohmyraid.service.oauth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.ohmyraid.config.Constant;
-import com.ohmyraid.dto.auth.AuthDto;
-import com.ohmyraid.dto.auth.AuthRequestDto;
+import com.ohmyraid.dto.auth.AuthResponseDto;
+import com.ohmyraid.dto.auth.ClientCredentialAuthRequestDto;
 import com.ohmyraid.feign.BattlenetClient;
 import com.ohmyraid.utils.CryptoUtils;
-import com.ohmyraid.utils.RedisUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +19,7 @@ public class BlizzardTokenFetcher {
 
     private final BattlenetClient battlenetClient;
 
-    @Value("${bz.grant-type}")
+    @Value("${bz.normal-grant-type}")
     private String GRANT_TYPE;
 
     /**
@@ -36,8 +34,8 @@ public class BlizzardTokenFetcher {
      */
     public String fetchBlizzardAccessToken() throws JsonProcessingException {
 
-        AuthDto blizzardAuthResponse = battlenetClient.getAccessTokenByClientCredential(CryptoUtils.getAuthValue(),
-                AuthRequestDto.builder().grant_type(GRANT_TYPE).build());
+        AuthResponseDto blizzardAuthResponse = battlenetClient.getAccessTokenByClientCredential(CryptoUtils.getAuthValue(),
+                ClientCredentialAuthRequestDto.builder().grant_type(GRANT_TYPE).build());
         if(ObjectUtils.isEmpty(blizzardAuthResponse)){
             log.error("battlenetClient.getAccessTokenByClientCredential response is empty.");
             throw new IllegalStateException("Result of requsting access token is empty");
