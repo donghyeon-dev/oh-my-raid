@@ -45,7 +45,8 @@ public enum SpecializationType {
     VENGEANCE("복수", 581),
     DEVASTATION("황폐", 1467),
     PRERSERVATION("보존", 1468),
-    AUGMENTATION("증강", 1473)
+    AUGMENTATION("증강", 1473),
+    UNDER_LEVEL_10(null,0)
     ;
 
     private final String specializationName;

@@ -14,7 +14,7 @@ public enum PlayableClassType {
     HUNTER("사냥꾼",3),
     ROGUE("도적",4),
     PRIEST("사제",5),
-    DEATH_KNIGHT("죽음의기사",6),
+    DEATH_KNIGHT("죽음의 기사",6),
     SHAMAN("주술사",7),
     MAGE("마법사",8),
     WARLOCK("흑마법사", 9),

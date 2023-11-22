@@ -37,7 +37,7 @@ public class OauthService {
     @Value("${bz.scope}")
     private String SCOPE;
 
-    public String getAccessTokenWithAuthorizationCode(String code) throws JsonProcessingException {
+    public String getAccessTokenByAuthorizationCode(String code) throws JsonProcessingException {
         String AUTH = CryptoUtils.getAuthValue();
 
         AuthorizationCodeAuthRequestDto authRequestDto = AuthorizationCodeAuthRequestDto.builder()
@@ -55,7 +55,7 @@ public class OauthService {
 
     ;
 
-    public Boolean storeAccessToken(StoreAtReqDto reqDto) throws JsonProcessingException {
+    public Boolean storeAccessTokenToUsersession(StoreAccessTokenRequestDto reqDto) throws JsonProcessingException {
         String bzToken = reqDto.getAccessToken();
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         log.debug("Bllizzard Token is {}", bzToken);
@@ -83,25 +83,25 @@ public class OauthService {
     }
 
     /**
-     * Client Credential로 액세스 토큰을 얻는 메서드입니다.
+     * 블리자드에 액세스 토큰을 요청하는 메소드.
      *
      * <p>
-     * 본 메서드는 BattlenetClient를 이용하여 Client Credential에 대한 액세스 토큰을 얻습니다.
-     * 액세스 토큰이 비어있는 경우, 이를 로그에 기록하고 IllegalStateException를 발생시킵니다.
-     * </p>
+     * 인증 정보를 사용하여 블리자드로부터 액세스 토큰을 요청하고, 획득한 토큰은 Redis에 저장합니다.
+     * 획득한 액세스 토큰을 반환합니다.
      *
-     * @return blizzardAuthResponse의 액세스 토큰을 반환합니다.
-     * @throws IllegalStateException 액세스 토큰 요청의 결과가 비어있을 경우 예외를 발생시킵니다.
+     * @return 블리자드로부터 획득한 액세스 토큰
+     * @throws JsonProcessingException JSON 처리 중 발생하는 예외
      */
-    public String getAccessTokenWithClientCredential(){
+    public String getAccessTokenByClientCredential() throws JsonProcessingException {
 
         AuthResponseDto blizzardAuthResponse = battlenetClient.getAccessTokenByClientCredential(CryptoUtils.getAuthValue(),
                 ClientCredentialAuthRequestDto.builder().grant_type(NORMAL_GRANT_TYPE).build());
-        if(ObjectUtils.isEmpty(blizzardAuthResponse)){
+        if (ObjectUtils.isEmpty(blizzardAuthResponse)) {
             log.error("battlenetClient.getAccessTokenByClientCredential response is empty.");
             throw new IllegalStateException("Result of requsting access token is empty");
         }
-
         return blizzardAuthResponse.getAccess_token();
-    };
+    }
+
+    ;
 }

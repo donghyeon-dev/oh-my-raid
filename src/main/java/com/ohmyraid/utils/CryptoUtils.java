@@ -1,5 +1,6 @@
 package com.ohmyraid.utils;
 
+import com.ohmyraid.config.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.Base64Utils;
@@ -7,6 +8,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 @Slf4j
 public class CryptoUtils {
@@ -37,14 +39,18 @@ public class CryptoUtils {
      * @return
      */
     public static String getAuthValue() {
-        String result = "";
-        String clientId = System.getenv("BLIZZARD_CLIENT_ID");
-        String clientSecret = System.getenv("BLIZZARD_CLIENT_SECRET");
+        String authorizationHeader;
+        String clientId = Optional.of(System.getenv("BLIZZARD_CLIENT_ID")).orElse("cd5f2cc20f0e4be08e31ae9938e56b2d");
+        String clientSecret = Optional.of(System.getenv("BLIZZARD_CLIENT_SECRET")).orElse("1penStTopokgRhM4fRtGwez2JUwyc7K2");
 
         if (StringUtils.hasText(clientId) && StringUtils.hasText(clientSecret)) {
-            result = clientId + ":" + clientSecret;
-            result = "Basic " + Base64Utils.encodeToString(result.getBytes(StandardCharsets.UTF_8));
-            return result;
+            authorizationHeader = String.join(Constant.STRING_SPACE,
+                    Constant.Auth.AUTHORIZATION_HEADER_BASIC,
+                    Base64Utils.encodeToString(String.join(
+                             ":"
+                            ,clientId
+                            ,clientSecret).getBytes(StandardCharsets.UTF_8)));
+            return authorizationHeader;
         } else {
             log.error("There is no clientId or clientSecret");
             throw new IllegalArgumentException("There is no client parameter");

@@ -20,16 +20,11 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private final JwtUtils jwtUtils;
 
-    @Value("${project.interceptor.authentication.exclude-path}")
-    private final String AUTHENTICATION_EXCLUDE_PATH = null;
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.debug("===============================  REQUEST RECEIVED  ===============================\n" +
                 ">>>>>>>>>>  Request URI \t : {}  <<<<<<<<<<", request.getRequestURI());
-        // exclude-path 검증 제외 로직 추가
-        String[] excludePath = AUTHENTICATION_EXCLUDE_PATH.split(",");
-        
+
 
         // Header의 AccessToken의 유효성 검사
         String header = request.getHeader("Authorization");
@@ -49,8 +44,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.debug("+++++++++++++++++++++++++++++++  REQUEST DONE  +++++++++++++++++++++++++++++++\n" +
-                ">>>>>>>>>>  Request URI \t : {}  <<<<<<<<<<", request.getRequestURI());
+        log.debug("+++++++++++++++++++++++++++++++  REQUEST DONE  +++++++++++++++++++++++++++++++");
     }
 
 }

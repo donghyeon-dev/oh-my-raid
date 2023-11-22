@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StoreAtReqDto {
+public class StoreAccessTokenRequestDto {
 
     // Blizzard API AccessToken
     private String accessToken;

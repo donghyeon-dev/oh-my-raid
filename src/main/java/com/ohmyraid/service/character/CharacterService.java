@@ -3,6 +3,7 @@ package com.ohmyraid.service.character;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.ohmyraid.common.enums.SlugType;
 import com.ohmyraid.common.result.CommonServiceException;
 import com.ohmyraid.common.result.ErrorResult;
 import com.ohmyraid.config.Constant;
@@ -11,8 +12,8 @@ import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.domain.raid.RaidEncounterEntity;
 import com.ohmyraid.dto.character.CharacterRaidInfoDto;
 import com.ohmyraid.dto.login.UserSessionDto;
-import com.ohmyraid.dto.wow_account.ActualCharacterDto;
-import com.ohmyraid.dto.wow_account.SpecInfDto;
+import com.ohmyraid.dto.wow_account.CharacterDto;
+import com.ohmyraid.dto.wow_account.CharacterSpecInfoDto;
 import com.ohmyraid.dto.wow_account.WowAccountDto;
 import com.ohmyraid.dto.wow_raid.*;
 import com.ohmyraid.feign.WowClient;
@@ -26,7 +27,6 @@ import com.ohmyraid.utils.ThreadLocalUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -52,81 +52,75 @@ public class CharacterService {
     private final ConvertUtils convertUtils;
     private final JPAQueryFactory queryFactory;
 
-    @Value("${bz.namespace}")
-    private String namespace;
-
-    @Value("${bz.locale}")
-    private String locale;
-
-    @Value("${bz.region}")
-    private String region;
-
     /**
-     * 블리자드 API를 통해
-     * 계정의 캐릭터 종합 정보를 가져와서, 각 캐릭터의 기본정보를 DB에 저장한다.
+     * 최초 혹은 추가 캐릭터정보를 가져올때 사용
+     * Login한 배틀넷계정의 캐릭터 종합 정보를 블리자드 API를 통해 가져와서, 각 캐릭터의 기본정보를 DB에 저장한다.
      *
      * @return
      * @throws JsonProcessingException
      */
     @Transactional
-    public Boolean getTotalSummary(long accountId) throws JsonProcessingException, InterruptedException {
+    public Boolean getChractersByAccount(long accountId) throws JsonProcessingException, InterruptedException {
         // 토큰가져오기 및 사용될 변수들 생성
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         String bzToken = redisUtils.getRedisValue(token, UserSessionDto.class).getBlizzardAccessToken();
         if (ObjectUtils.isEmpty(bzToken)) {
+            log.error("캐릭터 정보 추가를 위해서는 AuthorizationCode로 받아온 AccessToken이 필요합니다.");
             throw new CommonServiceException(ErrorResult.NO_BZ_TOKEN);
         }
         AccountEntity accountEntity = accountRepository.findByAccountId(accountId);
 
-        // AccountSummary Feign 호출 및 파싱
-        Map<String, Object> resultSummary = wowClient.getAccountProfileSummary(namespace, locale, bzToken, region);
-        List<WowAccountDto> wowAccountDto = mapper.convertValue(resultSummary.get("wow_accounts"),
+        // 계정 내 캐릭터정보 Feign 호출 및 파싱
+        Map<String, Object> accountProfileSummaryMap = wowClient.getAccountProfileSummary(Constant.Auth.NAMESPACE
+                , Constant.Auth.LOCALE
+                , bzToken
+                , Constant.Auth.REGION);
+        List<WowAccountDto> wowAccountDto = mapper.convertValue(accountProfileSummaryMap.get("wow_accounts"),
                 TypeFactory.defaultInstance().constructCollectionType(List.class, WowAccountDto.class));
-        log.debug("wowAccountDto is {}", wowAccountDto);
+        List<CharacterDto> characterList = parseCharacterList(wowAccountDto, accountId);
 
-        // SpecInf 호출을 하기 전 데이터 재파싱
-        List<ActualCharacterDto> requestList = wowAccountToActualCharacter(wowAccountDto, accountId);
-
-        log.debug("SpecInfReqDto is {}", requestList);
-
-        List<ActualCharacterDto> dtoList = new ArrayList<>();
-        for (ActualCharacterDto characterDto : requestList) {
-            SpecInfDto specDto = wowClient.getCharacterSpecInf(namespace, bzToken, locale, characterDto.getRealm(), characterDto.getName());
-            log.debug("SpecInfRes is {}", specDto);
+        for (CharacterDto characterDto : characterList) {
+            CharacterSpecInfoDto specDto = CharacterSpecInfoDto.builder().build();
+            try {
+                specDto = wowClient.getCharacterSpec(Constant.Auth.NAMESPACE
+                        , bzToken
+                        , Constant.Auth.LOCALE
+                        , characterDto.getRealm()
+                        , characterDto.getName());
+            }catch (Exception e){
+                e.printStackTrace();
+                log.error("Error occurred while wowClient.getCharacterSpec() with character name of {}", characterDto.getName());
+                continue;
+            }
 
             // insert를 하기 전 DB에 데이터 검증
-            CharacterEntity targetEntity = characterRespository.findCharacterByCharacterSeNumber(characterDto.getCharacterSeNumber());
-            Long targetCharacterId = null;
-            boolean isCreated = false;
+            CharacterEntity existCharacterEntity = characterRespository.findCharacterByCharacterSeNumber(characterDto.getCharacterSeNumber());
+            Long existCharacterId = null;
+            boolean isExist = false;
 
-            if (!ObjectUtils.isEmpty(targetEntity)) {
-                targetCharacterId = targetEntity.getCharacterId();
-                isCreated = true;
+            if (!ObjectUtils.isEmpty(existCharacterEntity)) {
+                existCharacterId = existCharacterEntity.getCharacterId();
+                isExist = true;
             }
-            // 엔티티를 위한 정보를 dto 하나에 합치기
-            characterDto.setSpecialization(specDto.getActive_spec().getName());
-            characterDto.setEquippedItemLevel(specDto.getEquipped_item_level());
-            characterDto.setAverageItemLvel(specDto.getAverage_item_level());
+            // 정보 합치기
             if (!ObjectUtils.isEmpty(specDto.getCovenant_progress())) {
                 characterDto.setExpansionOption(specDto.getCovenant_progress().getChosenCovenant().getName());
                 characterDto.setExpansionOptionLevel(specDto.getCovenant_progress().getRenownLevel());
             }
             ;
-            dtoList.add(characterDto);
-
             CharacterEntity characterEntity = CharacterEntity.builder()
                     .accountEntity(accountEntity)
-                    .characterId(isCreated ? targetCharacterId : null)
+                    .characterId(isExist ? existCharacterId : null)
                     .characterSeNumber(characterDto.getCharacterSeNumber())
                     .name(characterDto.getName())
                     .level(characterDto.getLevel())
                     .playableClass(characterDto.getPlayableClass())
-                    .specialization(characterDto.getSpecialization())
+                    .specialization(specDto.getActive_spec().getName())
                     .race(characterDto.getRace())
                     .gender(characterDto.getGender())
                     .faction(characterDto.getFaction())
-                    .equippedItemLevel(characterDto.getEquippedItemLevel())
-                    .averageItemLvel(characterDto.getAverageItemLvel())
+                    .equippedItemLevel(specDto.getEquipped_item_level())
+                    .averageItemLvel(specDto.getAverage_item_level())
                     .slug(characterDto.getSlug())
                     .lastCrawledAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                     .expansionOption(characterDto.getExpansionOption())
@@ -137,8 +131,6 @@ public class CharacterService {
             // Battle.Net API의 특성상 텀을 두고 Request를 보내야한다.
 //            Thread.sleep(2500L);
         }
-        log.debug("진짜진짜진짜Entity를 위한 DTO is {}", dtoList);
-
 
         return true;
     }
@@ -149,13 +141,13 @@ public class CharacterService {
      * @return
      * @throws JsonProcessingException
      */
-    public List<ActualCharacterDto> getMyCharacter(long accountId) throws JsonProcessingException {
+    public List<CharacterDto> getCharactersOfAccount(long accountId) throws JsonProcessingException {
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         List<CharacterEntity> myCharacters =
                 characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevelDesc(accountId);
 
 
-        List<ActualCharacterDto> resultList = CharacterMapper.INSTANCE.characterEntitiesToDtoList(myCharacters);
+        List<CharacterDto> resultList = CharacterMapper.INSTANCE.characterEntitiesToDtoList(myCharacters);
 
         return resultList;
 
@@ -169,16 +161,16 @@ public class CharacterService {
      */
     public Boolean getRaidEncounter(long accountId) throws Exception {
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
-        String bzToken = redisUtils.getRedisValue(Constant.BLIZZARD_TOKEN, String.class);
+        String bzToken = redisUtils.getRedisValue(Constant.Auth.BLIZZARD_TOKEN_KEY, String.class);
         if (ObjectUtils.isEmpty(bzToken)) {
             throw new CommonServiceException(ErrorResult.NO_BZ_TOKEN);
         }
-        List<CharacterEntity> myCharacters =
+        List<CharacterEntity> charactersEntities =
                 characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevelDesc(accountId);
-        List<ActualCharacterDto> actualCharacterDtos = CharacterMapper.INSTANCE.characterEntitiesToDtoList(myCharacters);
+        List<CharacterDto> characterDtos = CharacterMapper.INSTANCE.characterEntitiesToDtoList(charactersEntities);
 
 
-        List<RaidEncounterDto> encounterDtoList = accountRaidInfoToRaidEncounter(actualCharacterDtos, bzToken);
+        List<RaidEncounterDto> encounterDtoList = accountRaidInfoToRaidEncounter(characterDtos, bzToken);
 
         List<RaidEncounterEntity> raidEncounterEntities = new ArrayList<>();
         if (!ObjectUtils.isEmpty(encounterDtoList)) {
@@ -234,43 +226,58 @@ public class CharacterService {
 
     ;
 
-
-    List<ActualCharacterDto> wowAccountToActualCharacter(List<WowAccountDto> wowAccountDto, long accountId) {
-        List<ActualCharacterDto> requestList = new ArrayList<>();
-        for (WowAccountDto dto : wowAccountDto) {
-            ActualCharacterDto characterDto = new ActualCharacterDto();
-            dto.getCharacters()
+    /**
+     * 주어진 {@code WowAccountDto} 목록과 계정 ID를 사용하여 {@code CharacterDto}의 목록을 생성합니다.
+     *
+     * @param wowAccountDto 변환할 'WowAccountDto' 목록입니다.
+     * @param accountId     생성된 'CharacterDto'에 설정할 계정 ID입니다.
+     * @return {@code WowAccountDto}를 {@code CharacterDto}로 변환한 목록입니다.
+     * 각각의 'CharacterDto'는 원래 'WowAccountDto'의 캐릭터 정보와 주어진 계정 ID를 포함합니다.
+     */
+    List<CharacterDto> parseCharacterList(List<WowAccountDto> wowAccountDto, long accountId) {
+        List<CharacterDto> requestList = new ArrayList<>();
+            requestList = wowAccountDto.get(0).getCharacters()
                     .stream()
-                    .filter(c -> c.getLevel() > 50)
-                    .map(
-                            c -> {
-                                characterDto.setCharacterSeNumber(c.getId());
-                                characterDto.setAccountId(accountId);
-                                characterDto.setName(c.getName().toLowerCase());
-                                characterDto.setLevel(c.getLevel());
-                                characterDto.setPlayableClass(c.getPlayableClass().getName());
-                                characterDto.setRace(c.getPlayableRace().getName());
-                                characterDto.setSlug(c.getRealm().getName());
-                                characterDto.setRealm(c.getRealm().getSlug());
-                                characterDto.setFaction(c.getFaction().getName());
-                                return characterDto;
-                            });
-            requestList.add(characterDto);
-        }
-        ;
+                    .filter(c -> c.getLevel() > 60)
+                    .map( c ->
+                            CharacterDto.builder()
+                                            .characterSeNumber(c.getId())
+                                            .accountId(accountId)
+                                            .name(c.getName().toLowerCase())
+                                            .level(c.getLevel())
+                                            .playableClass(c.getPlayableClass().getName())
+                                            .race(c.getPlayableRace().getName())
+                                            .slug(c.getRealm().getName())
+                                            .realm(c.getRealm().getSlug())
+                                            .faction(c.getFaction().getName())
+                                            .gender(c.getGender().getName())
+                                    .build()
+                            ).collect(Collectors.toList());
 
         return requestList;
     }
 
-    List<RaidEncounterDto> accountRaidInfoToRaidEncounter(List<ActualCharacterDto> actualCharacterDtos, String bzToken) {
+    /**
+     * 실제 캐릭터 정보와 블리자드 API 토큰을 사용하여 RaidEncounter Dto 목록을 생성
+     *
+     * @param characterDtos 실제 캐릭터 DTO 정보의 목록
+     * @param bzToken             블리자드 API 주소를 호출할 때 사용되는 토큰
+     * @return 생성된 RaidEncounterDto 목록을 반환합니다. 이 목록은 캐릭터 ID,
+     * 확장팩 이름, 던전 이름, 난이도 등 정보를 기반으로 각각을 표현하는 RaidEncounterDto 오브젝트를 포함합니다.
+     * 각 RaidEncounterDto 객체는 하나의 공격대와 그 상세 정보를 나타냅니다.
+     */
+    List<RaidEncounterDto> accountRaidInfoToRaidEncounter(List<CharacterDto> characterDtos, String bzToken) {
         List<RaidEncounterDto> encounterDtoList = new ArrayList<>();
 
         // 캐릭터 정보들 Stream을 돌려 RaidEncounter List 생성
-        List<RaidInfDto> accountRaidInfList = actualCharacterDtos.stream()
+        List<RaidInfDto> accountRaidInfList = characterDtos.stream()
                 .map(
                         c -> {
                             RaidInfDto result =
-                                    wowClient.getRaidEncounter(namespace, bzToken, locale, convertUtils.krSlugToEng(c.getSlug()),
+                                    wowClient.getRaidEncounter(Constant.Auth.NAMESPACE
+                                            , bzToken
+                                            , Constant.Auth.LOCALE
+                                            , SlugType.getEnglishNameBySlugname(c.getSlug()).getSlugEnglishName(),
                                             c.getName());
 //                            try {
 //                                // BlizzardAPI의 빠른 호출 방지를 위한...
@@ -310,9 +317,7 @@ public class CharacterService {
                         String instanceName = instancesDto.getInstance().getName();
 
 
-                        List<ModesDto> difficultyList = instancesDto.getModes().stream()
-                                .filter(m -> !m.getDifficulty().getType().equals("LFR"))
-                                .collect(Collectors.toList()); // LFR = 공찾
+                        List<ModesDto> difficultyList = instancesDto.getModes();
                         for (ModesDto modeDto : difficultyList) {
                             RaidEncounterDto raidEncounterDto = new RaidEncounterDto();
                             raidEncounterDto.setCharacterId(characterId);

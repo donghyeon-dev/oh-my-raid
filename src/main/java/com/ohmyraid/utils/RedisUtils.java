@@ -3,7 +3,9 @@ package com.ohmyraid.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ohmyraid.config.Constant;
-import com.ohmyraid.service.oauth.BlizzardTokenFetcher;
+import com.ohmyraid.dto.auth.ClientCredentialAuthRequestDto;
+import com.ohmyraid.feign.BattlenetClient;
+import com.ohmyraid.service.oauth.OauthService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,7 +24,7 @@ public class RedisUtils {
 
     private final RedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
-    private final BlizzardTokenFetcher blizzardTokenFetcher;
+    private final BattlenetClient battlenetClient;
 
     /**
      * 주어진 객체를 Redis에 저장하는 함수입니다. 객체 유형인 따라 처리 방식과 만료 시간이 달라집니다.
@@ -81,8 +83,10 @@ public class RedisUtils {
             log.warn("There is no value for key:{}.", redisKey);
             if(type == String.class){
                 log.info("renew BlizzardAccesToken.");
-                String renewedAccessToken = blizzardTokenFetcher.fetchBlizzardAccessToken();
-                storeObjectToRedis(Constant.BLIZZARD_TOKEN, renewedAccessToken);
+                String renewedAccessToken = battlenetClient.getAccessTokenByClientCredential(CryptoUtils.getAuthValue(),
+                        ClientCredentialAuthRequestDto.builder().grant_type(Constant.Auth.NORMAL_GRANT_TYPE).build()
+                ).getAccess_token();
+                storeObjectToRedis(Constant.Auth.BLIZZARD_TOKEN_KEY, renewedAccessToken);
                 return type.cast(renewedAccessToken);
             }
             return null;
