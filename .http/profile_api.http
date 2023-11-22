@@ -20,3 +20,8 @@ GET https://kr.api.blizzard.com/profile/wow/character/azshara/%EB%88%88%EB%B6%88
 
 GET https://kr.api.blizzard.com/profile/wow/character/azshara/%EB%B0%95%EB%8F%99%ED%98%84/encounters/raids?
     namespace=profile-kr&locale=ko_KR&access_token={{battlenetAccessToken}}
+
+###
+
+GET https://kr.api.blizzard.com/profile/wow/character/azshara/%EC%98%A4%ED%86%A0%EC%BA%A3?namespace=profile-kr&
+    access_token=KRm9DAIW5ebM6MTg8x134oIP8t6BxG4h8J&locale=ko_KR

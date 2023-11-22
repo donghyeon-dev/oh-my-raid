@@ -28,11 +28,11 @@ spring:
     password: omraid
   jpa:
     generate-ddl: true
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         ddl-auto: update
-        format_sql: true
+        format_sql: false
   messages:
     cache-duration: -1
     basename: classpath:/i18n/messages
@@ -55,10 +55,7 @@ logging:
   level:
     root: INFO
     com.ohmyraid: DEBUG
-    org.hibernate.type.descriptor.sql: trace
-    org.springframework.jdbc.datasource.init.ScriptUtils: DEBUG
-    org.hibernate.type.descriptor:
-      sql: trace
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
   file:
     path: logs
 
@@ -100,3 +97,8 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true

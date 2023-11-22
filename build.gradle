@@ -91,6 +91,8 @@ dependencies {
     implementation 'io.micrometer:micrometer-core:1.9.3'
     implementation 'io.micrometer:micrometer-registry-prometheus:1.9.3'
 
+    // p6spy
+    implementation group: 'com.github.gavlyukovskiy', name: 'p6spy-spring-boot-starter', version: '1.8.0'
 
 
 }
