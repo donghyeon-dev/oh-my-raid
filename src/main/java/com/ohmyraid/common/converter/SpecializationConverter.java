@@ -15,7 +15,7 @@ public class SpecializationConverter implements AttributeConverter<String, Integ
      */
     @Override
     public Integer convertToDatabaseColumn(String specializationName) {
-        return SpecializationType.getIdByName(specializationName).getSpecializationId();
+        return SpecializationType.getTypeByName(specializationName).getSpecializationId();
     }
 
     /**
@@ -27,6 +27,6 @@ public class SpecializationConverter implements AttributeConverter<String, Integ
      */
     @Override
     public String convertToEntityAttribute(Integer specializationId) {
-        return SpecializationType.getNameById(specializationId).getSpecializationName();
+        return SpecializationType.getTypeById(specializationId).getSpecializationName();
     }
 }

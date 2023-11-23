@@ -38,14 +38,14 @@ public enum RaceType {
 
     private final int raceId;
 
-    public static RaceType getIdByName(String raceName) {
+    public static RaceType getTypeByName(String raceName) {
         return Arrays.stream(RaceType.values())
                 .filter(targetType -> targetType.getRaceName().equals(raceName))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("There is no described race."));
     }
 
-    public static RaceType getNameById(int raceId) {
+    public static RaceType getTypeById(int raceId) {
         return Arrays.stream(RaceType.values())
                 .filter(targetValue -> targetValue.getRaceId() == raceId)
                 .findFirst()

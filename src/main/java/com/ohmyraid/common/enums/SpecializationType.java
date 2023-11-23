@@ -52,14 +52,14 @@ public enum SpecializationType {
     private final String specializationName;
     private final int specializationId;
 
-    public static SpecializationType getIdByName(String specializationName){
+    public static SpecializationType getTypeByName(String specializationName){
         return Arrays.stream(SpecializationType.values())
                 .filter(targetType -> targetType.getSpecializationName().equals(specializationName))
                 .findFirst()
                 .orElseThrow( () -> new IllegalArgumentException("There is no described specialization."));
     }
 
-    public static SpecializationType getNameById(int specializationId) {
+    public static SpecializationType getTypeById(int specializationId) {
         return Arrays.stream(SpecializationType.values())
                 .filter(targetValue -> targetValue.getSpecializationId() == specializationId)
                 .findFirst()

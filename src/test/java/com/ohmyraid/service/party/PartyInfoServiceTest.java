@@ -39,9 +39,6 @@ class PartyInfoServiceTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private DatetimeUtils datetimeUtils;
-
-    @Autowired
     private RedisUtils redisUtils;
 
     @Autowired

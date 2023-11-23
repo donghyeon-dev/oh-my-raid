@@ -16,7 +16,7 @@ public class SlugConverter implements AttributeConverter<String, Integer> {
      */
     @Override
     public Integer convertToDatabaseColumn(String slugName) {
-        return SlugType.getIdByName(slugName).getSlugId();
+        return SlugType.getTypeByName(slugName).getSlugId();
     }
 
     /**
@@ -30,6 +30,6 @@ public class SlugConverter implements AttributeConverter<String, Integer> {
      */
     @Override
     public String convertToEntityAttribute(Integer slugId) {
-        return SlugType.getNameById(slugId).getSlugName();
+        return SlugType.getTypeById(slugId).getSlugName();
     }
 }

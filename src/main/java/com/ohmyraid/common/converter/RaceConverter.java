@@ -16,7 +16,7 @@ public class RaceConverter implements AttributeConverter<String, Integer> {
      */
     @Override
     public Integer convertToDatabaseColumn(String raceName) {
-        return RaceType.getIdByName(raceName).getRaceId();
+        return RaceType.getTypeByName(raceName).getRaceId();
     }
 
     /**
@@ -28,6 +28,6 @@ public class RaceConverter implements AttributeConverter<String, Integer> {
      */
     @Override
     public String convertToEntityAttribute(Integer raceId) {
-        return RaceType.getNameById(raceId).getRaceName();
+        return RaceType.getTypeById(raceId).getRaceName();
     }
 }

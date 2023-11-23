@@ -1,7 +1,7 @@
 package com.ohmyraid.feign;
 
 import com.ohmyraid.dto.wow_account.CharacterSpecInfoDto;
-import com.ohmyraid.dto.wow_raid.RaidInfDto;
+import com.ohmyraid.dto.wow_raid.RaidInfoDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +25,14 @@ public interface WowClient {
     CharacterSpecInfoDto getCharacterSpec(@RequestParam(name = "namespace", defaultValue = "profile-kr") String namespace,
                                           @RequestParam(name = "access_token") String access_token,
                                           @RequestParam(name = "locale", defaultValue = "ko_KR") String locale,
-                                          @PathVariable(name = "slug") String slug,
+                                          @PathVariable(name = "slug") String slugEnglishName,
                                           @PathVariable(name = "characterName") String characterName
     );
 
     @GetMapping(value = "profile/wow/character/{slug}/{characterName}/encounters/raids")
-    RaidInfDto getRaidEncounter(@RequestParam(name = "namespace", defaultValue = "profile-kr") String namespace,
-                                @RequestParam(name = "access_token") String access_token,
-                                @RequestParam(name = "locale", defaultValue = "ko_KR") String locale,
-                                @PathVariable(name = "slug") String slug,
-                                @PathVariable(name = "characterName") String characterName);
+    RaidInfoDto getRaidEncounter(@RequestParam(name = "namespace", defaultValue = "profile-kr") String namespace,
+                                 @RequestParam(name = "access_token") String access_token,
+                                 @RequestParam(name = "locale", defaultValue = "ko_KR") String locale,
+                                 @PathVariable(name = "slug") String slugEnglishName,
+                                 @PathVariable(name = "characterName") String characterName);
 }

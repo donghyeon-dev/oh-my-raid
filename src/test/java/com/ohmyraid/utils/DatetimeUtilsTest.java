@@ -1,5 +1,7 @@
 package com.ohmyraid.utils;
 
+import ch.qos.logback.classic.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@Slf4j
 class DatetimeUtilsTest {
-
-    @Autowired
-    DatetimeUtils datetimeUtils;
 
     @Test
     void now메서드_확인() {
-        System.out.println("현재날짜 ====" + datetimeUtils.now().toString());
+        System.out.println("현재날짜 ====" + DatetimeUtils.now().toString());
     }
 
     @Test
@@ -31,10 +31,15 @@ class DatetimeUtilsTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime convertedDateTime = LocalDateTime.parse(stringDateTime, formatter);
 
-        assertEquals(convertedDateTime, datetimeUtils.stringToLocalDateTime(stringDateTime));
+        assertEquals(convertedDateTime, DatetimeUtils.stringToLocalDateTime(stringDateTime));
 
+    };
+
+    @Test
+    void unixTimestampToLocalDateTime(){
+        String unixTimestamp = "1519466570000";
+        LocalDateTime convertedTime = DatetimeUtils.unixToLocalDateTime(Long.parseLong(unixTimestamp));
+        log.info("convertedTime is {}", convertedTime);
     }
-
-    ;
 
 }

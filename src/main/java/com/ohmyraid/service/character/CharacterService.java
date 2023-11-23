@@ -9,6 +9,7 @@ import com.ohmyraid.common.result.ErrorResult;
 import com.ohmyraid.config.Constant;
 import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.domain.character.CharacterEntity;
+import com.ohmyraid.domain.raid.RaidDetailEntity;
 import com.ohmyraid.domain.raid.RaidEncounterEntity;
 import com.ohmyraid.dto.character.CharacterRaidInfoDto;
 import com.ohmyraid.dto.login.UserSessionDto;
@@ -20,8 +21,10 @@ import com.ohmyraid.feign.WowClient;
 import com.ohmyraid.mapper.CharacterMapper;
 import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.repository.character.CharacterRespository;
+import com.ohmyraid.repository.raid.RaidDetailRepository;
 import com.ohmyraid.repository.raid.RaidEncounterRepository;
 import com.ohmyraid.utils.ConvertUtils;
+import com.ohmyraid.utils.DatetimeUtils;
 import com.ohmyraid.utils.RedisUtils;
 import com.ohmyraid.utils.ThreadLocalUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -45,7 +48,11 @@ public class CharacterService {
 
     private final CharacterRespository characterRespository;
     private final AccountRepository accountRepository;
+
     private final RaidEncounterRepository raidEncounterRepository;
+
+    private final RaidDetailRepository raidDetailRepository;
+
     private final WowClient wowClient;
     private final RedisUtils redisUtils;
     private final ObjectMapper mapper;
@@ -77,6 +84,7 @@ public class CharacterService {
                 , Constant.Auth.REGION);
         List<WowAccountDto> wowAccountDto = mapper.convertValue(accountProfileSummaryMap.get("wow_accounts"),
                 TypeFactory.defaultInstance().constructCollectionType(List.class, WowAccountDto.class));
+
         List<CharacterDto> characterList = parseCharacterList(wowAccountDto, accountId);
 
         for (CharacterDto characterDto : characterList) {
@@ -170,7 +178,7 @@ public class CharacterService {
         List<CharacterDto> characterDtos = CharacterMapper.INSTANCE.characterEntitiesToDtoList(charactersEntities);
 
 
-        List<RaidEncounterDto> encounterDtoList = accountRaidInfoToRaidEncounter(characterDtos, bzToken);
+        List<RaidEncounterDto> encounterDtoList = parseAccountRaidInfoToRaidEncounterList(characterDtos, bzToken);
 
         List<RaidEncounterEntity> raidEncounterEntities = new ArrayList<>();
         if (!ObjectUtils.isEmpty(encounterDtoList)) {
@@ -204,6 +212,97 @@ public class CharacterService {
 
         return true;
     }
+    // Todo 여기부터.. 빡씨네
+    /*public Boolean getRaidDetail(long accountId) throws Exception {
+            String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
+            String bzToken = redisUtils.getRedisValue(Constant.Auth.BLIZZARD_TOKEN_KEY, String.class);
+            if (ObjectUtils.isEmpty(bzToken)) {
+                throw new CommonServiceException(ErrorResult.NO_BZ_TOKEN);
+            }
+            List<CharacterEntity> charactersEntitiyList =
+                    characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevelDesc(accountId);
+            List<CharacterDto> characterDtoList = CharacterMapper.INSTANCE.characterEntitiesToDtoList(charactersEntitiyList);
+
+            ////////////
+            List<RaidDetailDto> raidDetailDtoList = new ArrayList<>();
+            for(CharacterEntity characterEntity : charactersEntitiyList){
+                CharacterDto characterDto = CharacterMapper.INSTANCE.characterEntityToDto(characterEntity);
+                RaidInfoDto charactersRaidInfo = wowClient.getRaidEncounter(Constant.Auth.NAMESPACE
+                        , bzToken
+                        , Constant.Auth.LOCALE
+                        , SlugType.getTypeByName(characterDto.getSlug()).getSlugEnglishName(),
+                        characterDto.getName());
+
+                List<ExpansionsDto> expansionRaidInfoList = charactersRaidInfo.getExpansions().stream()
+                        .filter(expansionsDto -> expansionsDto.getExpansion().getId() >= 395 // 395:군단 => 군단이후
+                                && !expansionsDto.getExpansion().getName().equals(Constant.CURRENT_SEASON))
+                        .collect(Collectors.toList());
+
+                for (ExpansionsDto expansionsRaidInfo : expansionRaidInfoList) {
+                    String expansionName = expansionsRaidInfo.getExpansion().getName(); // LEGION
+                    List<InstancesDto> expansionInstanceInfoList = expansionsRaidInfo.getInstances();
+                    for (InstancesDto raidInstancesDto : expansionInstanceInfoList) {
+                        String instanceName = raidInstancesDto.getInstance().getName(); // TOMB_OF_SARGERAS
+                        List<ModesDto> instanceModeList = raidInstancesDto.getModes();
+                        for (ModesDto instanceMode : instanceModeList) {
+                            String instanceDifficulty = instanceMode.getDifficulty().getType();// MYTHIC
+                            List<EncountersDto> instanceBossList = instanceMode.getProgress().getEncounters();
+                            for (EncountersDto instanceBoss : instanceBossList) {
+                                String bossName = instanceBoss.getEncounter().getName(); // Kiljeden
+                                int currentBossKills = instanceBoss.getCompleted_count(); // 1
+                                LocalDateTime lastKilledAt = DatetimeUtils.unixToLocalDateTime(Long.parseLong(instanceBoss.getLast_kill_timestamp())); // 2023.01.01 12:31:33
+                                RaidDetailDto raidDetailDto = RaidDetailDto.builder()
+                                        .characterId(characterEntity.getCharacterId())
+                                        .expansionName(expansionName)
+                                        .difficulty(instanceDifficulty)
+                                        .instanceName(instanceName)
+                                        .bossName(bossName)
+                                        .completedCount(currentBossKills)
+                                        .lastCrawledAt(DatetimeUtils.now())
+                                        .lastKilledAt(lastKilledAt)
+                                        .build();
+                                raidDetailDtoList.add(raidDetailDto);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            /////////////
+
+            List<RaidDetailEntity> raidDetailEntityList = new ArrayList<>();
+            if (!ObjectUtils.isEmpty(raidDetailDtoList)) {
+                raidDetailEntityList = raidDetailDtoList.stream()
+                        .filter(a -> a.getDifficulty() != null && !ObjectUtils.isEmpty(a.getDifficulty()))
+                        .map(a -> {
+                            RaidEncounterDto encounterDto = new RaidEncounterDto();
+                            encounterDto.setCharacterId(a.getCharacterId());
+                            encounterDto.setDifficulty(a.getDifficulty());
+                            encounterDto.setInstanceName(a.getInstanceName());
+                            encounterDto.setExpansionName(a.getExpansionName());
+                            encounterDto = raidEncounterRepository.findRaidEncounterEntityByDto(encounterDto);
+
+                            long encounterId = !ObjectUtils.isEmpty(encounterDto) ? encounterDto.getEncounterId() : 0L;
+
+                            RaidEncounterEntity entity = RaidEncounterEntity.builder()
+                                    .characterEntity(characterRespository.findCharacterEntityByCharacterId(a.getCharacterId()))
+                                    .encounterId(encounterId)
+                                    .difficulty(a.getDifficulty())
+                                    .expansionName(a.getExpansionName())
+                                    .instanceName(a.getInstanceName())
+                                    .lastCrawledAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                                    .progress(a.getProgress())
+                                    .build();
+                            return entity;
+                        })
+                        .collect(Collectors.toList());
+                log.debug("raidEuncounterEntities'is {}", raidEncounterEntities);
+            }
+            raidEncounterRepository.saveAll(raidEncounterEntities);
+
+            return true;
+        } */
 
     /**
      * 특정 캐릭터의 레이드 정보를 가져온다.
@@ -266,18 +365,18 @@ public class CharacterService {
      * 확장팩 이름, 던전 이름, 난이도 등 정보를 기반으로 각각을 표현하는 RaidEncounterDto 오브젝트를 포함합니다.
      * 각 RaidEncounterDto 객체는 하나의 공격대와 그 상세 정보를 나타냅니다.
      */
-    List<RaidEncounterDto> accountRaidInfoToRaidEncounter(List<CharacterDto> characterDtos, String bzToken) {
+    List<RaidEncounterDto> parseAccountRaidInfoToRaidEncounterList(List<CharacterDto> characterDtos, String bzToken) {
         List<RaidEncounterDto> encounterDtoList = new ArrayList<>();
 
         // 캐릭터 정보들 Stream을 돌려 RaidEncounter List 생성
-        List<RaidInfDto> accountRaidInfList = characterDtos.stream()
+        List<RaidInfoDto> accountRaidInfoList = characterDtos.stream()
                 .map(
                         c -> {
-                            RaidInfDto result =
+                            RaidInfoDto result =
                                     wowClient.getRaidEncounter(Constant.Auth.NAMESPACE
                                             , bzToken
                                             , Constant.Auth.LOCALE
-                                            , SlugType.getEnglishNameBySlugname(c.getSlug()).getSlugEnglishName(),
+                                            , SlugType.getTypeByName(c.getSlug()).getSlugEnglishName(),
                                             c.getName());
 //                            try {
 //                                // BlizzardAPI의 빠른 호출 방지를 위한...
@@ -289,28 +388,26 @@ public class CharacterService {
                             return result;
                         }
                 ).collect(Collectors.toList());
-        // 필터링
-        log.debug("accountRaidInfList is {}", accountRaidInfList);
-        accountRaidInfList = accountRaidInfList.stream()
-                .filter(raidInfList -> raidInfList.getExpansions() != null && !ObjectUtils.isEmpty(raidInfList))
+        accountRaidInfoList = accountRaidInfoList.stream()
+                .filter(raidInfoList -> raidInfoList.getExpansions() != null && !ObjectUtils.isEmpty(raidInfoList))
                 .collect(Collectors.toList());
 
         // stream으론 답이 안나온다.. 중첩된 For문을 사용하는 수밖에...
 
-        for (RaidInfDto raidInfDto : accountRaidInfList) {
+        for (RaidInfoDto raidInfoDto : accountRaidInfoList) {
 
-            long characterId = raidInfDto.getCharacterId();
+            long characterId = raidInfoDto.getCharacterId();
 
 
-            List<ExpansionsDto> expansionsList = raidInfDto.getExpansions();
+            List<ExpansionsDto> expansionsList = raidInfoDto.getExpansions();
             expansionsList = expansionsList.stream()
                     .filter(expansionDto -> !ObjectUtils.isEmpty(expansionDto))
+                    .filter(expansionsDto -> expansionsDto.getExpansion().getName().equals(Constant.CURRENT_SEASON))
                     .collect(Collectors.toList());
 
             if (!ObjectUtils.isEmpty(expansionsList)) {
                 for (ExpansionsDto expansionDto : expansionsList) {
                     String expansionName = expansionDto.getExpansion().getName();
-
 
                     List<InstancesDto> instancesList = expansionDto.getInstances();
                     for (InstancesDto instancesDto : instancesList) {
@@ -328,7 +425,6 @@ public class CharacterService {
                             raidEncounterDto.setProgress(convertUtils.progressToString(modeDto.getProgress()));
                             encounterDtoList.add(raidEncounterDto);
                         }
-
                     }
                 }
             }

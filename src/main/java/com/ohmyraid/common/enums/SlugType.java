@@ -33,21 +33,21 @@ public enum SlugType {
 
     private final int slugId;
 
-    public static SlugType getIdByName(String slugName) {
+    public static SlugType getTypeByName(String slugName) {
         return Arrays.stream(SlugType.values())
                 .filter(targetType -> targetType.getSlugName().equals(slugName))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("There is no described slug."));
     }
 
-    public static SlugType getEnglishNameBySlugname(String slugName){
+    public static SlugType getTypeBySlugEnglishname(String slugEnglishName){
         return Arrays.stream(SlugType.values())
-                .filter(targetType -> targetType.getSlugEnglishName().equals(slugName))
+                .filter(targetType -> targetType.getSlugEnglishName().equals(slugEnglishName))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("There is no described slug."));
     }
 
-    public static SlugType getNameById(int slugId) {
+    public static SlugType getTypeById(int slugId) {
         return Arrays.stream(SlugType.values())
                 .filter(targetValue -> targetValue.getSlugId() == slugId)
                 .findFirst()

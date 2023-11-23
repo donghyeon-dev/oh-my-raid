@@ -28,14 +28,14 @@ public enum PlayableClassType {
 
     private final int playableClassId;
 
-    public static PlayableClassType getIdByName(String playableClassName) {
+    public static PlayableClassType getTypeByName(String playableClassName) {
         return Arrays.stream(PlayableClassType.values())
                 .filter(targetType -> targetType.getPlayableClassName().equals(playableClassName))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("There is no described playble class."));
     }
 
-    public static PlayableClassType getNameById(int playableClassId) {
+    public static PlayableClassType getTypeById(int playableClassId) {
         return Arrays.stream(PlayableClassType.values())
                 .filter(targetValue -> targetValue.getPlayableClassId() == playableClassId)
                 .findFirst()

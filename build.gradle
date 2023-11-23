@@ -48,6 +48,8 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -76,7 +78,7 @@ dependencies {
 
     // JPA
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.1.4.RELEASE'
-    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.2.2.Final'
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.6.1.Final'
 
     //QueryDSL
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"

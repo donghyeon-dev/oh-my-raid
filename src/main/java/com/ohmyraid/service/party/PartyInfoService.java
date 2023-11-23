@@ -30,8 +30,6 @@ public class PartyInfoService {
     private final AccountRepository accountRepository;
     private final CharacterRespository characterRespository;
 
-    private final DatetimeUtils datetimeUtils;
-
     private final RedisUtils redisUtils;
 
     /**

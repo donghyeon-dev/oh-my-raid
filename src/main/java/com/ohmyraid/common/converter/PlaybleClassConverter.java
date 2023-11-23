@@ -16,7 +16,7 @@ public class PlaybleClassConverter implements AttributeConverter<String, Integer
      */
     @Override
     public Integer convertToDatabaseColumn(String playableClassName) {
-        return PlayableClassType.getIdByName(playableClassName).getPlayableClassId();
+        return PlayableClassType.getTypeByName(playableClassName).getPlayableClassId();
     }
 
     ;
@@ -31,6 +31,6 @@ public class PlaybleClassConverter implements AttributeConverter<String, Integer
      */
     @Override
     public String convertToEntityAttribute(Integer playableClassId) {
-        return PlayableClassType.getNameById(playableClassId).getPlayableClassName();
+        return PlayableClassType.getTypeById(playableClassId).getPlayableClassName();
     }
 }
