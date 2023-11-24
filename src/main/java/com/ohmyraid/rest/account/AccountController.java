@@ -47,7 +47,7 @@ public class AccountController {
     }
 
     @GetMapping(value = "{accountId}/sync")
-    @ApiOperation(value = "계정의 전체 캐릭터정보 동기화", notes = "해당 계정의 캐릭터 정보를 동기화한다.")
+    @ApiOperation(value = "최초 계정의 전체 캐릭터정보 동기화", notes = "최초실행 해당 계정의 캐릭터 정보를 동기화한다.")
     public ResultView<Boolean> getChractersByAccount(@PathVariable long accountId) throws JsonProcessingException, InterruptedException {
         return new ResultView<>(characterService.getChractersByAccount(accountId));
     }
@@ -61,7 +61,7 @@ public class AccountController {
     @GetMapping("/{accountId}/raid-encounter")
     @ApiOperation(value = "캐릭터의 레이드 정보 동기화", notes = "사용자 계정에 저장된 캐릭터들의 레이드들의 정보를 동기화한다.")
     public ResultView<Boolean> getRaidEncounter(@PathVariable long accountId) throws Exception {
-        return new ResultView<>(characterService.getRaidEncounter(accountId));
+        return new ResultView<>(characterService.getRaidDetail(accountId));
     }
 
 }

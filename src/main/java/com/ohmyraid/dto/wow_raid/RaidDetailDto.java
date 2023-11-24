@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
 public class RaidDetailDto {
@@ -29,9 +28,13 @@ public class RaidDetailDto {
 
     private String expansionName;
 
+    private Long expansionId;
+
     private String difficulty;
 
     private String instanceName;
+
+    private Long instanceId;
 
     private String bossName;
 
@@ -42,4 +45,22 @@ public class RaidDetailDto {
     private LocalDateTime lastCrawledAt;
 
     private LocalDateTime lastKilledAt;
+
+    @QueryProjection
+    public RaidDetailDto(Long detailId, Long characterId, String expansionName, Long expansionId, String difficulty,
+                         String instanceName, Long instanceId, String bossName, long bossId, int completedCount,
+                         LocalDateTime lastCrawledAt, LocalDateTime lastKilledAt) {
+        this.detailId = detailId;
+        this.characterId = characterId;
+        this.expansionName = expansionName;
+        this.expansionId = expansionId;
+        this.difficulty = difficulty;
+        this.instanceName = instanceName;
+        this.instanceId = instanceId;
+        this.bossName = bossName;
+        this.bossId = bossId;
+        this.completedCount = completedCount;
+        this.lastCrawledAt = lastCrawledAt;
+        this.lastKilledAt = lastKilledAt;
+    }
 }

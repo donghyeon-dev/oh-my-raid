@@ -37,6 +37,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -120,6 +121,23 @@ public class CharacterServiceTest {
         }
 
 
+    }
+
+    @Test
+    void findRaidDetailIdByDto_테스트(){
+        RaidDetailDto raidDetailDto = RaidDetailDto.builder()
+                .bossId(2168)
+                .difficulty("MYTHIC")
+                .characterId(19L)
+                .build();
+
+        Long detailId = raidDetailRepository.findRaidDetailIdByDto(raidDetailDto);
+        assertEquals(detailId, 166);
+
+        raidDetailDto.setBossId(2374);
+//        detailId = Optional.ofNullable(raidDetailRepository.findRaidDetailIdByDto(raidDetailDto)).orElse(0L);
+        detailId = raidDetailRepository.findRaidDetailIdByDto(raidDetailDto);
+        log.info("What is result of querydsl can't find value. detailId = {}", detailId);
     }
 
 

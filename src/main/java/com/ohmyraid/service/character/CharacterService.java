@@ -167,6 +167,7 @@ public class CharacterService {
      *
      * @return
      */
+    @Deprecated
     public Boolean getRaidEncounter(long accountId) throws Exception {
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         String bzToken = redisUtils.getRedisValue(Constant.Auth.BLIZZARD_TOKEN_KEY, String.class);
@@ -212,9 +213,8 @@ public class CharacterService {
 
         return true;
     }
-    // Todo 여기부터.. 빡씨네
-    /*public Boolean getRaidDetail(long accountId) throws Exception {
-            String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
+
+    public Boolean getRaidDetail(long accountId) throws Exception {
             String bzToken = redisUtils.getRedisValue(Constant.Auth.BLIZZARD_TOKEN_KEY, String.class);
             if (ObjectUtils.isEmpty(bzToken)) {
                 throw new CommonServiceException(ErrorResult.NO_BZ_TOKEN);
@@ -223,7 +223,6 @@ public class CharacterService {
                     characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevelDesc(accountId);
             List<CharacterDto> characterDtoList = CharacterMapper.INSTANCE.characterEntitiesToDtoList(charactersEntitiyList);
 
-            ////////////
             List<RaidDetailDto> raidDetailDtoList = new ArrayList<>();
             for(CharacterEntity characterEntity : charactersEntitiyList){
                 CharacterDto characterDto = CharacterMapper.INSTANCE.characterEntityToDto(characterEntity);
@@ -233,30 +232,41 @@ public class CharacterService {
                         , SlugType.getTypeByName(characterDto.getSlug()).getSlugEnglishName(),
                         characterDto.getName());
 
+                if(ObjectUtils.isEmpty(charactersRaidInfo.getExpansions())){
+                    log.error("This character has no raid info entire expansions");
+                    continue;
+                }
                 List<ExpansionsDto> expansionRaidInfoList = charactersRaidInfo.getExpansions().stream()
-                        .filter(expansionsDto -> expansionsDto.getExpansion().getId() >= 395 // 395:군단 => 군단이후
+                        .filter(expansionsDto -> !ObjectUtils.isEmpty(expansionsDto)
+                                && expansionsDto.getExpansion().getId() >= 395 // 395:군단 => 군단이후
                                 && !expansionsDto.getExpansion().getName().equals(Constant.CURRENT_SEASON))
                         .collect(Collectors.toList());
 
                 for (ExpansionsDto expansionsRaidInfo : expansionRaidInfoList) {
                     String expansionName = expansionsRaidInfo.getExpansion().getName(); // LEGION
+                    Long expansionId = expansionsRaidInfo.getExpansion().getId();
                     List<InstancesDto> expansionInstanceInfoList = expansionsRaidInfo.getInstances();
                     for (InstancesDto raidInstancesDto : expansionInstanceInfoList) {
                         String instanceName = raidInstancesDto.getInstance().getName(); // TOMB_OF_SARGERAS
+                        Long instanceId = raidInstancesDto.getInstance().getId();
                         List<ModesDto> instanceModeList = raidInstancesDto.getModes();
                         for (ModesDto instanceMode : instanceModeList) {
                             String instanceDifficulty = instanceMode.getDifficulty().getType();// MYTHIC
                             List<EncountersDto> instanceBossList = instanceMode.getProgress().getEncounters();
                             for (EncountersDto instanceBoss : instanceBossList) {
                                 String bossName = instanceBoss.getEncounter().getName(); // Kiljeden
+                                long bossId = instanceBoss.getEncounter().getId();
                                 int currentBossKills = instanceBoss.getCompleted_count(); // 1
                                 LocalDateTime lastKilledAt = DatetimeUtils.unixToLocalDateTime(Long.parseLong(instanceBoss.getLast_kill_timestamp())); // 2023.01.01 12:31:33
                                 RaidDetailDto raidDetailDto = RaidDetailDto.builder()
                                         .characterId(characterEntity.getCharacterId())
                                         .expansionName(expansionName)
+                                        .expansionId(expansionId)
                                         .difficulty(instanceDifficulty)
                                         .instanceName(instanceName)
+                                        .instanceId(instanceId)
                                         .bossName(bossName)
+                                        .bossId(bossId)
                                         .completedCount(currentBossKills)
                                         .lastCrawledAt(DatetimeUtils.now())
                                         .lastKilledAt(lastKilledAt)
@@ -268,41 +278,34 @@ public class CharacterService {
                 }
             }
 
-
-            /////////////
-
             List<RaidDetailEntity> raidDetailEntityList = new ArrayList<>();
             if (!ObjectUtils.isEmpty(raidDetailDtoList)) {
                 raidDetailEntityList = raidDetailDtoList.stream()
-                        .filter(a -> a.getDifficulty() != null && !ObjectUtils.isEmpty(a.getDifficulty()))
-                        .map(a -> {
-                            RaidEncounterDto encounterDto = new RaidEncounterDto();
-                            encounterDto.setCharacterId(a.getCharacterId());
-                            encounterDto.setDifficulty(a.getDifficulty());
-                            encounterDto.setInstanceName(a.getInstanceName());
-                            encounterDto.setExpansionName(a.getExpansionName());
-                            encounterDto = raidEncounterRepository.findRaidEncounterEntityByDto(encounterDto);
+                        .filter(raidDetailDto -> raidDetailDto.getDifficulty() != null && !ObjectUtils.isEmpty(raidDetailDto.getDifficulty()))
+                        .map(raidDetailDto -> {
+                            Long detailId = raidDetailRepository.findRaidDetailIdByDto(raidDetailDto);
 
-                            long encounterId = !ObjectUtils.isEmpty(encounterDto) ? encounterDto.getEncounterId() : 0L;
-
-                            RaidEncounterEntity entity = RaidEncounterEntity.builder()
-                                    .characterEntity(characterRespository.findCharacterEntityByCharacterId(a.getCharacterId()))
-                                    .encounterId(encounterId)
-                                    .difficulty(a.getDifficulty())
-                                    .expansionName(a.getExpansionName())
-                                    .instanceName(a.getInstanceName())
-                                    .lastCrawledAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                                    .progress(a.getProgress())
+                            return RaidDetailEntity.builder()
+                                    .detailId(detailId)
+                                    .characterEntity(CharacterEntity.builder().characterId(raidDetailDto.getCharacterId()).build())
+                                    .expansionName(raidDetailDto.getExpansionName())
+                                    .expansionId(raidDetailDto.getExpansionId())
+                                    .difficulty(raidDetailDto.getDifficulty())
+                                    .instanceName(raidDetailDto.getInstanceName())
+                                    .instanceId(raidDetailDto.getInstanceId())
+                                    .bossName(raidDetailDto.getBossName())
+                                    .bossId(raidDetailDto.getBossId())
+                                    .completedCount(raidDetailDto.getCompletedCount())
+                                    .lastCrawledAt(DatetimeUtils.now())
+                                    .lastKilledAt(raidDetailDto.getLastKilledAt())
                                     .build();
-                            return entity;
                         })
                         .collect(Collectors.toList());
-                log.debug("raidEuncounterEntities'is {}", raidEncounterEntities);
             }
-            raidEncounterRepository.saveAll(raidEncounterEntities);
+            raidDetailRepository.saveAll(raidDetailEntityList);
 
             return true;
-        } */
+        }
 
     /**
      * 특정 캐릭터의 레이드 정보를 가져온다.

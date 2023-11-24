@@ -1,5 +1,7 @@
 package com.ohmyraid.domain.raid;
 
+import com.ohmyraid.common.converter.DifficultyConverter;
+import com.ohmyraid.common.enums.DifficultyType;
 import com.ohmyraid.domain.character.CharacterEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,14 +32,22 @@ public class RaidDetailEntity {
     @Column(length = 100, nullable = false)
     String expansionName;
 
+    @Comment("확장팩 고유 ID")
+    @Column(length = 10, nullable = false)
+    Long expansionId;
 
     @Comment("난이도")
-    @Column(length = 20, nullable = false)
+    @Column(length = 3, nullable = false)
+    @Convert(converter = DifficultyConverter.class)
     String difficulty;
 
     @Comment("공격대명")
     @Column(length = 100, nullable = false)
     String instanceName;
+
+    @Comment("공격대 고유 ID")
+    @Column(length = 10, nullable = false)
+    Long instanceId;
 
     @Comment("네임드명")
     @Column(length = 100, nullable = false)
@@ -45,7 +55,7 @@ public class RaidDetailEntity {
 
     @Comment("네임드 고유 ID")
     @Column(length = 10, nullable = false)
-    long bossId;
+    Long bossId;
 
     @Comment("총 킬수")
     @Column(length = 2, nullable = false)

@@ -12,11 +12,10 @@ import java.time.format.DateTimeFormatter;
 public class DatetimeUtils {
 
     private final static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private final static String ZONE_ID = "Asia/Seoul";
 
     public static LocalDateTime now() {
-
-        String now = LocalDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        log.debug("nowTime is {}", LocalDateTime.parse(now, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        String now = LocalDateTime.now(ZoneId.of(ZONE_ID)).format(DateTimeFormatter.ofPattern(DATE_FORMAT));
 
         return LocalDateTime.parse(now, DateTimeFormatter.ofPattern(DATE_FORMAT));
     }
@@ -27,6 +26,6 @@ public class DatetimeUtils {
     }
 
     public static LocalDateTime unixToLocalDateTime(Long unixTimeStamp){
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(unixTimeStamp), ZoneId.of("Asia/Seoul"));
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(unixTimeStamp), ZoneId.of(ZONE_ID));
     }
 }

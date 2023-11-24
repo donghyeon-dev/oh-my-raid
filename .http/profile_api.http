@@ -25,3 +25,14 @@ GET https://kr.api.blizzard.com/profile/wow/character/azshara/%EB%B0%95%EB%8F%99
 
 GET https://kr.api.blizzard.com/profile/wow/character/azshara/%EC%98%A4%ED%86%A0%EC%BA%A3?namespace=profile-kr&
     access_token=KRm9DAIW5ebM6MTg8x134oIP8t6BxG4h8J&locale=ko_KR
+
+
+###
+#Raider MythicPlusScoreBySeason:current
+GET https://raider.io/api/v1/characters/profile?region=kr&realm=azshara&name=눈불&
+    fields=mythic_plus_scores_by_season%3Acurrent
+Content-Type: application/json
+
+###
+GET https://www.warcraftlogs.com/oauth/token
+Authorization: Basic cd5f2cc20f0e4be08e31ae9938e56b2d 1penStTopokgRhM4fRtGwez2JUwyc7K2

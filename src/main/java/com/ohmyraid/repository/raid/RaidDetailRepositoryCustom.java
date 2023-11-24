@@ -9,4 +9,6 @@ import java.util.List;
 public interface RaidDetailRepositoryCustom {
 
     Long findRaidDetailIdByDto(RaidDetailDto raidDetailDto);
+
+
 }

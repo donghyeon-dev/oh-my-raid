@@ -24,18 +24,17 @@ public class RaidDetailRepositoryImpl implements RaidDetailRepositoryCustom {
 
     @Override
     public Long findRaidDetailIdByDto(RaidDetailDto requestDto) {
-        return 0L;
-//        QRaidDetailEntity raidDetailEntity = QRaidDetailEntity.raidDetailEntity;
-//
-//        return queryFactory
-//                .select(new QRaidDetailEntity(
-//                        raidDetailEntity.detailId
-//                ))
-//                .from(raidDetailEntity)
-//                .where(raidDetailEntity.characterEntity.characterId.eq(requestDto.getCharacterId())
-//                        .and(raidDetailEntity.difficulty.eq(requestDto.getDifficulty()))
-//                        .and(raidDetailEntity.bossId.eq(requestDto.getBossId()))
-//                ).fetchOne();
+        QRaidDetailEntity raidDetailEntity = QRaidDetailEntity.raidDetailEntity;
+
+        return queryFactory
+                .select(raidDetailEntity.detailId)
+                .from(raidDetailEntity)
+                .where(raidDetailEntity.characterEntity.characterId.eq(requestDto.getCharacterId())
+                        .and(raidDetailEntity.difficulty.eq(requestDto.getDifficulty()))
+                        .and(raidDetailEntity.bossId.eq(requestDto.getBossId()))
+                ).fetchOne();
 
     }
+
+
 }
