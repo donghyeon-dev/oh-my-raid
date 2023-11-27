@@ -1,10 +1,13 @@
 package com.ohmyraid.dto.wow_raid;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 
 /**
@@ -14,11 +17,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ExpansionDto {
+@JsonRootName("instances")
+public class Instances {
 
-    @ApiModelProperty(value = "확장팩 명", name = "name")
-    String name;
+    @ApiModelProperty(value = "인스턴스 던전 정보 DTO", name = "instance")
+    private Instance instance;
 
-    @ApiModelProperty(value = "확장팩 고유번호", name = "id")
-    long id;
+    @ApiModelProperty(value = "난이도 관련 정보 DTO", name = "modes")
+    private List<ModesDto> modes;
 }

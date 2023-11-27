@@ -236,24 +236,24 @@ public class CharacterService {
                     log.error("This character has no raid info entire expansions");
                     continue;
                 }
-                List<ExpansionsDto> expansionRaidInfoList = charactersRaidInfo.getExpansions().stream()
-                        .filter(expansionsDto -> !ObjectUtils.isEmpty(expansionsDto)
-                                && expansionsDto.getExpansion().getId() >= 395 // 395:군단 => 군단이후
-                                && !expansionsDto.getExpansion().getName().equals(Constant.CURRENT_SEASON))
+                List<Expansions> expansionRaidInfoList = charactersRaidInfo.getExpansions().stream()
+                        .filter(expansions -> !ObjectUtils.isEmpty(expansions)
+                                && expansions.getExpansion().getId() >= 395 // 395:군단 => 군단이후
+                                && !expansions.getExpansion().getName().equals(Constant.CURRENT_SEASON))
                         .collect(Collectors.toList());
 
-                for (ExpansionsDto expansionsRaidInfo : expansionRaidInfoList) {
+                for (Expansions expansionsRaidInfo : expansionRaidInfoList) {
                     String expansionName = expansionsRaidInfo.getExpansion().getName(); // LEGION
                     Long expansionId = expansionsRaidInfo.getExpansion().getId();
-                    List<InstancesDto> expansionInstanceInfoList = expansionsRaidInfo.getInstances();
-                    for (InstancesDto raidInstancesDto : expansionInstanceInfoList) {
-                        String instanceName = raidInstancesDto.getInstance().getName(); // TOMB_OF_SARGERAS
-                        Long instanceId = raidInstancesDto.getInstance().getId();
-                        List<ModesDto> instanceModeList = raidInstancesDto.getModes();
+                    List<Instances> expansionInstanceInfoList = expansionsRaidInfo.getInstances();
+                    for (Instances raidInstances : expansionInstanceInfoList) {
+                        String instanceName = raidInstances.getInstance().getName(); // TOMB_OF_SARGERAS
+                        Long instanceId = raidInstances.getInstance().getId();
+                        List<ModesDto> instanceModeList = raidInstances.getModes();
                         for (ModesDto instanceMode : instanceModeList) {
                             String instanceDifficulty = instanceMode.getDifficulty().getType();// MYTHIC
-                            List<EncountersDto> instanceBossList = instanceMode.getProgress().getEncounters();
-                            for (EncountersDto instanceBoss : instanceBossList) {
+                            List<Encounters> instanceBossList = instanceMode.getProgress().getEncounters();
+                            for (Encounters instanceBoss : instanceBossList) {
                                 String bossName = instanceBoss.getEncounter().getName(); // Kiljeden
                                 long bossId = instanceBoss.getEncounter().getId();
                                 int currentBossKills = instanceBoss.getCompleted_count(); // 1
@@ -402,22 +402,22 @@ public class CharacterService {
             long characterId = raidInfoDto.getCharacterId();
 
 
-            List<ExpansionsDto> expansionsList = raidInfoDto.getExpansions();
+            List<Expansions> expansionsList = raidInfoDto.getExpansions();
             expansionsList = expansionsList.stream()
                     .filter(expansionDto -> !ObjectUtils.isEmpty(expansionDto))
-                    .filter(expansionsDto -> expansionsDto.getExpansion().getName().equals(Constant.CURRENT_SEASON))
+                    .filter(expansions -> expansions.getExpansion().getName().equals(Constant.CURRENT_SEASON))
                     .collect(Collectors.toList());
 
             if (!ObjectUtils.isEmpty(expansionsList)) {
-                for (ExpansionsDto expansionDto : expansionsList) {
+                for (Expansions expansionDto : expansionsList) {
                     String expansionName = expansionDto.getExpansion().getName();
 
-                    List<InstancesDto> instancesList = expansionDto.getInstances();
-                    for (InstancesDto instancesDto : instancesList) {
-                        String instanceName = instancesDto.getInstance().getName();
+                    List<Instances> instancesList = expansionDto.getInstances();
+                    for (Instances instances : instancesList) {
+                        String instanceName = instances.getInstance().getName();
 
 
-                        List<ModesDto> difficultyList = instancesDto.getModes();
+                        List<ModesDto> difficultyList = instances.getModes();
                         for (ModesDto modeDto : difficultyList) {
                             RaidEncounterDto raidEncounterDto = new RaidEncounterDto();
                             raidEncounterDto.setCharacterId(characterId);

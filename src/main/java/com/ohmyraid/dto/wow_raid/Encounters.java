@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 
 /**
  * BlahBlah Entity 의 DT 를 도와주는 DTO 클래스
@@ -17,12 +15,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("instances")
-public class InstancesDto {
+@JsonRootName("encounters")
+public class Encounters {
 
-    @ApiModelProperty(value = "인스턴스 던전 정보 DTO", name = "instance")
-    private InstanceDto instance;
+    @ApiModelProperty(value = "네임드 정보", name = "encounter")
+    private Encounter encounter;
 
-    @ApiModelProperty(value = "난이도 관련 정보 DTO", name = "modes")
-    private List<ModesDto> modes;
+    @ApiModelProperty(value = "네임드 처치 수", name = "comopleted_count")
+    private int completed_count;
+
+    @ApiModelProperty(value = "가장 최근에 잡은 시간", name = "last_kill_timestamp")
+    private String last_kill_timestamp;
+
+
 }

@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonRootName("playble_race")
-public class PlayableRaceDto {
+public class PlayableRace {
 
     String name;
 

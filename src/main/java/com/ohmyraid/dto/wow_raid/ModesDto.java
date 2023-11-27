@@ -19,10 +19,10 @@ import lombok.NoArgsConstructor;
 public class ModesDto {
 
     @ApiModelProperty(value = "난이도 정보 DTO", name = "difficulty")
-    private DifficultyDto difficulty;
+    private Difficulty difficulty;
 
     @ApiModelProperty(value = "레이드 완료여부 DTO", name = "status")
-    private StatusDto status;
+    private Status status;
 
     @ApiModelProperty(value = "레이드 진척도 DTO", name = "progress")
     private ProgressDto progress;

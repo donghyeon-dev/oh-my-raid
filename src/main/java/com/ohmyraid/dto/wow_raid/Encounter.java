@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("difficulty")
-public class DifficultyDto {
+@JsonRootName("encounter")
+public class Encounter {
 
-    @ApiModelProperty(value = "영문 난이도명", name = "type")
-    private String type;
-
-    @ApiModelProperty(value = "한글 난이도명", name = "name")
+    @ApiModelProperty(value = "네임드 이름", name = "name")
     private String name;
+
+    @ApiModelProperty(value = "네임드 고유 번호", name = "id")
+    private long id;
 }

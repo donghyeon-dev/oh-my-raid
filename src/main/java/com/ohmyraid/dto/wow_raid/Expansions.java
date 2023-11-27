@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 /**
  * BlahBlah Entity 의 DT 를 도와주는 DTO 클래스
@@ -15,12 +17,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("status")
-public class StatusDto {
+@JsonRootName("expansions")
+public class Expansions {
 
-    @ApiModelProperty(value = "영문 상태", name = "type")
-    private String type;
+    @ApiModelProperty(value = "확장팩 관련 Dto", name = "expansionDto")
+    private Expansion expansion;
 
-    @ApiModelProperty(value = "한글 상태", name = "name")
-    private String name;
+    @ApiModelProperty(value = "인스턴스 던전 정보 DTO", name = "instances")
+    private List<Instances> instances;
 }

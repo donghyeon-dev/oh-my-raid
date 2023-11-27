@@ -1,7 +1,6 @@
 package com.ohmyraid.dto.wow_account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
@@ -10,14 +9,14 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 
-public class CharactersDto {
+public class Characters {
 
     public String name;
     public int id;
-    public RealmDto realm;
-    public PlayableClassDto playableClass;
-    public PlayableRaceDto playableRace;
-    public GenderDto gender;
-    public FactionDto faction;
+    public Realm realm;
+    public PlayableClass playableClass;
+    public PlayableRace playableRace;
+    public Gender gender;
+    public Faction faction;
     public int level;
 }

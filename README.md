@@ -19,3 +19,7 @@
 - Feign
 - Swagger
 - Lombok
+
+### 중첩된 For문을 사용하는 이유
+![레이드정보계층](doc/RaidDtoUML.png)*블리자드에서 제공하는 레이드 API의 depth*
+![캐릭터정보계층](doc/CharacterDtoUML.png)*블리자드에서 제공하는 캐릭터 API의 depth*

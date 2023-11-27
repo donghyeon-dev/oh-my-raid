@@ -19,5 +19,5 @@ public class RaidInfoDto {
 
     private long characterId;
     
-    private List<ExpansionsDto> expansions;
+    private List<Expansions> expansions;
 }

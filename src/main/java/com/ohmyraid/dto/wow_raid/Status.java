@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("instance")
-public class InstanceDto {
+@JsonRootName("status")
+public class Status {
 
-    @ApiModelProperty(value = "레이드 던전 명", name = "name")
-    String name;
+    @ApiModelProperty(value = "영문 상태", name = "type")
+    private String type;
 
-    @ApiModelProperty(value = "레이드 던전 고유 번호", name = "id")
-    long id;
+    @ApiModelProperty(value = "한글 상태", name = "name")
+    private String name;
 }

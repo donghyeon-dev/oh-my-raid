@@ -30,7 +30,7 @@ public class ProgressDto {
     private int totalCount;
 
     @ApiModelProperty(value = "각 네임드 별 정보DTO ", name = "encounters")
-    private List<EncountersDto> encounters;
+    private List<Encounters> encounters;
 
 
 }

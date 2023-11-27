@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonRootName("gender")
-public class GenderDto {
+public class Gender {
 
     String type;
     String name;

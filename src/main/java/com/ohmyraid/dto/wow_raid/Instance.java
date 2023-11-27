@@ -15,17 +15,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("encounters")
-public class EncountersDto {
+@JsonRootName("instance")
+public class Instance {
 
-    @ApiModelProperty(value = "네임드 정보", name = "encounter")
-    private EncounterDto encounter;
+    @ApiModelProperty(value = "레이드 던전 명", name = "name")
+    String name;
 
-    @ApiModelProperty(value = "네임드 처치 수", name = "comopleted_count")
-    private int completed_count;
-
-    @ApiModelProperty(value = "가장 최근에 잡은 시간", name = "last_kill_timestamp")
-    private String last_kill_timestamp;
-
-
+    @ApiModelProperty(value = "레이드 던전 고유 번호", name = "id")
+    long id;
 }

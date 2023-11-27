@@ -14,5 +14,5 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class WowAccountDto {
     public int id;
-    public List<CharactersDto> characters;
+    public List<Characters> characters;
 }

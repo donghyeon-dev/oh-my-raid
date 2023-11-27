@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties
 @JsonRootName("realm")
-public class RealmDto {
+public class Realm {
 
     public String name;
 

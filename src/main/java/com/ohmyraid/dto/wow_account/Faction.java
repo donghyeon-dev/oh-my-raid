@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Data;
 
 @Data
-@JsonIgnoreProperties
-@JsonRootName("playble_class")
-public class PlayableClassDto {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonRootName("faction")
+public class Faction {
 
-    public String name;
+    String type;
 
-    public int id;
+    String name;
 }

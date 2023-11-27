@@ -13,34 +13,20 @@ import com.ohmyraid.mapper.CharacterMapper;
 import com.ohmyraid.repository.character.CharacterRespository;
 import com.ohmyraid.repository.raid.RaidDetailRepository;
 import com.ohmyraid.utils.DatetimeUtils;
-import com.ohmyraid.utils.RedisUtilTest;
 import com.ohmyraid.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
@@ -81,24 +67,24 @@ public class CharacterServiceTest {
                 , SlugType.getTypeByName(characterDto.getSlug()).getSlugEnglishName(),
                 characterDto.getName());
 
-        List<ExpansionsDto> expansionRaidInfoList = charactersRaidInfo.getExpansions().stream()
-                .filter(expansionsDto -> expansionsDto.getExpansion().getId() >= 395 // 395:군단
-                        && !expansionsDto.getExpansion().getName().equals(Constant.CURRENT_SEASON) )
+        List<Expansions> expansionRaidInfoList = charactersRaidInfo.getExpansions().stream()
+                .filter(expansions -> expansions.getExpansion().getId() >= 395 // 395:군단
+                        && !expansions.getExpansion().getName().equals(Constant.CURRENT_SEASON) )
                 .collect(Collectors.toList())
                 ; // legion,bfa,sdl,df
 
-        for(ExpansionsDto expansionsRaidInfo : expansionRaidInfoList){
+        for(Expansions expansionsRaidInfo : expansionRaidInfoList){
             String expansionName = expansionsRaidInfo.getExpansion().getName(); // LEGION
-            List<InstancesDto> expansionInstanceInfoList = expansionsRaidInfo.getInstances();
-            for(InstancesDto raidInstancesDto : expansionInstanceInfoList){
-                String instanceName = raidInstancesDto.getInstance().getName(); // TOMB_OF_SARGERAS
-                List<ModesDto> instanceModeList = raidInstancesDto.getModes();
+            List<Instances> expansionInstanceInfoList = expansionsRaidInfo.getInstances();
+            for(Instances raidInstances : expansionInstanceInfoList){
+                String instanceName = raidInstances.getInstance().getName(); // TOMB_OF_SARGERAS
+                List<ModesDto> instanceModeList = raidInstances.getModes();
                 for(ModesDto instanceMode : instanceModeList){
                     String instanceDifficulty = instanceMode.getDifficulty().getType();// MYTHIC
                     int currentDifficultyKilledBossesCount = instanceMode.getProgress().getCompletedCount(); // 1
                     int currentDifficultyTotalKilledBossesCount = instanceMode.getProgress().getTotalCount(); // 13
-                    List<EncountersDto> instanceBossList = instanceMode.getProgress().getEncounters();
-                    for(EncountersDto instanceBoss : instanceBossList ){
+                    List<Encounters> instanceBossList = instanceMode.getProgress().getEncounters();
+                    for(Encounters instanceBoss : instanceBossList ){
                         String bossName = instanceBoss.getEncounter().getName(); // Kiljeden
                         long bossId = instanceBoss.getEncounter().getId();
                         int currentBossKills = instanceBoss.getCompleted_count(); // 1
