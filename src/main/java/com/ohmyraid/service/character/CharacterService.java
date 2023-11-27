@@ -12,6 +12,7 @@ import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.domain.raid.RaidDetailEntity;
 import com.ohmyraid.domain.raid.RaidEncounterEntity;
 import com.ohmyraid.dto.character.CharacterRaidInfoDto;
+import com.ohmyraid.dto.character.CharacterRaidInfoRequest;
 import com.ohmyraid.dto.login.UserSessionDto;
 import com.ohmyraid.dto.wow_account.CharacterDto;
 import com.ohmyraid.dto.wow_account.CharacterSpecInfoDto;
@@ -315,13 +316,15 @@ public class CharacterService {
      * @return
      * @throws Exception
      */
-    public List<CharacterRaidInfoDto> getSpecificCharacterRaidInfo(long characterId, long accountId) throws Exception {
+//    public List<CharacterRaidInfoDto> getSpecificCharacterRaidInfo(long characterId, long accountId) throws Exception {
+//
+//        return raidEncounterRepository.findCharacterRaidInfoByCharacterId(characterId, accountId);
+//    }
 
-        return raidEncounterRepository.findCharacterRaidInfoByCharacterId(characterId, accountId);
-    }
 
+    public List<CharacterRaidInfoDto> getSpecificCharacterRaidDetailInfo(long characterId,
+                                                                 CharacterRaidInfoRequest characterRaidInfoRequest) {
 
-    public List<CharacterRaidInfoDto> getSpecificCharacterEncounterInfo(long characterId) {
 
         return null;
     }

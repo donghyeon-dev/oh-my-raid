@@ -6,7 +6,7 @@ import com.ohmyraid.dto.wow_raid.RaidEncounterDto;
 import java.util.List;
 
 public interface RaidEncounterRepositoryCustom {
-    List<CharacterRaidInfoDto> findCharacterRaidInfoByCharacterId(long characterId, long accountId);
+//    List<CharacterRaidInfoDto> findCharacterRaidInfoByCharacterId(long characterId, long accountId);
 
     RaidEncounterDto findRaidEncounterEntityByDto(RaidEncounterDto requestDto);
 }

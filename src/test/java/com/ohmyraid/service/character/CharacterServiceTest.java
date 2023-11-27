@@ -6,6 +6,8 @@ import com.ohmyraid.common.enums.SlugType;
 import com.ohmyraid.config.Constant;
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.domain.raid.RaidDetailEntity;
+import com.ohmyraid.dto.character.CharacterRaidInfoDto;
+import com.ohmyraid.dto.character.CharacterRaidInfoRequest;
 import com.ohmyraid.dto.wow_account.CharacterDto;
 import com.ohmyraid.dto.wow_raid.*;
 import com.ohmyraid.feign.WowClient;
@@ -127,4 +129,12 @@ public class CharacterServiceTest {
     }
 
 
+    @Test
+    void findRaidDetailListBySearchParam(){
+
+        List<CharacterRaidInfoDto> raidDetailDtoList = raidDetailRepository.findRaidDetailListBySearchParam(CharacterRaidInfoRequest.builder()
+                        .characterId(19)
+                .build());
+        log.info("raidDetailDtoList={}",raidDetailDtoList.toString());
+    }
 }

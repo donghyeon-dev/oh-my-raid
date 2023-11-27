@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface RaidEncounterRepository extends JpaRepository<RaidEncounterEntity, Long>, RaidEncounterRepositoryCustom {
 
-    public List<CharacterRaidInfoDto> findCharacterRaidInfoByCharacterId(long characterId, long accountId);
+//    public List<CharacterRaidInfoDto> findCharacterRaidInfoByCharacterId(long characterId, long accountId);
 
     public RaidEncounterDto findRaidEncounterEntityByDto(RaidEncounterDto requestDto);
 

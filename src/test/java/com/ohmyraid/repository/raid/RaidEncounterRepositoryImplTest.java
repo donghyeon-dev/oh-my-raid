@@ -48,32 +48,32 @@ class RaidEncounterRepositoryImplTest {
 
     }
 
-    @Test
-    void getCharacterRaidInfo_querydsl_test() {
-        long characterId = 6;
-        QRaidEncounterEntity raidEncounterEntity = QRaidEncounterEntity.raidEncounterEntity;
-        QCharacterEntity characterEntity = QCharacterEntity.characterEntity;
-
-        List<CharacterRaidInfoDto> raidInfoDtoList = jpaQueryFactory
-                .select(new QCharacterRaidInfoDto(
-                        raidEncounterEntity.encounterId,
-                        raidEncounterEntity.characterEntity.characterId.as("characterId"),
-                        characterEntity.name.as("characterName"),
-                        characterEntity.slug.as("slugName"),
-                        raidEncounterEntity.difficulty,
-                        raidEncounterEntity.expansionName,
-                        raidEncounterEntity.instanceName,
-                        raidEncounterEntity.lastCrawledAt,
-                        raidEncounterEntity.progress
-                ))
-                .from(raidEncounterEntity)
-                .innerJoin(characterEntity).on(raidEncounterEntity.characterEntity.characterId.eq(characterEntity.characterId)
-                        .and(characterEntity.characterId.eq(characterId)))
-                .fetch();
-
-        raidInfoDtoList.forEach(System.out::println);
-
-    }
+//    @Test
+//    void getCharacterRaidInfo_querydsl_test() {
+//        long characterId = 6;
+//        QRaidEncounterEntity raidEncounterEntity = QRaidEncounterEntity.raidEncounterEntity;
+//        QCharacterEntity characterEntity = QCharacterEntity.characterEntity;
+//
+//        List<CharacterRaidInfoDto> raidInfoDtoList = jpaQueryFactory
+//                .select(new QCharacterRaidInfoDto(
+//                        raidEncounterEntity.encounterId,
+//                        raidEncounterEntity.characterEntity.characterId.as("characterId"),
+//                        characterEntity.name.as("characterName"),
+//                        characterEntity.slug.as("slugName"),
+//                        raidEncounterEntity.difficulty,
+//                        raidEncounterEntity.expansionName,
+//                        raidEncounterEntity.instanceName,
+//                        raidEncounterEntity.lastCrawledAt,
+//                        raidEncounterEntity.progress
+//                ))
+//                .from(raidEncounterEntity)
+//                .innerJoin(characterEntity).on(raidEncounterEntity.characterEntity.characterId.eq(characterEntity.characterId)
+//                        .and(characterEntity.characterId.eq(characterId)))
+//                .fetch();
+//
+//        raidInfoDtoList.forEach(System.out::println);
+//
+//    }
 
 
 }
