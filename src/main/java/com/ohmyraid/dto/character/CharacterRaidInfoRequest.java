@@ -20,13 +20,14 @@ import java.time.LocalDateTime;
 @Builder
 public class CharacterRaidInfoRequest {
 
-    @ApiModelProperty(value = "캐릭터 고유 ID", name = "characterId")
+    @ApiModelProperty(value = "캐릭터 고유 ID", name = "characterId", example="19")
     private Integer characterId;
 
-    @ApiModelProperty(value = "확장팩 ID", name = "expansionId", allowableValues = "395,396,499,503")
+    @ApiModelProperty(value = "확장팩 ID (eg.395:Legion, 396:BFA, 499:SHL, 503:DF)", name = "expansionId"
+            , allowableValues = "395,396,499,503", example="395")
     private Integer expansionId;
 
-    @ApiModelProperty(value = "난이도 ID", name = "difficulty", allowableValues = "1,2,3,4")
+    @ApiModelProperty(value = "난이도 ID", name = "difficulty", allowableValues = "1,2,3,4", example="4")
     private Integer difficulty;
 
 }

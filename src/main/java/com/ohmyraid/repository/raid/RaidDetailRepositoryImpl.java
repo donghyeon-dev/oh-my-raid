@@ -1,5 +1,6 @@
 package com.ohmyraid.repository.raid;
 
+import com.ohmyraid.common.enums.DifficultyType;
 import com.ohmyraid.domain.character.QCharacterEntity;
 import com.ohmyraid.domain.raid.QRaidDetailEntity;
 import com.ohmyraid.dto.character.CharacterRaidInfoDto;
@@ -56,7 +57,7 @@ public class RaidDetailRepositoryImpl implements RaidDetailRepositoryCustom {
         .innerJoin(character).on(character.characterId.eq(raidDetail.characterEntity.characterId))
         .where(eqCharacterId(raidInfoRequest.getCharacterId())
             , eqExpansionId(raidInfoRequest.getExpansionId())
-//            , eqDifficulty(raidInfoRequest.getDifficulty())
+            , eqDifficulty(raidInfoRequest.getDifficulty())
         )
         .fetch();
     }
@@ -75,12 +76,12 @@ public class RaidDetailRepositoryImpl implements RaidDetailRepositoryCustom {
         return raidDetail.expansionId.eq(expansionId.longValue());
     }
 
-//    private BooleanExpression eqDifficulty(Integer difficulty){
-//        if(ObjectUtils.isEmpty(difficulty)){
-//            return null;
-//        }
-//        return raidDetail.difficulty.eq(difficulty);
-//    }
+    private BooleanExpression eqDifficulty(Integer difficulty){
+        if(ObjectUtils.isEmpty(difficulty)){
+            return null;
+        }
+        return raidDetail.difficulty.eq(DifficultyType.getTypeById(difficulty).getDifficultyEnglishName());
+    }
 
 
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.ohmyraid.common.enums.SlugType;
+import com.ohmyraid.common.result.CommonInvalidInputException;
 import com.ohmyraid.common.result.CommonServiceException;
 import com.ohmyraid.common.result.ErrorResult;
 import com.ohmyraid.config.Constant;
@@ -322,11 +323,11 @@ public class CharacterService {
 //    }
 
 
-    public List<CharacterRaidInfoDto> getSpecificCharacterRaidDetailInfo(long characterId,
-                                                                 CharacterRaidInfoRequest characterRaidInfoRequest) {
-
-
-        return null;
+    public List<CharacterRaidInfoDto> getSpecificCharacterRaidDetailInfo(CharacterRaidInfoRequest characterRaidInfoRequest) {
+        if(ObjectUtils.isEmpty(characterRaidInfoRequest.getCharacterId())){
+            throw new CommonInvalidInputException();
+        }
+        return raidDetailRepository.findRaidDetailListBySearchParam(characterRaidInfoRequest);
     }
 
     ;

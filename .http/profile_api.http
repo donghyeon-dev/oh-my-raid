@@ -36,3 +36,6 @@ Content-Type: application/json
 ###
 GET https://www.warcraftlogs.com/oauth/token
 Authorization: Basic cd5f2cc20f0e4be08e31ae9938e56b2d 1penStTopokgRhM4fRtGwez2JUwyc7K2
+
+###
+GET http://localhost:8880/characters/1/raids?characterId=19&difficulty=4&expansionId=395
