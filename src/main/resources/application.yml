@@ -24,7 +24,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:43306/omr?serverTimezone=Asia/Seoul
-    username: root
+    username: omraid
     password: omraid
   jpa:
     generate-ddl: true
@@ -50,6 +50,16 @@ spring:
   mvc: # Spring Boot 2.6버전 이후에 matching-strategy값이 ant_apth_mather= > path_pattern_parser로 변경되면서 오류가 발생하여 추가 --> Spring Actuator와 함께 사용할때는 절대 작동하지 않는다.
     pathmatch:
       matching-strategy: ant_path_matcher
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+
 
 logging:
   level:
@@ -63,7 +73,7 @@ project:
   interceptor:
     authentication:
       add-path: /**
-      exclude-path: /favicon.ico,/,/csrf,/swagger-ui.html,/swagger-ui.html/**,/account/signup,/login,/error,/null/swagger-resources/**,/swagger*,/swagger*/**,/webjars/**,/login/**,/party/**,/metrics,/actuator/**
+      exclude-path: /favicon.ico,/,/csrf,/swagger-ui.html,/swagger-ui.html/**,/account/signup,/login,/error,/null/swagger-resources/**,/swagger*,/swagger*/**,/webjars/**,/login/**,/party/**,/metrics,/actuator/**,/characters/**/raids
 
 # Swagger 설정
 #springfox:
