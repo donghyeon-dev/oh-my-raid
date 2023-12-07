@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.naming.LimitExceededException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -114,7 +115,7 @@ public class CommonExceptionHandler {
                 ConversionNotSupportedException.class, TypeMismatchException.class,
                 HttpMessageNotReadableException.class, HttpMessageNotWritableException.class,
                 MethodArgumentNotValidException.class, MissingServletRequestPartException.class,
-                BindException.class, NoHandlerFoundException.class})
+                BindException.class, NoHandlerFoundException.class, LimitExceededException.class})
         public final Object handleServletException(Exception ex, HttpServletRequest request,
                                                    HttpServletResponse response) throws IOException {
 
@@ -157,6 +158,9 @@ public class CommonExceptionHandler {
             } else if (ex instanceof NoHandlerFoundException) {
                 status = HttpStatus.NOT_FOUND;
                 result = ErrorResult.PAGE_NOT_FOUND;
+            } else if (ex instanceof LimitExceededException){
+                status = HttpStatus.TOO_MANY_REQUESTS;
+                result = ErrorResult.TOO_MANY_REQUEST;
             } else {
                 logger.warn("Unknown exception type: " + ex.getClass().getName());
                 status = HttpStatus.INTERNAL_SERVER_ERROR;

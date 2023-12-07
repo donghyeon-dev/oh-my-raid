@@ -10,7 +10,7 @@ import com.ohmyraid.dto.character.CharacterRaidInfoDto;
 import com.ohmyraid.dto.character.CharacterRaidInfoRequest;
 import com.ohmyraid.dto.wow_account.CharacterDto;
 import com.ohmyraid.dto.wow_raid.*;
-import com.ohmyraid.feign.WowClient;
+import com.ohmyraid.feign.WowClientWrapper;
 import com.ohmyraid.mapper.CharacterMapper;
 import com.ohmyraid.repository.character.CharacterRespository;
 import com.ohmyraid.repository.raid.RaidDetailRepository;
@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -53,7 +55,7 @@ public class CharacterServiceTest {
     private RedisUtils redisUtils;
 
     @Autowired
-    private WowClient wowClient;
+    private WowClientWrapper wowClientWrapper;
 
 
     @Test
@@ -63,7 +65,7 @@ public class CharacterServiceTest {
         CharacterEntity characterEntity = characterRespository.findCharacterEntityByCharacterId(19);
         CharacterDto characterDto = CharacterMapper.INSTANCE.characterEntityToDto(characterEntity);
 
-        RaidInfoDto charactersRaidInfo = wowClient.getRaidEncounter(Constant.Auth.NAMESPACE
+        RaidInfoDto charactersRaidInfo = wowClientWrapper.getRaidEncounter(Constant.Auth.NAMESPACE
                 , bzToken
                 , Constant.Auth.LOCALE
                 , SlugType.getTypeByName(characterDto.getSlug()).getSlugEnglishName(),
@@ -136,5 +138,11 @@ public class CharacterServiceTest {
                         .characterId(19)
                 .build());
         log.info("raidDetailDtoList={}",raidDetailDtoList.toString());
+    }
+
+    @Test
+    void getRaidDetail_mockmvc_테스트() throws Exception {
+            mockMvc.perform(get("/account/1/raid-encounter").header("Authorization", "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJvaG15cmFpZCIsImlhdCI6MTcwMTc1MTE5OCwiTG9naW5JZCI6ImRvbmdoeWVvbmRldkBnbWFpbC5jb20iLCJVc2VyTmFtZSI6ImF1dG9jYXQiLCJleHAiOjE3MDE3ODcxOTh9.KP-fa5aJdw73_2imb8_3btqgHYmTWjxek92vFBEQZWo"))
+                    .andDo(print());
     }
 }

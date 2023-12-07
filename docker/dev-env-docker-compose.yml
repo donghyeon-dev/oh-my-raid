@@ -1,4 +1,5 @@
 # Docker-compose to set omr dev environment
+name: omr-service
 
 version: '2'
 services:
@@ -10,10 +11,11 @@ services:
       - "43306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: ${OMR_MYSQL_PASSWORD}
-      TZ : Asia/Seoul #docker compose yml 자체에 TimeZone을 박아놓는것도 방법이다.
+      TZ : Asia/Seoul
     command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
     volumes:
       - /Users/autocat/dev/Personal/docker-mysql
+
   #Redis
   redis:
     image: redis
@@ -21,6 +23,7 @@ services:
     ports:
       - "46379:6379"
   #Prometheus
+
   prometheus:
     container_name: omr-prometheus
     image: prom/prometheus
@@ -31,6 +34,7 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
     restart: always
+
   #Grafana
   grafana:
     container_name: omr-grafana
@@ -43,4 +47,32 @@ services:
     depends_on:
       - prometheus
     privileged: true
+  # zookeeper
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_SERVER_ID: zookeper-1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+    ports:
+      - "22181:2181"
+  # kafka
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: bucket-broker-1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Map;
 
 /**
- * World Of Warcraft API Feign Interface
+ * World Of Warcraft profile-dynamic API Feign Interface
  */
 @FeignClient(name = "WOW", url = "https://kr.api.blizzard.com")
 public interface WowClient {

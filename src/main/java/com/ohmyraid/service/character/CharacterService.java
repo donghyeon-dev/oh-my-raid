@@ -19,7 +19,7 @@ import com.ohmyraid.dto.wow_account.CharacterDto;
 import com.ohmyraid.dto.wow_account.CharacterSpecInfoDto;
 import com.ohmyraid.dto.wow_account.WowAccountDto;
 import com.ohmyraid.dto.wow_raid.*;
-import com.ohmyraid.feign.WowClient;
+import com.ohmyraid.feign.WowClientWrapper;
 import com.ohmyraid.mapper.CharacterMapper;
 import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.repository.character.CharacterRespository;
@@ -55,7 +55,7 @@ public class CharacterService {
 
     private final RaidDetailRepository raidDetailRepository;
 
-    private final WowClient wowClient;
+    private final WowClientWrapper wowClientWrapper;
     private final RedisUtils redisUtils;
     private final ObjectMapper mapper;
     private final ConvertUtils convertUtils;
@@ -80,7 +80,7 @@ public class CharacterService {
         AccountEntity accountEntity = accountRepository.findByAccountId(accountId);
 
         // 계정 내 캐릭터정보 Feign 호출 및 파싱
-        Map<String, Object> accountProfileSummaryMap = wowClient.getAccountProfileSummary(Constant.Auth.NAMESPACE
+        Map<String, Object> accountProfileSummaryMap = wowClientWrapper.getAccountProfileSummary(Constant.Auth.NAMESPACE
                 , Constant.Auth.LOCALE
                 , bzToken
                 , Constant.Auth.REGION);
@@ -92,7 +92,7 @@ public class CharacterService {
         for (CharacterDto characterDto : characterList) {
             CharacterSpecInfoDto specDto = CharacterSpecInfoDto.builder().build();
             try {
-                specDto = wowClient.getCharacterSpec(Constant.Auth.NAMESPACE
+                specDto = wowClientWrapper.getCharacterSpec(Constant.Auth.NAMESPACE
                         , bzToken
                         , Constant.Auth.LOCALE
                         , characterDto.getRealm()
@@ -228,7 +228,7 @@ public class CharacterService {
             List<RaidDetailDto> raidDetailDtoList = new ArrayList<>();
             for(CharacterEntity characterEntity : charactersEntitiyList){
                 CharacterDto characterDto = CharacterMapper.INSTANCE.characterEntityToDto(characterEntity);
-                RaidInfoDto charactersRaidInfo = wowClient.getRaidEncounter(Constant.Auth.NAMESPACE
+                RaidInfoDto charactersRaidInfo = wowClientWrapper.getRaidEncounter(Constant.Auth.NAMESPACE
                         , bzToken
                         , Constant.Auth.LOCALE
                         , SlugType.getTypeByName(characterDto.getSlug()).getSlugEnglishName(),
@@ -380,7 +380,7 @@ public class CharacterService {
                 .map(
                         c -> {
                             RaidInfoDto result =
-                                    wowClient.getRaidEncounter(Constant.Auth.NAMESPACE
+                                    wowClientWrapper.getRaidEncounter(Constant.Auth.NAMESPACE
                                             , bzToken
                                             , Constant.Auth.LOCALE
                                             , SlugType.getTypeByName(c.getSlug()).getSlugEnglishName(),
