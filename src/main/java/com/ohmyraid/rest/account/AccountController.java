@@ -2,9 +2,12 @@ package com.ohmyraid.rest.account;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.common.wrapper.ResultView;
+import com.ohmyraid.config.KafkaProducer;
+import com.ohmyraid.dto.account.AccountDto;
 import com.ohmyraid.dto.account.SignUpInpDto;
 import com.ohmyraid.dto.account.SignUpResDto;
 import com.ohmyraid.dto.account.UpdatePasswordDto;
+import com.ohmyraid.dto.kafka.KafkaStoreData;
 import com.ohmyraid.dto.wow_account.CharacterDto;
 import com.ohmyraid.service.account.AccountService;
 import com.ohmyraid.service.character.CharacterService;
@@ -24,6 +27,8 @@ public class AccountController {
     private final AccountService accountService;
 
     private final CharacterService characterService;
+
+    private final KafkaProducer kafkaProducer;
 
     @ApiOperation(value = "회원가입", notes = "로그인이메일, 패스워드, 별명을 입력하여 계정을 등록한다.")
     @PostMapping(value = "/signup")
@@ -64,4 +69,14 @@ public class AccountController {
         return new ResultView<>(characterService.getRaidDetail(accountId));
     }
 
+    @GetMapping("/kafka")
+    public String kafka(String email){
+        KafkaStoreData<Object> message = KafkaStoreData.builder()
+                .methodName("test")
+                .targetParameter(AccountDto.builder().accountId(1L).email(email).build())
+                .parameterTargetClass(AccountDto.class)
+                .build();
+        kafkaProducer.sendFlightEvent(message);
+        return "kafka";
+    }
 }

@@ -16,4 +16,9 @@ public final class Constant {
         public static final String LOCALE = "ko_KR";
         public static final String REGION = "kr";
     }
+
+    public static final class Kafka{
+        public static final String TOPIC = "request-fail-data";
+        public static final String GROUP_ID = "omr";
+    }
 }

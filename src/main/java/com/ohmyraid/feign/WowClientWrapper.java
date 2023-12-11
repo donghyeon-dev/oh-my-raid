@@ -1,6 +1,7 @@
 package com.ohmyraid.feign;
 
 import com.ohmyraid.config.RateLimited;
+import com.ohmyraid.dto.client.WowClientRequestDto;
 import com.ohmyraid.dto.wow_account.CharacterSpecInfoDto;
 import com.ohmyraid.dto.wow_raid.RaidInfoDto;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,7 @@ import java.util.Map;
 
 /**
  * Wrapper class for the WowClient interface. Provides convenient methods to interact with the World of Warcraft API.
- * This class is annotated with @RateLimited to ensure that API calls are rate-limited.
+ * This class's methods are annotated with @RateLimited to ensure that API calls are rate-limited.
  */
 @RequiredArgsConstructor
 @Component
@@ -59,8 +60,8 @@ public class WowClientWrapper {
      * @return The raid encounter information for the character
      */
     @RateLimited
-    public RaidInfoDto getRaidEncounter(String namespace, String accessToken, String locale, String slugEnglishName, String characterName) {
-        return wowClient.getRaidEncounter(namespace, accessToken, locale, slugEnglishName, characterName);
+    public RaidInfoDto getRaidEncounter(WowClientRequestDto requestDto) {
+        return wowClient.getRaidEncounter(requestDto);
     };
 
 }

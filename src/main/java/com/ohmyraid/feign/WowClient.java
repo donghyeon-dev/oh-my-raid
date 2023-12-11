@@ -1,5 +1,6 @@
 package com.ohmyraid.feign;
 
+import com.ohmyraid.dto.client.WowClientRequestDto;
 import com.ohmyraid.dto.wow_account.CharacterSpecInfoDto;
 import com.ohmyraid.dto.wow_raid.RaidInfoDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -30,9 +31,5 @@ public interface WowClient {
     );
 
     @GetMapping(value = "profile/wow/character/{slug}/{characterName}/encounters/raids")
-    RaidInfoDto getRaidEncounter(@RequestParam(name = "namespace", defaultValue = "profile-kr") String namespace,
-                                 @RequestParam(name = "access_token") String access_token,
-                                 @RequestParam(name = "locale", defaultValue = "ko_KR") String locale,
-                                 @PathVariable(name = "slug") String slugEnglishName,
-                                 @PathVariable(name = "characterName") String characterName);
+    RaidInfoDto getRaidEncounter(WowClientRequestDto requestDto);
 }
