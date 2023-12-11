@@ -25,7 +25,7 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://223.130.146.114:43306/omr?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://:43306/omr?serverTimezone=Asia/Seoul
     username: omraid
     password: omraid
   jpa:
@@ -53,7 +53,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   kafka:
-    bootstrap-servers: http://223.130.146.114:29092
+    bootstrap-servers: http://:29092
     consumer:
       group-id: omr
 
