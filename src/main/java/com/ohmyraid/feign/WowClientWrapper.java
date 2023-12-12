@@ -20,48 +20,53 @@ public class WowClientWrapper {
     private final WowClient wowClient;
 
     /**
-     * Retrieves the account profile summary.
+     * Retrieves the account profile summary for a user in World of Warcraft.
      *
-     * @param namespace The namespace for the profile. Default value: "profile-kr"
-     * @param locale The locale for the profile. Default value: "ko_KR"
-     * @param accessToken The access token for authentication
-     * @param region The region for the profile. Default value: "kr"
-     * @return A map containing the account profile summary
+     * @param requestDto the request object containing the necessary parameters
+     * @return a map containing the account profile summary information
      */
     @RateLimited
-    public Map<String,Object> getAccountProfileSummary(String namespace, String locale
-            , String accessToken, String region){
-        return wowClient.getAccountProfileSummary(namespace, locale, accessToken, region);
-    };
+    public Map<String, Object> getAccountProfileSummary(WowClientRequestDto requestDto) {
+        return wowClient.getAccountProfileSummary(requestDto.getNamespace(),
+                requestDto.getLocale(),
+                requestDto.getAccessToken(),
+                requestDto.getRegion());
+    }
+
+    ;
 
     /**
-     * Retrieves the character specialization information.
+     * Retrieves the character specialization information for a character in World of Warcraft.
      *
-     * @param namespace The namespace for the profile. Default value: "profile-kr"
-     * @param accessToken The access token for authentication
-     * @param locale The locale for the profile. Default value: "ko_KR"
-     * @param slugEnglishName The slug/englishName for the character's profile URL
-     * @param characterName The character's name
-     * @return The character specialization information
+     * @param requestDto the request object containing the necessary parameters
+     * @return the CharacterSpecInfoDto object representing the character specialization information
      */
     @RateLimited
-    public CharacterSpecInfoDto getCharacterSpec(String namespace, String accessToken, String locale, String slugEnglishName, String characterName) {
-        return wowClient.getCharacterSpec(namespace, accessToken, locale, slugEnglishName, characterName);
-    };
+    public CharacterSpecInfoDto getCharacterSpec(WowClientRequestDto requestDto){
+        return wowClient.getCharacterSpec(requestDto.getNamespace(),
+                requestDto.getAccessToken(),
+                requestDto.getLocale(),
+                requestDto.getSlugEnglishName(),
+                requestDto.getCharacterName());
+    }
+
+    ;
 
     /**
-     * Retrieves the raid encounter information for a character.
+     * Retrieves the raid encounter information for a character in World of Warcraft.
      *
-     * @param namespace The namespace for the profile. Default value: "profile-kr"
-     * @param accessToken The access token for authentication
-     * @param locale The locale for the profile. Default value: "ko_KR"
-     * @param slugEnglishName The slug/englishName for the character's profile URL
-     * @param characterName The character's name
-     * @return The raid encounter information for the character
+     * @param requestDto the request object containing the necessary parameters
+     * @return the RaidInfoDto object representing the raid encounter information
      */
     @RateLimited
     public RaidInfoDto getRaidEncounter(WowClientRequestDto requestDto) {
-        return wowClient.getRaidEncounter(requestDto);
-    };
+        return wowClient.getRaidEncounter(requestDto.getNamespace(),
+                requestDto.getAccessToken(),
+                requestDto.getLocale(),
+                requestDto.getSlugEnglishName(),
+                requestDto.getCharacterName());
+    }
+
+    ;
 
 }

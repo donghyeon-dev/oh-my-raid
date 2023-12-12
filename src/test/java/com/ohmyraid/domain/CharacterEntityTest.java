@@ -2,7 +2,7 @@ package com.ohmyraid.domain;
 
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.repository.account.AccountRepository;
-import com.ohmyraid.repository.character.CharacterRespository;
+import com.ohmyraid.repository.character.CharacterRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class CharacterEntityTest {
     AccountRepository accountRepository;
 
     @Autowired
-    CharacterRespository characterRespository;
+    CharacterRepository characterRepository;
 
     @Test
     public void 엔티티_AttributeConverter_test() {
@@ -48,10 +48,10 @@ public class CharacterEntityTest {
                 .expansionOption("나이트 페이")
                 .expansionOptionLevel(50)
                 .build();
-        characterRespository.save(characterEntity);
+        characterRepository.save(characterEntity);
 
         // 컨버팅 된 코드값으로 로우 조회
-        characterEntity = characterRespository.findByName(randomName);
+        characterEntity = characterRepository.findByName(randomName);
 
         System.out.println("************* characterEntity\n" + characterEntity);
 
@@ -60,7 +60,7 @@ public class CharacterEntityTest {
         assertEquals(playbleClass, "전사");
 
         // 성공했으니 삭제
-        characterRespository.delete(characterEntity);
+        characterRepository.delete(characterEntity);
     }
 
 

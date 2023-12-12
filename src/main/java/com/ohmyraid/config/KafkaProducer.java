@@ -1,5 +1,6 @@
 package com.ohmyraid.config;
 
+import com.ohmyraid.dto.client.WowClientRequestDto;
 import com.ohmyraid.dto.kafka.KafkaStoreData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,7 @@ public class KafkaProducer {
 
     private final KafkaTemplate kafkaTemplate;
 
-    public void sendFlightEvent(KafkaStoreData kafkaStoreData) {
+    public void sendFlightEvent(KafkaStoreData<WowClientRequestDto> kafkaStoreData) {
         log.info("Producer produced the Data -> {}", kafkaStoreData.toString());
         kafkaTemplate.send(Constant.Kafka.TOPIC, kafkaStoreData);
     }

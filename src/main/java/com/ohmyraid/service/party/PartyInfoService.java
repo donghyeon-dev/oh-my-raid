@@ -9,9 +9,8 @@ import com.ohmyraid.dto.login.UserSessionDto;
 import com.ohmyraid.dto.party.PartyInfoDto;
 import com.ohmyraid.mapper.PartyInfoMapper;
 import com.ohmyraid.repository.account.AccountRepository;
-import com.ohmyraid.repository.character.CharacterRespository;
+import com.ohmyraid.repository.character.CharacterRepository;
 import com.ohmyraid.repository.party.PartyInfoRepository;
-import com.ohmyraid.utils.DatetimeUtils;
 import com.ohmyraid.utils.RedisUtils;
 import com.ohmyraid.utils.ThreadLocalUtils;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,7 @@ public class PartyInfoService {
 
     private final PartyInfoRepository partyRepository;
     private final AccountRepository accountRepository;
-    private final CharacterRespository characterRespository;
+    private final CharacterRepository characterRepository;
 
     private final RedisUtils redisUtils;
 

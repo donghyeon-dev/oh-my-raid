@@ -1,6 +1,7 @@
 package com.ohmyraid.dto.wow_account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -53,4 +54,10 @@ public class CharacterDto {
     private LocalDateTime lastCrawledAt;
 
 
+    @QueryProjection
+    public CharacterDto(long characterId, String name, String slug){
+        this.characterId = characterId;
+        this.name = name;
+        this.slug = slug;
+    }
 }

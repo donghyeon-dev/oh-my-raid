@@ -13,7 +13,7 @@ import com.ohmyraid.dto.wow_account.CharacterDto;
 import com.ohmyraid.dto.wow_raid.*;
 import com.ohmyraid.feign.WowClientWrapper;
 import com.ohmyraid.mapper.CharacterMapper;
-import com.ohmyraid.repository.character.CharacterRespository;
+import com.ohmyraid.repository.character.CharacterRepository;
 import com.ohmyraid.repository.raid.RaidDetailRepository;
 import com.ohmyraid.utils.DatetimeUtils;
 import com.ohmyraid.utils.RedisUtils;
@@ -47,7 +47,7 @@ public class CharacterServiceTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private CharacterRespository characterRespository;
+    private CharacterRepository characterRepository;
 
     @Autowired
     private RaidDetailRepository raidDetailRepository;
@@ -63,7 +63,7 @@ public class CharacterServiceTest {
     void getSpecificCharacterEncounterInfo() throws JsonProcessingException {
         String bzToken = redisUtils.getRedisValue(Constant.Auth.BLIZZARD_TOKEN_KEY, String.class);
         // 박동현 가져오기
-        CharacterEntity characterEntity = characterRespository.findCharacterEntityByCharacterId(19);
+        CharacterEntity characterEntity = characterRepository.findCharacterEntityByCharacterId(19);
         CharacterDto characterDto = CharacterMapper.INSTANCE.characterEntityToDto(characterEntity);
 
         RaidInfoDto charactersRaidInfo = wowClientWrapper.getRaidEncounter(

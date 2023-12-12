@@ -31,5 +31,9 @@ public interface WowClient {
     );
 
     @GetMapping(value = "profile/wow/character/{slug}/{characterName}/encounters/raids")
-    RaidInfoDto getRaidEncounter(WowClientRequestDto requestDto);
+    RaidInfoDto getRaidEncounter(@RequestParam(name = "namespace", defaultValue = "profile-kr") String namespace,
+                                 @RequestParam(name = "access_token") String access_token,
+                                 @RequestParam(name = "locale", defaultValue = "ko_KR") String locale,
+                                 @PathVariable(name = "slug") String slugEnglishName,
+                                 @PathVariable(name = "characterName") String characterName);
 }

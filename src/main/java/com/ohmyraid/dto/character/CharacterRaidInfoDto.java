@@ -47,7 +47,6 @@ public class CharacterRaidInfoDto {
     private LocalDateTime lastCrawledAt;
 
     @QueryProjection
-
     public CharacterRaidInfoDto(Long detailId, String characterName, String expansionName, String instanceName,
                                 String difficulty, String bossName, int completedCount, LocalDateTime lastKilledAt, LocalDateTime lastCrawledAt) {
         this.detailId = detailId;

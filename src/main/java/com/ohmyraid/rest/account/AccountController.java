@@ -66,7 +66,7 @@ public class AccountController {
     @GetMapping("/{accountId}/raid-encounter")
     @ApiOperation(value = "캐릭터의 레이드 정보 동기화", notes = "사용자 계정에 저장된 캐릭터들의 레이드들의 정보를 동기화한다.")
     public ResultView<Boolean> getRaidEncounter(@PathVariable long accountId) throws Exception {
-        return new ResultView<>(characterService.getRaidDetail(accountId));
+        return new ResultView<>(characterService.getCharactersRaidDetailByAccount(accountId));
     }
 
     @GetMapping("/kafka")

@@ -11,7 +11,6 @@ import com.ohmyraid.config.Constant;
 import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.domain.raid.RaidDetailEntity;
-import com.ohmyraid.domain.raid.RaidEncounterEntity;
 import com.ohmyraid.dto.character.CharacterRaidInfoDto;
 import com.ohmyraid.dto.character.CharacterRaidInfoRequest;
 import com.ohmyraid.dto.client.WowClientRequestDto;
@@ -23,7 +22,7 @@ import com.ohmyraid.dto.wow_raid.*;
 import com.ohmyraid.feign.WowClientWrapper;
 import com.ohmyraid.mapper.CharacterMapper;
 import com.ohmyraid.repository.account.AccountRepository;
-import com.ohmyraid.repository.character.CharacterRespository;
+import com.ohmyraid.repository.character.CharacterRepository;
 import com.ohmyraid.repository.raid.RaidDetailRepository;
 import com.ohmyraid.repository.raid.RaidEncounterRepository;
 import com.ohmyraid.utils.ConvertUtils;
@@ -43,13 +42,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CharacterService {
 
-    private final CharacterRespository characterRespository;
+    private final CharacterRepository characterRepository;
     private final AccountRepository accountRepository;
 
     private final RaidEncounterRepository raidEncounterRepository;
@@ -81,10 +81,14 @@ public class CharacterService {
         AccountEntity accountEntity = accountRepository.findByAccountId(accountId);
 
         // 계정 내 캐릭터정보 Feign 호출 및 파싱
-        Map<String, Object> accountProfileSummaryMap = wowClientWrapper.getAccountProfileSummary(Constant.Auth.NAMESPACE
-                , Constant.Auth.LOCALE
-                , bzToken
-                , Constant.Auth.REGION);
+        Map<String, Object> accountProfileSummaryMap = wowClientWrapper.getAccountProfileSummary(
+                WowClientRequestDto.builder()
+                        .namespace(Constant.Auth.NAMESPACE)
+                        .locale(Constant.Auth.LOCALE)
+                        .accessToken(bzToken)
+                        .region(Constant.Auth.REGION)
+                        .build());
+
         List<WowAccountDto> wowAccountDto = mapper.convertValue(accountProfileSummaryMap.get("wow_accounts"),
                 TypeFactory.defaultInstance().constructCollectionType(List.class, WowAccountDto.class));
 
@@ -93,11 +97,14 @@ public class CharacterService {
         for (CharacterDto characterDto : characterList) {
             CharacterSpecInfoDto specDto = CharacterSpecInfoDto.builder().build();
             try {
-                specDto = wowClientWrapper.getCharacterSpec(Constant.Auth.NAMESPACE
-                        , bzToken
-                        , Constant.Auth.LOCALE
-                        , characterDto.getRealm()
-                        , characterDto.getName());
+                specDto = wowClientWrapper.getCharacterSpec(
+                        WowClientRequestDto.builder()
+                                .namespace(Constant.Auth.NAMESPACE)
+                                .accessToken(bzToken)
+                                .locale(Constant.Auth.LOCALE)
+                                .slugEnglishName(characterDto.getRealm())
+                                .characterName(characterDto.getName())
+                                .build());
             }catch (Exception e){
                 e.printStackTrace();
                 log.error("Error occurred while wowClient.getCharacterSpec() with character name of {}", characterDto.getName());
@@ -105,7 +112,7 @@ public class CharacterService {
             }
 
             // insert를 하기 전 DB에 데이터 검증
-            CharacterEntity existCharacterEntity = characterRespository.findCharacterByCharacterSeNumber(characterDto.getCharacterSeNumber());
+            CharacterEntity existCharacterEntity = characterRepository.findCharacterByCharacterSeNumber(characterDto.getCharacterSeNumber());
             Long existCharacterId = null;
             boolean isExist = false;
 
@@ -138,7 +145,7 @@ public class CharacterService {
                     .expansionOptionLevel(characterDto.getExpansionOptionLevel())
                     .build();
 
-            characterRespository.save(characterEntity);
+            characterRepository.save(characterEntity);
             // Battle.Net API의 특성상 텀을 두고 Request를 보내야한다.
 //            Thread.sleep(2500L);
         }
@@ -155,7 +162,7 @@ public class CharacterService {
     public List<CharacterDto> getCharactersOfAccount(long accountId) throws JsonProcessingException {
         String token = ThreadLocalUtils.getThreadInfo().getAccessToken();
         List<CharacterEntity> myCharacters =
-                characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevelDesc(accountId);
+                characterRepository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevelDesc(accountId);
 
 
         List<CharacterDto> resultList = CharacterMapper.INSTANCE.characterEntitiesToDtoList(myCharacters);
@@ -164,48 +171,96 @@ public class CharacterService {
 
     }
 
-    public Boolean getRaidDetail(long accountId) throws Exception {
+    public Boolean getCharactersRaidDetailByAccount(long accountId) throws Exception {
 
+        // 1. Redis에서 토큰 가져오기
         String bzToken = redisUtils.getRedisValue(Constant.Auth.BLIZZARD_TOKEN_KEY, String.class);
         if (ObjectUtils.isEmpty(bzToken)) {
             throw new CommonServiceException(ErrorResult.NO_BZ_TOKEN);
         }
-        List<CharacterDto> targetCharacterDtoList = CharacterMapper.INSTANCE.characterEntitiesToDtoList(
-                characterRespository.findAllByAccountEntity_AccountIdOrderByEquippedItemLevelDesc(accountId)
-        );
+        // 2. 계정의 모든 캐릭터 정보 가져오기
+        List<CharacterDto> targetCharacterDtoList = characterRepository.findCharacterDtosByAccountId(accountId);
 
-
-        // Todo 비동기로 구현
-        // 1. 캐릭터정보를 비동기(FeignAsync)를 통해 가져옴 (suuplyAsync)
-        // 1-1. Exception발생시 해당 캐릭터를 조회하는 정보?를 Kafka Queue에 넣음
-        // 1-1-2. Kafka Consumer 폴링
-        // 1-1-3. 만약에 폴링을 했을때 토픽에 데이터가 있으면 해당 데이터를 가져와서 다시 캐릭터정보를 가져옴
-        // 2. 가져온 데이터들을 파싱하여 각각 save? or saveAll? (thenAcceptAsync)
-
-        //
+        // 3. BlizzardAPI에서 계정의 모든 캐릭터 정보의 레이드 정보를 가져옴
+//        List<RaidInfoDto> characterRaidInfoList = targetCharacterDtoList.stream()
+//                .map(
+//                        characterDto -> {
+//                            RaidInfoDto result = wowClientWrapper.getRaidEncounter(
+//                                            WowClientRequestDto.builder()
+//                                                    .namespace(Constant.Auth.NAMESPACE)
+//                                                    .accessToken(bzToken)
+//                                                    .locale(Constant.Auth.LOCALE)
+//                                                    .slugEnglishName(SlugType.getTypeByName(characterDto.getSlug()).getSlugEnglishName())
+//                                                    .characterName(characterDto.getName())
+//                                                    .accountId(accountId)
+//                                                    .build());
+//
+//                            result.setCharacterId(characterDto.getCharacterId());
+//                            return result;
+//                        }
+//                ).collect(Collectors.toList());
 
         List<RaidInfoDto> characterRaidInfoList = targetCharacterDtoList.stream()
-                .map(
-                        c -> {
-                            RaidInfoDto result =
-                                    wowClientWrapper.getRaidEncounter(
-                                            WowClientRequestDto.builder()
-                                                    .namespace(Constant.Auth.NAMESPACE)
-                                                    .accessToken(bzToken)
-                                                    .locale(Constant.Auth.LOCALE)
-                                                    .slugEnglishName(SlugType.getTypeByName(c.getSlug()).getSlugEnglishName())
-                                                    .characterName(c.getName())
-                                                    .build());
+                .flatMap(characterDto -> {
+                    try {
+                        RaidInfoDto result = wowClientWrapper.getRaidEncounter(
+                                WowClientRequestDto.builder()
+                                        .namespace(Constant.Auth.NAMESPACE)
+                                        .accessToken(bzToken)
+                                        .locale(Constant.Auth.LOCALE)
+                                        .slugEnglishName(SlugType.getTypeByName(characterDto.getSlug()).getSlugEnglishName())
+                                        .characterName(characterDto.getName())
+                                        .accountId(accountId)
+                                        .build());
 
-                            result.setCharacterId(c.getCharacterId());
-                            return result;
-                        }
-                ).collect(Collectors.toList());
+                        result.setCharacterId(characterDto.getCharacterId());
+                        return Stream.of(result);    // On success, return a Stream containing the result.
+                    } catch (Exception e) {
+                        // Log the exception, if necessary.
+                        return Stream.empty();    // On exception, return an empty Stream.
+                    }
+                }).collect(Collectors.toList());
+        // 4. 레이드 정보를 파싱
+        List<RaidDetailDto> raidDetailDtoList = parseCharacterRaidInfosToRaidDetails(characterRaidInfoList);
+
+        // 5. DB에 해당하는 레이드정보가 있다면 update, 없다면 insert
+        if (!ObjectUtils.isEmpty(raidDetailDtoList)) {
+
+            insertRaidDetail(raidDetailDtoList);
+        }
+
+        return true;
+    }
+
+    public void insertRaidDetail(List<RaidDetailDto> raidDetailDtoList) {
+        raidDetailDtoList.stream()
+                .filter(raidDetailDto -> raidDetailDto.getDifficulty() != null && !ObjectUtils.isEmpty(raidDetailDto.getDifficulty()))
+                .forEach(raidDetailDto -> {
+                    Long detailId = raidDetailRepository.findRaidDetailIdByDto(raidDetailDto);
+                    raidDetailRepository.save(RaidDetailEntity.builder()
+                            .detailId(detailId)
+                            .characterEntity(CharacterEntity.builder().characterId(raidDetailDto.getCharacterId()).build())
+                            .expansionName(raidDetailDto.getExpansionName())
+                            .expansionId(raidDetailDto.getExpansionId())
+                            .difficulty(raidDetailDto.getDifficulty())
+                            .instanceName(raidDetailDto.getInstanceName())
+                            .instanceId(raidDetailDto.getInstanceId())
+                            .bossName(raidDetailDto.getBossName())
+                            .bossId(raidDetailDto.getBossId())
+                            .completedCount(raidDetailDto.getCompletedCount())
+                            .lastCrawledAt(DatetimeUtils.now())
+                            .lastKilledAt(raidDetailDto.getLastKilledAt())
+                            .build());
+                });
+    }
+
+    public List<RaidDetailDto> parseCharacterRaidInfosToRaidDetails(List<RaidInfoDto> characterRaidInfoList) {
+
         List<RaidDetailDto> raidDetailDtoList = new ArrayList<>();
         for (RaidInfoDto charactersRaidInfo : characterRaidInfoList) {
 
             if (ObjectUtils.isEmpty(charactersRaidInfo.getExpansions())) {
-                log.error("This character has no raid info entire expansions");
+                log.error("This character({}) has no raid info entire expansions.", charactersRaidInfo.getCharacterId());
                 continue;
             }
             List<Expansions> expansionRaidInfoList = charactersRaidInfo.getExpansions().stream()
@@ -249,37 +304,17 @@ public class CharacterService {
                 }
             }
         }
-
-        List<RaidDetailEntity> raidDetailEntityList = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(raidDetailDtoList)) {
-            raidDetailEntityList = raidDetailDtoList.stream()
-                    .filter(raidDetailDto -> raidDetailDto.getDifficulty() != null && !ObjectUtils.isEmpty(raidDetailDto.getDifficulty()))
-                    .map(raidDetailDto -> {
-                        Long detailId = raidDetailRepository.findRaidDetailIdByDto(raidDetailDto);
-
-                        return RaidDetailEntity.builder()
-                                .detailId(detailId)
-                                .characterEntity(CharacterEntity.builder().characterId(raidDetailDto.getCharacterId()).build())
-                                .expansionName(raidDetailDto.getExpansionName())
-                                .expansionId(raidDetailDto.getExpansionId())
-                                .difficulty(raidDetailDto.getDifficulty())
-                                .instanceName(raidDetailDto.getInstanceName())
-                                .instanceId(raidDetailDto.getInstanceId())
-                                .bossName(raidDetailDto.getBossName())
-                                .bossId(raidDetailDto.getBossId())
-                                .completedCount(raidDetailDto.getCompletedCount())
-                                .lastCrawledAt(DatetimeUtils.now())
-                                .lastKilledAt(raidDetailDto.getLastKilledAt())
-                                .build();
-                    })
-                    .collect(Collectors.toList());
-        }
-        raidDetailRepository.saveAll(raidDetailEntityList);
-
-        return true;
+        return raidDetailDtoList;
     }
 
 
+    /**
+     * 특정 캐릭터의 레이드 세부 정보를 조회합니다.
+     *
+     * @param characterRaidInfoRequest 세부 정보를 조회하기 위한 캐릭터 레이드 정보 요청 객체. 이 객체는 캐릭터 ID를 포함해야 합니다.
+     * @return CharacterRaidInfoDto 내용이 포함된 목록. 이 목록은 레이드 세부 정보를 포함합니다.
+     * @throws CommonInvalidInputException 캐릭터 ID가 없는 경우 발생하는 예외입니다.
+     */
     public List<CharacterRaidInfoDto> getSpecificCharacterRaidDetailInfo(CharacterRaidInfoRequest characterRaidInfoRequest) {
         if(ObjectUtils.isEmpty(characterRaidInfoRequest.getCharacterId())){
             throw new CommonInvalidInputException();

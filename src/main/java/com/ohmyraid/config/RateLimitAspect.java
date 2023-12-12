@@ -1,5 +1,7 @@
 package com.ohmyraid.config;
 
+import com.ohmyraid.common.suport.CustomSerializer;
+import com.ohmyraid.dto.client.WowClientRequestDto;
 import com.ohmyraid.dto.kafka.KafkaStoreData;
 import io.github.bucket4j.Bucket;
 import lombok.RequiredArgsConstructor;
@@ -21,17 +23,17 @@ public class RateLimitAspect {
 
     private final KafkaProducer kafkaProducer;
 
+
     @Around("@annotation(com.ohmyraid.config.RateLimited)")
     public Object rateLimit(ProceedingJoinPoint joinPoint) throws Throwable{
         if( !tokenBucket.tryConsume(1)){
             log.warn("Exceed limit of request to Blizzard API");
-            // Todo Some code put data into polling kafka queue.
+            // Todo 수정해야함 joinPoint.getArgs()는 OBject[]임 OBject로 넘겨야 추후에 역직렬화가 가능
             kafkaProducer.sendFlightEvent(KafkaStoreData.builder()
-                            .methodName("asd")
-//                            .parameterTargetClass()
-//                            .targetParameter()
+                            .methodName(joinPoint.getSignature().getName())
+                            .targetParameter(joinPoint.getArgs())
+                            .parameterTargetClass(WowClientRequestDto.class)
                     .build());
-
             throw new LimitExceededException("API호출 횟수가 초과되었습니다.");
         }
         return joinPoint.proceed();
