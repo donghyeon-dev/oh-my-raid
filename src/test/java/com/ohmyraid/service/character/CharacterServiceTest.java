@@ -8,6 +8,7 @@ import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.domain.raid.RaidDetailEntity;
 import com.ohmyraid.dto.character.CharacterRaidInfoDto;
 import com.ohmyraid.dto.character.CharacterRaidInfoRequest;
+import com.ohmyraid.dto.client.WowClientRequestDto;
 import com.ohmyraid.dto.wow_account.CharacterDto;
 import com.ohmyraid.dto.wow_raid.*;
 import com.ohmyraid.feign.WowClientWrapper;
@@ -65,11 +66,14 @@ public class CharacterServiceTest {
         CharacterEntity characterEntity = characterRespository.findCharacterEntityByCharacterId(19);
         CharacterDto characterDto = CharacterMapper.INSTANCE.characterEntityToDto(characterEntity);
 
-        RaidInfoDto charactersRaidInfo = wowClientWrapper.getRaidEncounter(Constant.Auth.NAMESPACE
-                , bzToken
-                , Constant.Auth.LOCALE
-                , SlugType.getTypeByName(characterDto.getSlug()).getSlugEnglishName(),
-                characterDto.getName());
+        RaidInfoDto charactersRaidInfo = wowClientWrapper.getRaidEncounter(
+                WowClientRequestDto.builder()
+                        .namespace(Constant.Auth.NAMESPACE)
+                        .accessToken(bzToken)
+                        .locale(Constant.Auth.LOCALE)
+                        .slugEnglishName(SlugType.getTypeByName(characterDto.getSlug()).getSlugEnglishName())
+                        .characterName(characterDto.getName())
+                        .build());
 
         List<Expansions> expansionRaidInfoList = charactersRaidInfo.getExpansions().stream()
                 .filter(expansions -> expansions.getExpansion().getId() >= 395 // 395:군단

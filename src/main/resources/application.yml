@@ -25,7 +25,7 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://:43306/omr?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://${PUBLIC_IP:localhost}:43306/omr?serverTimezone=Asia/Seoul
     username: omraid
     password: omraid
   jpa:
@@ -40,7 +40,7 @@ spring:
     basename: classpath:/i18n/messages
     encoding: UTF-8
   redis:
-    host: 223.130.146.114
+    host: ${PUBLIC_IP:localhost}
     port: 46379
   data:
     redis:
@@ -53,7 +53,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   kafka:
-    bootstrap-servers: http://:29092
+    bootstrap-servers: http://${PUBLIC_IP:localhost}:29092
     consumer:
       group-id: omr
 
@@ -70,17 +70,6 @@ project:
     authentication:
       add-path: /**
       exclude-path: /favicon.ico,/,/csrf,/swagger-ui.html,/swagger-ui.html/**,/account/signup,/login,/error,/null/swagger-resources/**,/swagger*,/swagger*/**,/webjars/**,/login/**,/party/**,/metrics,/actuator/**,/characters/**/raids
-
-# Swagger 설정
-#springfox:
-#  documentation:
-#    swagger:
-#      v2.path: /swagger/swagger.json
-#      use-service: OMR
-#      ui-enabled: true
-#      group-name: OMR-API
-#      description: OhMyRaid-API
-#      post-paths: /*.*|/s/*.*
 
 feign:
   client:

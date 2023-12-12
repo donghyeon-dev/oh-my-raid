@@ -3,7 +3,6 @@ name: omr-service
 
 version: '2'
 services:
-  #Mysql
   database:
     image: mysql
     container_name: omr-mysql
@@ -14,15 +13,13 @@ services:
       TZ : Asia/Seoul
     command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
     volumes:
-      - /Users/autocat/dev/Personal/docker-mysql
+      - /Users/autocat/dev/Personal/docker-mysql:/var/lib/mysql
 
-  #Redis
   redis:
     image: redis
     container_name: omr-redis
     ports:
       - "46379:6379"
-  #Prometheus
 
   prometheus:
     container_name: omr-prometheus
@@ -35,7 +32,6 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
     restart: always
 
-  #Grafana
   grafana:
     container_name: omr-grafana
     image: grafana/grafana
@@ -47,31 +43,43 @@ services:
     depends_on:
       - prometheus
     privileged: true
-  # zookeeper
+
   zookeeper:
+    container_name: omr-zookeeper
     image: confluentinc/cp-zookeeper:latest
     environment:
-      ZOOKEEPER_SERVER_ID: zookeper-1
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_INIT_LIMIT: 5
-      ZOOKEEPER_SYNC_LIMIT: 2
     ports:
-      - "22181:2181"
-  # kafka
+      - 22181:2181
+
+
   kafka:
+    container_name: omr-kafka
     image: confluentinc/cp-kafka:latest
     depends_on:
       - zookeeper
     ports:
-      - "29092:29092"
+      - 29092:29092
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://${EXTERNAL_HOST}:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://#{PUBLIC_IP}:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  kafka-ui:
+    container_name: omr-kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    depends_on:
+      - kafka
+    ports:
+      - 8090:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
 
 
 
