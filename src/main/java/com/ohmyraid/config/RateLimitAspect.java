@@ -1,5 +1,6 @@
 package com.ohmyraid.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ohmyraid.common.suport.CustomSerializer;
 import com.ohmyraid.dto.client.WowClientRequestDto;
 import com.ohmyraid.dto.kafka.KafkaStoreData;
@@ -31,7 +32,7 @@ public class RateLimitAspect {
             // Todo 수정해야함 joinPoint.getArgs()는 OBject[]임 OBject로 넘겨야 추후에 역직렬화가 가능
             kafkaProducer.sendFlightEvent(KafkaStoreData.builder()
                             .methodName(joinPoint.getSignature().getName())
-                            .targetParameter(joinPoint.getArgs())
+                            .targetParameter(joinPoint.getArgs()[0])
                             .parameterTargetClass(WowClientRequestDto.class)
                     .build());
             throw new LimitExceededException("API호출 횟수가 초과되었습니다.");

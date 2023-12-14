@@ -211,6 +211,7 @@ public class CharacterService {
                                         .slugEnglishName(SlugType.getTypeByName(characterDto.getSlug()).getSlugEnglishName())
                                         .characterName(characterDto.getName())
                                         .accountId(accountId)
+                                        .characterId(characterDto.getCharacterId())
                                         .build());
 
                         result.setCharacterId(characterDto.getCharacterId());

@@ -48,11 +48,11 @@ public class KafkaConfig {
         config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, CustomDeserializer.class);
-        config.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "300000");
-        config.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, "10000");
-        config.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "10000");
-        config.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, "3000");
-        config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "100");
+        config.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "600000");
+        config.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, "30000");
+        config.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
+        config.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, "20000");
+        config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
         return new DefaultKafkaConsumerFactory<>(config);
     }
 

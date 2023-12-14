@@ -68,15 +68,4 @@ public class AccountController {
     public ResultView<Boolean> getRaidEncounter(@PathVariable long accountId) throws Exception {
         return new ResultView<>(characterService.getCharactersRaidDetailByAccount(accountId));
     }
-
-    @GetMapping("/kafka")
-    public String kafka(String email){
-        KafkaStoreData<Object> message = KafkaStoreData.builder()
-                .methodName("test")
-                .targetParameter(AccountDto.builder().accountId(1L).email(email).build())
-                .parameterTargetClass(AccountDto.class)
-                .build();
-        kafkaProducer.sendFlightEvent(message);
-        return "kafka";
-    }
 }

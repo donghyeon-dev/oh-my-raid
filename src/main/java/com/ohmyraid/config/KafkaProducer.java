@@ -16,7 +16,7 @@ public class KafkaProducer {
 
     private final KafkaTemplate kafkaTemplate;
 
-    public void sendFlightEvent(KafkaStoreData<WowClientRequestDto> kafkaStoreData) {
+    public void sendFlightEvent(KafkaStoreData<?> kafkaStoreData) {
         log.info("Producer produced the Data -> {}", kafkaStoreData.toString());
         kafkaTemplate.send(Constant.Kafka.TOPIC, kafkaStoreData);
     }
