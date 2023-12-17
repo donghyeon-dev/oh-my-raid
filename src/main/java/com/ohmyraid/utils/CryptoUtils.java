@@ -40,8 +40,13 @@ public class CryptoUtils {
      */
     public static String getAuthValue() {
         String authorizationHeader;
-        String clientId = Optional.of(System.getenv("BLIZZARD_CLIENT_ID")).orElse("cd5f2cc20f0e4be08e31ae9938e56b2d");
-        String clientSecret = Optional.of(System.getenv("BLIZZARD_CLIENT_SECRET")).orElse("1penStTopokgRhM4fRtGwez2JUwyc7K2");
+
+        String clientId = Optional.ofNullable(System.getenv("BLIZZARD_CLIENT_ID")).orElse("cd5f2cc20f0e4be08e31ae9938e56b2d");
+        String clientSecret = Optional.ofNullable(System.getenv("BLIZZARD_CLIENT_SECRET")).orElse("1penStTopokgRhM4fRtGwez2JUwyc7K2");
+
+//        String clientId = Optional.ofNullable(System.getenv("BLIZZARD_CLIENT_ID")).orElseThrow(() -> new IllegalArgumentException("There is no clientId"));
+//        String clientSecret = Optional.ofNullable(System.getenv("BLIZZARD_CLIENT_SECRET")).orElseThrow(() -> new IllegalArgumentException("There is no clientSecret"));
+
 
         if (StringUtils.hasText(clientId) && StringUtils.hasText(clientSecret)) {
             authorizationHeader = String.join(Constant.STRING_SPACE,

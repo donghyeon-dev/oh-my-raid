@@ -12,10 +12,10 @@ public class BucketConfig {
     @Bean
     public Bucket tokenBucket(){
         return Bucket.builder()
-//                .addLimit(limit -> limit.capacity(36000).refillIntervally(36000, Duration.ofHours(1)))
-//                .addLimit(limit -> limit.capacity(100).refillIntervally(100, Duration.ofMinutes(1)))
+                .addLimit(limit -> limit.capacity(36000).refillIntervally(36000, Duration.ofHours(1)))
+                .addLimit(limit -> limit.capacity(100).refillIntervally(100, Duration.ofMinutes(1)))
 //                 Todo : For test
-                .addLimit(limit -> limit.capacity(3).refillIntervally(3, Duration.ofMinutes(1)))
+//                .addLimit(limit -> limit.capacity(3).refillIntervally(3, Duration.ofMinutes(1)))
                 .build();
 
     }

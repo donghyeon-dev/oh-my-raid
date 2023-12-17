@@ -29,7 +29,6 @@ public class RateLimitAspect {
     public Object rateLimit(ProceedingJoinPoint joinPoint) throws Throwable{
         if( !tokenBucket.tryConsume(1)){
             log.warn("Exceed limit of request to Blizzard API");
-            // Todo 수정해야함 joinPoint.getArgs()는 OBject[]임 OBject로 넘겨야 추후에 역직렬화가 가능
             kafkaProducer.sendFlightEvent(KafkaStoreData.builder()
                             .methodName(joinPoint.getSignature().getName())
                             .targetParameter(joinPoint.getArgs()[0])
