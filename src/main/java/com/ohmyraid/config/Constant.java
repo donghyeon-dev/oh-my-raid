@@ -15,6 +15,7 @@ public final class Constant {
         public static final String NAMESPACE = "profile-kr";
         public static final String LOCALE = "ko_KR";
         public static final String REGION = "kr";
+        public static final String REDIRECT_URI = "http://localhost:3000/oauth";
     }
 
     public static final class Kafka{
