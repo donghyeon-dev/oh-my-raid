@@ -28,8 +28,6 @@ public class AccountController {
 
     private final CharacterService characterService;
 
-    private final KafkaProducer kafkaProducer;
-
     @ApiOperation(value = "회원가입", notes = "로그인이메일, 패스워드, 별명을 입력하여 계정을 등록한다.")
     @PostMapping(value = "/signup")
     public ResultView<SignUpResDto> signUp(

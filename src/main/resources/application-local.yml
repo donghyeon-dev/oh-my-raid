@@ -1,0 +1,86 @@
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+  application:
+    name: ohmyraid-api
+  main: # 클래스로더 리플렉션에서 Swagger의 RequestMapping 들 수집관련해서 오류가 있었음
+    allow-bean-definition-overriding: true
+  datasource:
+    driver-class-name: org.hsqldb.jdbc.JDBCDriver
+    url: jdbc:hsqldb:omr
+    username: sa
+    password: ''
+  jpa:
+    generate-ddl: true
+    show-sql: false
+    properties:
+      hibernate:
+        ddl-auto: create-drop
+        format_sql: false
+  messages:
+    cache-duration: -1
+    basename: classpath:/i18n/messages
+    encoding: UTF-8
+  redis:
+    port: 46379
+  data:
+    redis:
+      repositories:
+        enabled: false
+  jwt:
+    secret-key: ohmyraidApiSecretkeyWithJwtThatManageTokenValidate
+    issuer: ohmyraid
+  mvc: # Spring Boot 2.6버전 이후에 matching-strategy값이 ant_apth_mather= > path_pattern_parser로 변경되면서 오류가 발생하여 추가 --> Spring Actuator와 함께 사용할때는 절대 작동하지 않는다.
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+server:
+  port: 8881
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+logging:
+  level:
+    root: INFO
+    com.ohmyraid: DEBUG
+#    org.hibernate.type.descriptor.sql.BasicBinder: trace
+  file:
+    path: logs
+
+project:
+  interceptor:
+    authentication:
+      add-path: /**
+      exclude-path: /favicon.ico,/,/csrf,/swagger-ui.html,/swagger-ui.html/**,/account/signup,/login,/error,/null/swagger-resources/**,/swagger*,/swagger*/**,/webjars/**,/login/**,/party/**,/metrics,/actuator/**,/characters/**/raids
+
+feign:
+  client:
+    config:
+      RAD:
+        loggerLevel: basic
+        connectTimeout: 5000
+        readTimeout: 5000
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true

@@ -25,7 +25,6 @@ import com.ohmyraid.repository.account.AccountRepository;
 import com.ohmyraid.repository.character.CharacterRepository;
 import com.ohmyraid.repository.raid.RaidDetailRepository;
 import com.ohmyraid.repository.raid.RaidEncounterRepository;
-import com.ohmyraid.utils.ConvertUtils;
 import com.ohmyraid.utils.DatetimeUtils;
 import com.ohmyraid.utils.RedisUtils;
 import com.ohmyraid.utils.ThreadLocalUtils;
@@ -59,7 +58,6 @@ public class CharacterService {
     private final WowClientWrapper wowClientWrapper;
     private final RedisUtils redisUtils;
     private final ObjectMapper mapper;
-    private final ConvertUtils convertUtils;
     private final JPAQueryFactory queryFactory;
 
     /**

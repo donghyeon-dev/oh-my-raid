@@ -1,6 +1,7 @@
 package com.ohmyraid.service.oauth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.ohmyraid.config.Constant;
 import com.ohmyraid.dto.auth.*;
 import com.ohmyraid.dto.login.UserSessionDto;
 import com.ohmyraid.feign.BattlenetClient;
@@ -24,26 +25,13 @@ public class OauthService {
     private final RedisUtils redisUtils;
     private final BattlenetClient battlenetClient;
 
-    @Value("${bz.redirect-uri}")
-    private String REDIRECT_URI;
-
-    @Value("${bz.summary-grant-type}")
-    private String SUMMARY_GRANT_TYPE;
-
-    @Value("${bz.normal-grant-type}")
-    private String NORMAL_GRANT_TYPE;
-
-
-    @Value("${bz.scope}")
-    private String SCOPE;
-
     public String getAccessTokenByAuthorizationCode(String code) throws JsonProcessingException {
         String AUTH = CryptoUtils.getAuthValue();
 
         AuthorizationCodeAuthRequestDto authRequestDto = AuthorizationCodeAuthRequestDto.builder()
-                .grant_type(SUMMARY_GRANT_TYPE)
-                .redirect_uri(REDIRECT_URI)
-                .scope(SCOPE)
+                .grant_type(Constant.Auth.SUMMARY_GRANT_TYPE)
+                .redirect_uri(Constant.Auth.REDIRECT_URI)
+                .scope(Constant.Auth.SCOPE)
                 .code(code)
                 .build();
 
@@ -95,7 +83,7 @@ public class OauthService {
     public String getAccessTokenByClientCredential() throws JsonProcessingException {
 
         AuthResponseDto blizzardAuthResponse = battlenetClient.getAccessTokenByClientCredential(CryptoUtils.getAuthValue(),
-                ClientCredentialAuthRequestDto.builder().grant_type(NORMAL_GRANT_TYPE).build());
+                ClientCredentialAuthRequestDto.builder().grant_type(Constant.Auth.NORMAL_GRANT_TYPE).build());
         if (ObjectUtils.isEmpty(blizzardAuthResponse)) {
             log.error("battlenetClient.getAccessTokenByClientCredential response is empty.");
             throw new IllegalStateException("Result of requsting access token is empty");

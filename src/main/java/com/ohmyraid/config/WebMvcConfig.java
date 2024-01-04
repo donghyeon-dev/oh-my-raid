@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -38,12 +39,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Value("${spring.messages.cache-duration}")
     int messagesCacheSeconds = -1;
 
-    @Value("${spring.redis.port}")
-    private int redisPort;
-
-    @Value("${spring.redis.host}")
-    private String redisHost;
-
     @Value("${project.interceptor.authentication.exclude-path}")
     private final String AUTHENTICATION_EXCLUDE_PATH = null;
 
@@ -69,20 +64,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         messageSource.setDefaultEncoding(messagesEncoding);
         messageSource.setCacheSeconds(messagesCacheSeconds);
         return messageSource;
-    }
-
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(redisHost, redisPort);
-    }
-
-    @Bean
-    public RedisTemplate<?, ?> redisTemplate() {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
-        return redisTemplate;
     }
 
     @Override

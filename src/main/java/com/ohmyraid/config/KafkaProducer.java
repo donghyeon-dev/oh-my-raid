@@ -4,6 +4,7 @@ import com.ohmyraid.dto.client.WowClientRequestDto;
 import com.ohmyraid.dto.kafka.KafkaStoreData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ import java.util.HashMap;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@Profile("dev")
 public class KafkaProducer {
 
     private final KafkaTemplate kafkaTemplate;

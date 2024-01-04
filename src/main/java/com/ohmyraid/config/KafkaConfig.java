@@ -10,6 +10,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 
 @Configuration
 @EnableKafka
+@Profile("dev")
 public class KafkaConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
@@ -52,7 +54,7 @@ public class KafkaConfig {
         config.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, "30000");
         config.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
         config.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, "20000");
-        config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
+        config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "10");
         return new DefaultKafkaConsumerFactory<>(config);
     }
 

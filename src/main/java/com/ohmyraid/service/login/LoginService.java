@@ -7,7 +7,6 @@ import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.dto.login.LoginInpDto;
 import com.ohmyraid.dto.login.UserSessionDto;
 import com.ohmyraid.repository.account.AccountRepository;
-import com.ohmyraid.service.oauth.BlizzardTokenFetcher;
 import com.ohmyraid.utils.CryptoUtils;
 import com.ohmyraid.utils.JwtUtils;
 import com.ohmyraid.utils.RedisUtils;
@@ -23,7 +22,6 @@ public class LoginService {
 
     private final AccountRepository accountRepository;
 
-    private final BlizzardTokenFetcher blizzardTokenFetcher;
 
     private final JwtUtils jwtUtils;
 
