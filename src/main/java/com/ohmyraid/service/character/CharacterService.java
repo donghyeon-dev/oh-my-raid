@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.ohmyraid.common.enums.SlugType;
+import com.ohmyraid.common.result.CommonBadRequestException;
 import com.ohmyraid.common.result.CommonInvalidInputException;
 import com.ohmyraid.common.result.CommonServiceException;
 import com.ohmyraid.common.result.ErrorResult;
@@ -13,6 +14,7 @@ import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.domain.raid.RaidDetailEntity;
 import com.ohmyraid.dto.character.CharacterRaidInfoDto;
 import com.ohmyraid.dto.character.CharacterRaidInfoRequest;
+import com.ohmyraid.dto.character.CharacterSpecRequest;
 import com.ohmyraid.dto.client.WowClientRequestDto;
 import com.ohmyraid.dto.login.UserSessionDto;
 import com.ohmyraid.dto.wow_account.CharacterDto;
@@ -33,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -119,9 +122,10 @@ public class CharacterService {
                 isExist = true;
             }
             // 정보 합치기
-            if (!ObjectUtils.isEmpty(specDto.getCovenant_progress())) {
-                characterDto.setExpansionOption(specDto.getCovenant_progress().getChosenCovenant().getName());
-                characterDto.setExpansionOptionLevel(specDto.getCovenant_progress().getRenownLevel());
+            generateCharacterEntityByCharacterSpec(specDto);
+            if (!ObjectUtils.isEmpty(specDto.getCovenantProgress())) {
+                characterDto.setExpansionOption(specDto.getCovenantProgress().getChosenCovenant().getName());
+                characterDto.setExpansionOptionLevel(specDto.getCovenantProgress().getRenownLevel());
             }
             ;
             CharacterEntity characterEntity = CharacterEntity.builder()
@@ -131,12 +135,12 @@ public class CharacterService {
                     .name(characterDto.getName())
                     .level(characterDto.getLevel())
                     .playableClass(characterDto.getPlayableClass())
-                    .specialization(specDto.getActive_spec().getName())
+                    .specialization(specDto.getActiveSpec().getName())
                     .race(characterDto.getRace())
                     .gender(characterDto.getGender())
                     .faction(characterDto.getFaction())
-                    .equippedItemLevel(specDto.getEquipped_item_level())
-                    .averageItemLvel(specDto.getAverage_item_level())
+                    .equippedItemLevel(specDto.getEquippedItemLevel())
+                    .averageItemLvel(specDto.getAverageItemLevel())
                     .slug(characterDto.getSlug())
                     .lastCrawledAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                     .expansionOption(characterDto.getExpansionOption())
@@ -149,6 +153,43 @@ public class CharacterService {
         }
 
         return true;
+    }
+
+    /**
+     * 캐릭터 스펙 정보를 CharacterEntity에 맞게 파싱하여 Entity 생성
+     * @param specDto
+     */
+    private CharacterEntity generateCharacterEntityByCharacterSpec(CharacterSpecInfoDto specDto) {
+        if(ObjectUtils.isEmpty(specDto)){
+           log.warn("There is no CharacterSpecInfoDto");
+        }
+
+        String expansionOption = "";
+        int expansionOptionLevel= 0;
+        if (!ObjectUtils.isEmpty(specDto.getCovenantProgress())) {
+            expansionOption = specDto.getCovenantProgress().getChosenCovenant().getName();
+            expansionOptionLevel = specDto.getCovenantProgress().getRenownLevel();
+        }
+        ;
+        CharacterEntity characterEntity = CharacterEntity.builder()
+                .characterSeNumber(characterDto.getCharacterSeNumber())
+                .name(characterDto.getName())
+                .level(characterDto.getLevel())
+                .playableClass(characterDto.getPlayableClass())
+                .specialization(specDto.getActiveSpec().getName())
+                .race(characterDto.getRace())
+                .gender(characterDto.getGender())
+                .faction(characterDto.getFaction())
+                .equippedItemLevel(specDto.getEquippedItemLevel())
+                .averageItemLvel(specDto.getAverageItemLevel())
+                .slug(characterDto.getSlug())
+                .lastCrawledAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .expansionOption(characterDto.getExpansionOption())
+                .expansionOptionLevel(characterDto.getExpansionOptionLevel())
+                .build();
+        return CharacterEntity.builder()
+
+                .build();
     }
 
     /**
@@ -354,4 +395,32 @@ public class CharacterService {
         return requestList;
     }
 
+    public CharacterRaidInfoDto getCharacterSpec(CharacterSpecRequest characterSpecRequest) throws JsonProcessingException {
+        if( !StringUtils.hasText(characterSpecRequest.getCharacterName()) &&
+                !StringUtils.hasText(characterSpecRequest.getSlugName())){
+            throw new CommonBadRequestException();
+        }
+
+        // DB조회
+        CharacterDto characterDto = characterRepository.findCharacterDtoBySlugAndName(characterSpecRequest);
+        if(ObjectUtils.isEmpty(characterDto)){
+            log.info("There is no chracter in DB. CharacterName={}, slugName={}", characterSpecRequest.getCharacterName(), characterSpecRequest.getSlugName());
+            // fetch from API
+            CharacterSpecInfoDto fetchedCharacterSpec = wowClientWrapper.getCharacterSpec(
+                    WowClientRequestDto.builder()
+                            .namespace(Constant.Auth.NAMESPACE)
+                            .accessToken(redisUtils.getRedisValue(Constant.Auth.BLIZZARD_TOKEN_KEY, String.class))
+                            .locale(Constant.Auth.LOCALE)
+                            .slugEnglishName(characterSpecRequest.getSlugName())
+                            .characterName(characterSpecRequest.getCharacterName())
+                            .build());
+
+            // Todo Make method convert CharacterSpecInfoDto to CharacterDTO
+            CharacterEntity fetchedCharacter = CharacterMapper.INSTANCE.characterDtoToEntity(fetchedCharacterSpec);
+        }
+
+
+
+        return null;
+    }
 }

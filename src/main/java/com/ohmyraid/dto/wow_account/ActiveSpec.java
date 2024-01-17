@@ -8,7 +8,6 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("active_spec")
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ActiveSpec {
 

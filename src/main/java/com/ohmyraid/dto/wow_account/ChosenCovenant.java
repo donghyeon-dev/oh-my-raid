@@ -8,8 +8,6 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("chosen_covenant")
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ChosenCovenant {
 
     private String name;
