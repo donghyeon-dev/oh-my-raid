@@ -1,3 +1,4 @@
+
 spring:
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
@@ -38,6 +39,9 @@ spring:
     bootstrap-servers: http://${PUBLIC_IP:localhost}:29092
     consumer:
       group-id: omr
+  config:
+    activate:
+      on-profile: dev
 
 
 server:
