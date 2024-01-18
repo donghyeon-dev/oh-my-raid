@@ -219,6 +219,7 @@ public class CharacterService {
         raidDetailDtoList.stream()
                 .filter(raidDetailDto -> raidDetailDto.getDifficulty() != null && !ObjectUtils.isEmpty(raidDetailDto.getDifficulty()))
                 .forEach(raidDetailDto -> {
+                    // Todo ID값이 long type이다보니 null이 아니라 0으로 실질적으로 조회처리가 되면서 그대로 0이 insert 되는과정에서 외래키0이 없다고하여 오류발생
                     Long detailId = raidDetailRepository.findRaidDetailIdByDto(raidDetailDto);
                     raidDetailRepository.save(RaidDetailEntity.builder()
                             .detailId(detailId)
@@ -345,6 +346,7 @@ public class CharacterService {
      * @return
      * @throws JsonProcessingException
      */
+    @Transactional
     public CharacterDto getCharacterProfile(CharacterSpecRequest characterSpecRequest) throws JsonProcessingException {
         if( !StringUtils.hasText(characterSpecRequest.getCharacterName()) &&
                 !StringUtils.hasText(characterSpecRequest.getSlugName())){
@@ -368,6 +370,22 @@ public class CharacterService {
 
             characterDto = generateCharacterEntityByCharacterProfileSummary(characterProfileSummary);
             characterRepository.save(CharacterMapper.INSTANCE.characterDtoToEntity(characterDto));
+
+            // fetch RaidInfo
+            RaidInfoDto raidInfoDto = wowClientWrapper.fetchRaidEncounter(
+                    WowClientRequestDto.builder()
+                            .namespace(Constant.Auth.NAMESPACE)
+                            .accessToken(redisUtils.getRedisValue(Constant.Auth.BLIZZARD_TOKEN_KEY, String.class))
+                            .locale(Constant.Auth.LOCALE)
+                            .slugEnglishName(SlugType.getSlugEnglishNameByKorName(characterSpecRequest.getSlugName()))
+                            .characterName(characterSpecRequest.getCharacterName())
+                            .build());
+
+            List<RaidDetailDto> raidDetailList =  parseCharacterRaidInfosToRaidDetails(Stream.of(raidInfoDto).collect(Collectors.toList()));
+            if (!ObjectUtils.isEmpty(raidDetailList)) {
+
+                insertRaidDetail(raidDetailList);
+            }
 
         }
 
