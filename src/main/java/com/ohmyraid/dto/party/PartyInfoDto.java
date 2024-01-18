@@ -52,7 +52,7 @@ public class PartyInfoDto {
     @ApiModelProperty(value = "서버", name = "slug")
     private String slug;
 
-    @ApiModelProperty(value = "생성자계정ID", name = "createAccountId")
-    private long createAccountId;
+    @ApiModelProperty(value = "생성자계정ID", name = "createUserId")
+    private long createUserId;
 
 }

@@ -1,7 +1,7 @@
 package com.ohmyraid.utils;
 
 import com.ohmyraid.config.Constant;
-import com.ohmyraid.dto.account.ThreadInfDto;
+import com.ohmyraid.dto.user.ThreadInfDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;

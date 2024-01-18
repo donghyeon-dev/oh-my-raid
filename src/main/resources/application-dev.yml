@@ -65,7 +65,7 @@ project:
   interceptor:
     authentication:
       add-path: /**
-      exclude-path: /favicon.ico,/,/csrf,/swagger-ui.html,/swagger-ui.html/**,/account/signup,/login,/error,/null/swagger-resources/**,/swagger*,/swagger*/**,/webjars/**,/login/**,/party/**,/metrics,/actuator/**,/characters/**/raids
+      exclude-path: /favicon.ico,/,/csrf,/swagger-ui.html,/swagger-ui.html/**,/account/signup,/login,/error,/null/swagger-resources/**,/swagger*,/swagger*/**,/webjars/**,/login/**,/party/**,/metrics,/actuator/**,/characters/**/raids,/characters/get-chracter
 
 feign:
   client:

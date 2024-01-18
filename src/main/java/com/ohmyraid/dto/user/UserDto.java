@@ -1,4 +1,4 @@
-package com.ohmyraid.dto.account;
+package com.ohmyraid.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AccountDto {
+public class UserDto {
 
-    private long accountId;
+    private long userId;
 
     private String email;
 

@@ -1,7 +1,7 @@
 insert into omr_account (account_id, email, nickname, password)
 values (1, 'donghyeondev@gmail.com', 'autocat', '$2a$08$dQLjDEjVcCK7uDhSy2RY3uCDobWvOdAjYDRkYAoe6nMok2Qgzmtvi');
 
-insert into omr_character (character_id, account_id, character_se_number, name, playable_class, specialization,
+insert into omr_character (character_id, user_id, character_se_number, name, playable_class, specialization,
                                level, equipped_item_level, average_item_lvel, faction, gender, slug, race,
                                last_crawled_at)
 values (11, 1, 86261209, '박퓨리', 9, 267, 62, 166, 166, 'HORDE', 'FEMALE', 205, 5, '2023-12-12 10:10:44.963617'),
@@ -19,7 +19,7 @@ values (11, 1, 86261209, '박퓨리', 9, 267, 62, 166, 166, 'HORDE', 'FEMALE', 2
         '2023-12-11 17:05:57.370659');
 
 insert into omr_party_info (party_id, contents, difficulty, instance_name, member_capacity, recruit_until,
-                                required_members, slug, start_at, subject, times, account_id)
+                                required_members, slug, start_at, subject, times, user_id)
 values (1, '가나다라마바사아자차카타파하
 abcdefghijklmnopqrstuvwxyz', 'MYTHIC', 'FOA', '확고', '2023-11-17 05:44:45.109000', 15, 'Azshara',
         '2023-11-17 05:44:45.109000', 'recruit!!!!!', 6, 1);

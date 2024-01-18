@@ -3,10 +3,10 @@ package com.ohmyraid.service.login;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.common.result.CommonServiceException;
 import com.ohmyraid.common.result.ErrorResult;
-import com.ohmyraid.domain.account.AccountEntity;
+import com.ohmyraid.domain.user.UserEntity;
 import com.ohmyraid.dto.login.LoginInpDto;
 import com.ohmyraid.dto.login.UserSessionDto;
-import com.ohmyraid.repository.account.AccountRepository;
+import com.ohmyraid.repository.user.UserRepository;
 import com.ohmyraid.utils.CryptoUtils;
 import com.ohmyraid.utils.JwtUtils;
 import com.ohmyraid.utils.RedisUtils;
@@ -20,7 +20,7 @@ import org.springframework.util.ObjectUtils;
 @RequiredArgsConstructor
 public class LoginService {
 
-    private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
 
     private final JwtUtils jwtUtils;
@@ -40,21 +40,21 @@ public class LoginService {
     public UserSessionDto signIn(LoginInpDto inpVo) throws JsonProcessingException {
 
         // 아이디 통해 검색
-        AccountEntity accountEntity = accountRepository.findAllByEmail(inpVo.getEmail());
+        UserEntity userEntity = userRepository.findAllByEmail(inpVo.getEmail());
 
         // 조회되는 값이 없다면
-        if (ObjectUtils.isEmpty(accountEntity)) {
+        if (ObjectUtils.isEmpty(userEntity)) {
             throw new CommonServiceException(ErrorResult.LOGIN_FAIL_NO_ID);
         }
 
-        if ( CryptoUtils.isPwVerify(inpVo.getPassword(), accountEntity.getPassword()) ) {
+        if ( CryptoUtils.isPwVerify(inpVo.getPassword(), userEntity.getPassword()) ) {
             // Output Vo 작성
-            String token = jwtUtils.createAccessToken(String.valueOf(accountEntity.getEmail()), accountEntity.getNickname());
+            String token = jwtUtils.createAccessToken(String.valueOf(userEntity.getEmail()), userEntity.getNickname());
             UserSessionDto userSessionDto = new UserSessionDto();
-            userSessionDto.setEmail(accountEntity.getEmail());
-            userSessionDto.setNickname(accountEntity.getNickname());
+            userSessionDto.setEmail(userEntity.getEmail());
+            userSessionDto.setNickname(userEntity.getNickname());
             userSessionDto.setAccessToken(token);
-            userSessionDto.setAccountId(accountEntity.getAccountId());
+            userSessionDto.setAccountId(userEntity.getUserId());
 
             redisUtils.storeObjectToRedis(token, userSessionDto);
             return userSessionDto;

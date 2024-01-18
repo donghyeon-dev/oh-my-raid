@@ -2,7 +2,7 @@ package com.ohmyraid.rest.party;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ohmyraid.config.Constant;
-import com.ohmyraid.dto.account.ThreadInfDto;
+import com.ohmyraid.dto.user.ThreadInfDto;
 import com.ohmyraid.dto.login.UserSessionDto;
 import com.ohmyraid.dto.party.PartyInfoDto;
 import com.ohmyraid.utils.RedisUtils;

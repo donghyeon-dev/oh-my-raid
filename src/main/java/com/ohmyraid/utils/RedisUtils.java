@@ -63,10 +63,10 @@ public class RedisUtils {
     /**
      * 주어진 Redis 키에 연결된 값을 반환합니다. 사용하는 클래스 타입에 따라 반환 값이 다릅니다.
      *
-     * <p>Redis에 키가 없는 경우, type이 String인 경우 새로운 BlizzardAccess 토큰을 가져옵니다.
+     * <p>1. Redis에 키가 없는 경우, type이 String인 경우 새로운 BlizzardAccess 토큰을 가져옵니다.
      * 그외의 경우에는 null을 반환합니다.
      *
-     * <p>키가 존재하고 type이 String인 경우, 해당 값이 String 형태로 반환됩니다.
+     * <p>2. 키가 존재하고 type이 String인 경우, 해당 값이 String 형태로 반환됩니다.
      * 그외의 경우에는 ObjectMapper을 사용하여 JSON string을 원하는 객체 형태로 변환하여 반환합니다.
      *
      * @param redisKey Redis에서 가져올 값의 키

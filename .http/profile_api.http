@@ -43,3 +43,13 @@ GET http://localhost:8880/characters/1/raids?characterId=19&difficulty=4&expansi
 ###
 GET https://kr.api.blizzard.com/profile/wow/character/azshara/%EB%88%88%EB%B6%88/encounters/raids?namespace=profile-kr&
     access_token=KRcXm1s6hWOP6bA1oiaV9Q39Z3HaB2j9li&locale=ko_KR
+
+###
+GET https://kr.api.blizzard.com/profile/user/wow/protected-character/205-86261209?namespace=profile-kr&access_token=KRSopCAZuAFEb0XdThD0kGKaL5Kn7Pu6S9
+content-type: application/json;charset=UTF-8
+last-modified: Fri, 15 Dec 2023 10:53:50 GMT
+
+###
+GET https://kr.api.blizzard.com/profile/wow/character/azshara/%EB%B0%95%EB%8F%99%ED%98%84/appearance?namespace=profile-kr&access_token=KRUhUkWGEpmwDOF5FqT6ziujRN7BkTeGpS&locale=ko_KR
+content-type: application/json;charset=UTF-8
+last-modified: Fri, 15 Dec 2023 10:53:50 GMT

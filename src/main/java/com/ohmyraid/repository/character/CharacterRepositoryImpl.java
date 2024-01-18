@@ -20,13 +20,13 @@ public class CharacterRepositoryImpl implements CharacterRepositoryCustom {
 
 
     @Override
-    public List<CharacterDto> findCharacterDtosByAccountId(long accountId) {
+    public List<CharacterDto> findCharacterDtosByUserId(long userId) {
         return queryFactory.select(new QCharacterDto(
                 character.characterId,
                 character.name,
                 character.slug
         )).from(character)
-                .where(character.accountEntity.accountId.eq(accountId)).fetch();
+                .where(character.userEntity.userId.eq(userId)).fetch();
     }
 
     @Override

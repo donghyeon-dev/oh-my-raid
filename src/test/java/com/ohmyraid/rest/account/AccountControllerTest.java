@@ -2,7 +2,7 @@ package com.ohmyraid.rest.account;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohmyraid.config.Constant;
-import com.ohmyraid.dto.account.ThreadInfDto;
+import com.ohmyraid.dto.user.ThreadInfDto;
 import com.ohmyraid.dto.login.UserSessionDto;
 import com.ohmyraid.utils.RedisUtils;
 import com.ohmyraid.utils.ThreadLocalUtils;

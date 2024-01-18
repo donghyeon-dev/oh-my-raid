@@ -13,10 +13,10 @@ public interface PartyInfoMapper {
 
     PartyInfoMapper INSTANCE = Mappers.getMapper(PartyInfoMapper.class);
 
-    @Mapping(source = "createAccountId", target = "createAccountId.accountId")
+    @Mapping(source = "createUserId", target = "createUser.userId")
     PartyInfoEntity partInfoDtoToEntity(PartyInfoDto partyInfoDto);
 
-    @Mapping(source = "createAccountId.accountId", target = "createAccountId")
+    @Mapping(source = "createUser.userId", target = "createUserId")
     PartyInfoDto entityToDto(PartyInfoEntity entity);
 
     List<PartyInfoDto> entityListToDtoList(List<PartyInfoEntity> entity);

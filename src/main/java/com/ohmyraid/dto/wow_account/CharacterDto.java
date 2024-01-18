@@ -21,7 +21,7 @@ public class CharacterDto {
 
     private long characterId;
 
-    private long accountId;
+    private long userId;
 
     private int characterSeNumber;
 

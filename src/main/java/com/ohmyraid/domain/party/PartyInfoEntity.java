@@ -1,6 +1,6 @@
 package com.ohmyraid.domain.party;
 
-import com.ohmyraid.domain.account.AccountEntity;
+import com.ohmyraid.domain.user.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,8 +46,8 @@ public class PartyInfoEntity {
     private String slug;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "account_id")
-    private AccountEntity createAccountId;
+    @JoinColumn(name = "user_id")
+    private UserEntity createUser;
 
     @Column(length = 10, nullable = false)
     private LocalDateTime startAt;
