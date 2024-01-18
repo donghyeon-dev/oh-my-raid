@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AuthResponseDto {
 
-    private String access_token;
+    private String accessToken;
 
-    private String token_type;
+    private String tokenType;
 
-    private int expires_in;
+    private int expiresIn;
 
     private String scope;
 }

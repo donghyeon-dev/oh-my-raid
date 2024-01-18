@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 @Data
 @Builder
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ClientCredentialAuthRequestDto implements Serializable {
 
     private String grant_type;

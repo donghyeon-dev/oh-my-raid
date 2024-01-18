@@ -66,7 +66,7 @@ public class CharacterServiceTest {
         CharacterEntity characterEntity = characterRepository.findCharacterEntityByCharacterId(19);
         CharacterDto characterDto = CharacterMapper.INSTANCE.characterEntityToDto(characterEntity);
 
-        RaidInfoDto charactersRaidInfo = wowClientWrapper.getRaidEncounter(
+        RaidInfoDto charactersRaidInfo = wowClientWrapper.fetchRaidEncounter(
                 WowClientRequestDto.builder()
                         .namespace(Constant.Auth.NAMESPACE)
                         .accessToken(bzToken)
@@ -95,8 +95,8 @@ public class CharacterServiceTest {
                     for(Encounters instanceBoss : instanceBossList ){
                         String bossName = instanceBoss.getEncounter().getName(); // Kiljeden
                         long bossId = instanceBoss.getEncounter().getId();
-                        int currentBossKills = instanceBoss.getCompleted_count(); // 1
-                        LocalDateTime lastKilledAt = DatetimeUtils.unixToLocalDateTime(Long.parseLong(instanceBoss.getLast_kill_timestamp())); // 2023.01.01 12:31:33
+                        int currentBossKills = instanceBoss.getCompletedCount(); // 1
+                        LocalDateTime lastKilledAt = DatetimeUtils.unixToLocalDateTime(Long.parseLong(instanceBoss.getLastKillTimestamp())); // 2023.01.01 12:31:33
                         RaidDetailEntity raidDetailEntity = RaidDetailEntity.builder()
                                 .characterEntity(characterEntity)
                                 .expansionName(expansionName)

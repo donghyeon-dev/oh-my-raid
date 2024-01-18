@@ -47,10 +47,6 @@ public class CharacterDto {
 
     private String faction;
 
-    private String expansionOption;
-
-    private int expansionOptionLevel;
-
     private LocalDateTime lastCrawledAt;
 
 

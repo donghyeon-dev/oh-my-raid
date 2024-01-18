@@ -14,16 +14,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("modes")
 public class ModesDto {
 
-    @ApiModelProperty(value = "난이도 정보 DTO", name = "difficulty")
+    @ApiModelProperty(value = "난이도 정보", name = "difficulty")
     private Difficulty difficulty;
 
-    @ApiModelProperty(value = "레이드 완료여부 DTO", name = "status")
+    @ApiModelProperty(value = "레이드 완료여부", name = "status")
     private Status status;
 
-    @ApiModelProperty(value = "레이드 진척도 DTO", name = "progress")
+    @ApiModelProperty(value = "레이드 진척도", name = "progress")
     private ProgressDto progress;
 }

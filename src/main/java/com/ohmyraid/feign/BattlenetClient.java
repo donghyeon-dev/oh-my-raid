@@ -15,15 +15,15 @@ import java.util.Map;
 /**
  * Authorization_code를 사용해 Token을 받아오는 Feign Interface
  */
-@FeignClient(name="OAU", url = "https://oauth.battle.net")
+@FeignClient(name="OAU", url = "https://oauth.battle.net", configuration = FeignConfig.class)
 public interface BattlenetClient {
 
     @PostMapping(value = "/oauth/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    AuthResponseDto getAccessTokenByAuthorizationCode(@RequestBody AuthorizationCodeAuthRequestDto body,
-                                                      @RequestHeader(value = "Authorization") String authHeader);
+    AuthResponseDto fetchAccessTokenByAuthorizationCode(@RequestBody AuthorizationCodeAuthRequestDto body,
+                                                        @RequestHeader(value = "Authorization") String authHeader);
     @PostMapping(value = "/oauth/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    AuthResponseDto getAccessTokenByClientCredential(@RequestHeader(value = "Authorization") String authHeader,
-                                                     @RequestBody ClientCredentialAuthRequestDto authDto);
+    AuthResponseDto fetchAccessTokenByClientCredential(@RequestHeader(value = "Authorization") String authHeader,
+                                                       @RequestBody ClientCredentialAuthRequestDto authDto);
 
     @PostMapping(value = "/oauth/check_token" , consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     Map<String, Object> checkToken(@RequestBody CheckTokenDto body);

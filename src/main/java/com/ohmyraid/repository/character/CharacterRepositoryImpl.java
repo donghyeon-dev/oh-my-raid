@@ -1,6 +1,7 @@
 package com.ohmyraid.repository.character;
 
 import com.ohmyraid.domain.character.QCharacterEntity;
+import com.ohmyraid.dto.character.CharacterSpecRequest;
 import com.ohmyraid.dto.wow_account.CharacterDto;
 import com.ohmyraid.dto.wow_account.QCharacterDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -26,5 +27,17 @@ public class CharacterRepositoryImpl implements CharacterRepositoryCustom {
                 character.slug
         )).from(character)
                 .where(character.accountEntity.accountId.eq(accountId)).fetch();
+    }
+
+    @Override
+    public CharacterDto findCharacterDtoBySlugAndName(CharacterSpecRequest request) {
+        return queryFactory.select(new QCharacterDto(
+                character.characterId,
+                character.name,
+                character.slug
+        )).from(character)
+                .where(character.slug.eq(request.getSlugName())
+                        .and(character.name.eq(request.getCharacterName())))
+                .fetchOne();
     }
 }

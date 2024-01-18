@@ -18,9 +18,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("progress")
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ProgressDto {
 
     @ApiModelProperty(value = "잡은 네임드 수", name = "completedCount")

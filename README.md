@@ -44,15 +44,15 @@ docker compose up -d
 ## Usage
 OMR operates in two Spring boot active profiles:
 ```
-Development (dev): This profile uses Docker resources for running the services.
-Local: This profile uses in-memory components for local testing and development.
+dev(Development): This profile uses Docker resources for running the services.
+local(Local): This profile uses in-memory components for local testing and development.
 ```
 To switch between profiles, adjust your environment configuration accordingly.
 
 ## Features
 Using your blizzard accounts(by login to blizzard), we can ask blizzard to fetch that account's WoW data.
-- Get account's all the character(level 60 upper) inofrmation
-- Get simple raid career
+- Get Blizzard account's all the character(level 60 upper) inofrmation
+- Get Chracter's raid career
 
 ### UML (data from Blizzard)
 ![레이드정보계층](doc/RaidDtoUML.png)*블리자드에서 제공하는 레이드 API의 depth*

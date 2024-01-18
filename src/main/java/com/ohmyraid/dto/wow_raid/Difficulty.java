@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("difficulty")
 public class Difficulty {
 
     @ApiModelProperty(value = "영문 난이도명", name = "type")

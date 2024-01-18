@@ -10,8 +10,6 @@ import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-
 public class AccountSummaryDto {
 
     public List<WowAccountDto> wowAccounts;
