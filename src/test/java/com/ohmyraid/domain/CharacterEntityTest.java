@@ -45,8 +45,6 @@ public class CharacterEntityTest {
                 .averageItemLvel(231)
                 .slug("아즈샤라")
                 .lastCrawledAt(LocalDateTime.now())
-                .expansionOption("나이트 페이")
-                .expansionOptionLevel(50)
                 .build();
         characterRepository.save(characterEntity);
 

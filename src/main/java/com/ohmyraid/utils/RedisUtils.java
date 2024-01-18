@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ohmyraid.config.Constant;
 import com.ohmyraid.dto.auth.ClientCredentialAuthRequestDto;
 import com.ohmyraid.feign.BattlenetClient;
-import com.ohmyraid.service.oauth.OauthService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -83,9 +82,9 @@ public class RedisUtils {
             log.warn("There is no value for key:{}.", redisKey);
             if(type == String.class){
                 log.info("renew BlizzardAccesToken.");
-                String renewedAccessToken = battlenetClient.getAccessTokenByClientCredential(CryptoUtils.getAuthValue(),
+                String renewedAccessToken = battlenetClient.fetchAccessTokenByClientCredential(CryptoUtils.getAuthValue(),
                         ClientCredentialAuthRequestDto.builder().grant_type(Constant.Auth.NORMAL_GRANT_TYPE).build()
-                ).getAccess_token();
+                ).getAccessToken();
                 storeObjectToRedis(Constant.Auth.BLIZZARD_TOKEN_KEY, renewedAccessToken);
                 return type.cast(renewedAccessToken);
             }

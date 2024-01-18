@@ -14,13 +14,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("instance")
 public class Instance {
 
-    @ApiModelProperty(value = "레이드 던전 명", name = "name")
+    @ApiModelProperty(value = "레이드 던전 명(ENG)", name = "name")
     String name;
 
-    @ApiModelProperty(value = "레이드 던전 고유 번호", name = "id")
+    @ApiModelProperty(value = "레이드 던전 고유 값", name = "id")
     long id;
 }

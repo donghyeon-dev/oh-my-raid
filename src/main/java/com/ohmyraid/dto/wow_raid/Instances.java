@@ -16,13 +16,11 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("instances")
 public class Instances {
 
-    @ApiModelProperty(value = "인스턴스 던전 정보 DTO", name = "instance")
+    @ApiModelProperty(value = "인스턴스 던전 정보", name = "instance")
     private Instance instance;
 
-    @ApiModelProperty(value = "난이도 관련 정보 DTO", name = "modes")
+    @ApiModelProperty(value = "난이도 관련 정보", name = "modes")
     private List<ModesDto> modes;
 }

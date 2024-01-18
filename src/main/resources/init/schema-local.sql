@@ -28,8 +28,6 @@ create table omr_character
     gender                 varchar(10) not null,
     slug                   int         not null,
     race                   int         not null,
-    expansion_option_level int         null,
-    expansion_option       int         null,
     last_crawled_at        datetime(6) not null,
     constraint UK_gt8m76k66drao1gnlnc4vh5fl
         unique (character_se_number),

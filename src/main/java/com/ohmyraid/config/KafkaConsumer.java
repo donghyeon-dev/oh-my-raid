@@ -58,7 +58,7 @@ public class KafkaConsumer {
                     kafkaStoreData.getParameterTargetClass());
 
             List<RaidInfoDto> raidInfoDtoList = new ArrayList<>();
-            raidInfoDtoList.add(wowClientWrapper.getRaidEncounter(wowClientRequestDto));
+            raidInfoDtoList.add(wowClientWrapper.fetchRaidEncounter(wowClientRequestDto));
             raidInfoDtoList.forEach(raidInfoDto -> {
                 raidInfoDto.setCharacterId(wowClientRequestDto.getCharacterId());
             });

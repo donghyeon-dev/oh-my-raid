@@ -14,18 +14,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("encounters")
 public class Encounters {
 
     @ApiModelProperty(value = "네임드 정보", name = "encounter")
     private Encounter encounter;
 
-    @ApiModelProperty(value = "네임드 처치 수", name = "comopleted_count")
-    private int completed_count;
+    @ApiModelProperty(value = "네임드 처치 수", name = "completedCount")
+    private int completedCount;
 
-    @ApiModelProperty(value = "가장 최근에 잡은 시간", name = "last_kill_timestamp")
-    private String last_kill_timestamp;
+    @ApiModelProperty(value = "가장 최근에 잡은 시간", name = "lastKillTimestamp")
+    private String lastKillTimestamp;
 
 
 }

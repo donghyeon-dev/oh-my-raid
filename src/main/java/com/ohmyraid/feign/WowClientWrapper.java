@@ -2,12 +2,11 @@ package com.ohmyraid.feign;
 
 import com.ohmyraid.config.RateLimited;
 import com.ohmyraid.dto.client.WowClientRequestDto;
-import com.ohmyraid.dto.wow_account.CharacterSpecInfoDto;
+import com.ohmyraid.dto.wow_account.AccountSummaryDto;
+import com.ohmyraid.dto.wow_account.CharacterProfileSummary;
 import com.ohmyraid.dto.wow_raid.RaidInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * Wrapper class for the WowClient interface. Provides convenient methods to interact with the World of Warcraft API.
@@ -26,8 +25,8 @@ public class WowClientWrapper {
      * @return a map containing the account profile summary information
      */
     @RateLimited
-    public Map<String, Object> getAccountProfileSummary(WowClientRequestDto requestDto) {
-        return wowClient.getAccountProfileSummary(requestDto.getNamespace(),
+    public AccountSummaryDto fetchAccountProfileSummary(WowClientRequestDto requestDto) {
+        return wowClient.fetchAccountProfileSummary(requestDto.getNamespace(),
                 requestDto.getLocale(),
                 requestDto.getAccessToken(),
                 requestDto.getRegion());
@@ -39,11 +38,11 @@ public class WowClientWrapper {
      * Retrieves the character specialization information for a character in World of Warcraft.
      *
      * @param requestDto the request object containing the necessary parameters
-     * @return the CharacterSpecInfoDto object representing the character specialization information
+     * @return the CharacterProfileSummary object representing the character specialization information
      */
     @RateLimited
-    public CharacterSpecInfoDto getCharacterSpec(WowClientRequestDto requestDto){
-        return wowClient.getCharacterSpec(requestDto.getNamespace(),
+    public CharacterProfileSummary fetchCharacterProfileSummary(WowClientRequestDto requestDto){
+        return wowClient.fetchCharacterProfileSummary(requestDto.getNamespace(),
                 requestDto.getAccessToken(),
                 requestDto.getLocale(),
                 requestDto.getSlugEnglishName(),
@@ -59,8 +58,8 @@ public class WowClientWrapper {
      * @return the RaidInfoDto object representing the raid encounter information
      */
     @RateLimited
-    public RaidInfoDto getRaidEncounter(WowClientRequestDto requestDto) {
-        return wowClient.getRaidEncounter(requestDto.getNamespace(),
+    public RaidInfoDto fetchRaidEncounter(WowClientRequestDto requestDto) {
+        return wowClient.fetchRaidEncounter(requestDto.getNamespace(),
                 requestDto.getAccessToken(),
                 requestDto.getLocale(),
                 requestDto.getSlugEnglishName(),

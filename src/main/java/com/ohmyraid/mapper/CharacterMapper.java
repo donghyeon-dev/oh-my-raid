@@ -1,5 +1,6 @@
 package com.ohmyraid.mapper;
 
+import com.ohmyraid.domain.account.AccountEntity;
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.dto.wow_account.CharacterDto;
 import org.mapstruct.Mapper;
@@ -8,12 +9,12 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper//(uses = {CharacterResolver.class})
+@Mapper
 public interface CharacterMapper {
 
     CharacterMapper INSTANCE = Mappers.getMapper(CharacterMapper.class);
 
-    @Mapping(source = "characterId", target = "accountEntity.accountId")
+    @Mapping(target = "accountEntity", expression = "java(mappingAccount(characterDto.getAccountId()))")
     CharacterEntity characterDtoToEntity(CharacterDto characterDto);
 
     @Mapping(target = "realm", ignore = true)
@@ -24,5 +25,14 @@ public interface CharacterMapper {
 
     List<CharacterEntity> dtoListToCharacterEntities(List<CharacterDto> characterEntity);
 
+    default AccountEntity mappingAccount(long accountId){
+        if(accountId == 0){
+            return null;
+        }
+
+        return AccountEntity.builder().accountId(accountId).build();
+
+
+    }
 
 }

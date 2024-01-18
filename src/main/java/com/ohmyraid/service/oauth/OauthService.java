@@ -10,7 +10,6 @@ import com.ohmyraid.utils.RedisUtils;
 import com.ohmyraid.utils.ThreadLocalUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -35,10 +34,10 @@ public class OauthService {
                 .code(code)
                 .build();
 
-        AuthResponseDto tokenRes = battlenetClient.getAccessTokenByAuthorizationCode(authRequestDto, AUTH);
+        AuthResponseDto tokenRes = battlenetClient.fetchAccessTokenByAuthorizationCode(authRequestDto, AUTH);
         log.debug("TokenRes is {}", tokenRes);
 
-        return tokenRes.getAccess_token();
+        return tokenRes.getAccessToken();
     }
 
     ;
@@ -82,13 +81,13 @@ public class OauthService {
      */
     public String getAccessTokenByClientCredential() throws JsonProcessingException {
 
-        AuthResponseDto blizzardAuthResponse = battlenetClient.getAccessTokenByClientCredential(CryptoUtils.getAuthValue(),
+        AuthResponseDto blizzardAuthResponse = battlenetClient.fetchAccessTokenByClientCredential(CryptoUtils.getAuthValue(),
                 ClientCredentialAuthRequestDto.builder().grant_type(Constant.Auth.NORMAL_GRANT_TYPE).build());
         if (ObjectUtils.isEmpty(blizzardAuthResponse)) {
             log.error("battlenetClient.getAccessTokenByClientCredential response is empty.");
             throw new IllegalStateException("Result of requsting access token is empty");
         }
-        return blizzardAuthResponse.getAccess_token();
+        return blizzardAuthResponse.getAccessToken();
     }
 
     ;

@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CovenantProgress {
 
     private ChosenCovenant chosenCovenant;
+
     private int renownLevel;
 }

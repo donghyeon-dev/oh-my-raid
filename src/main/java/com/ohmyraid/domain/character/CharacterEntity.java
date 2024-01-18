@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -55,6 +56,7 @@ public class CharacterEntity {
 
     @Convert(converter = FactionConverter.class)
     @Column(length = 10, nullable = false)
+    @Comment("진영(HODE,ALLIANCE)")
     private String faction;
 
     @Column(length = 10, nullable = false)
@@ -69,12 +71,5 @@ public class CharacterEntity {
 
     @Column(length = 10, nullable = false)
     private LocalDateTime lastCrawledAt;
-
-    @Convert(converter = ExpansionOptionCoverter.class)
-    @Column(length = 10, nullable = true)
-    private String expansionOption;
-
-    @Column(length = 10, nullable = true)
-    private Integer expansionOptionLevel;
 
 }

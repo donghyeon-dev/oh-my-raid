@@ -40,6 +40,13 @@ public enum SlugType {
                 .orElseThrow(() -> new IllegalArgumentException("There is no described slug."));
     }
 
+    public static String getSlugEnglishNameByKorName(String slugName){
+        return Arrays.stream(SlugType.values())
+                .filter(targetType -> targetType.getSlugName().equals(slugName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("There is no described slug.")).getSlugEnglishName();
+    }
+
     public static SlugType getTypeBySlugEnglishname(String slugEnglishName){
         return Arrays.stream(SlugType.values())
                 .filter(targetType -> targetType.getSlugEnglishName().equals(slugEnglishName))

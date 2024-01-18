@@ -16,8 +16,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonRootName("expansions")
 public class Expansions {
 
     @ApiModelProperty(value = "확장팩 관련 Dto", name = "expansionDto")
