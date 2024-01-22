@@ -17,7 +17,6 @@ public interface CharacterMapper {
     @Mapping(target = "userEntity", expression = "java(mappingAccount(characterDto.getUserId()))")
     CharacterEntity characterDtoToEntity(CharacterDto characterDto);
 
-    @Mapping(target = "realm", ignore = true)
     @Mapping(source = "userEntity.userId", target = "userId")
     CharacterDto characterEntityToDto(CharacterEntity characterEntity);
 

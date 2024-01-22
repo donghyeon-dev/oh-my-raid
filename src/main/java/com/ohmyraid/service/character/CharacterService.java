@@ -96,7 +96,7 @@ public class CharacterService {
                                 .namespace(Constant.Auth.NAMESPACE)
                                 .accessToken(bzToken)
                                 .locale(Constant.Auth.LOCALE)
-                                .slugEnglishName(characterDto.getRealm())
+                                .slugEnglishName(SlugType.getSlugEnglishNameByKorName(characterDto.getSlug()))
                                 .characterName(characterDto.getName())
                                 .build());
             }catch (Exception e){
@@ -219,8 +219,10 @@ public class CharacterService {
         raidDetailDtoList.stream()
                 .filter(raidDetailDto -> raidDetailDto.getDifficulty() != null && !ObjectUtils.isEmpty(raidDetailDto.getDifficulty()))
                 .forEach(raidDetailDto -> {
-                    // Todo ID값이 long type이다보니 null이 아니라 0으로 실질적으로 조회처리가 되면서 그대로 0이 insert 되는과정에서 외래키0이 없다고하여 오류발생
-                    Long detailId = raidDetailRepository.findRaidDetailIdByDto(raidDetailDto);
+                    Long detailId = null;
+                    if(raidDetailDto.getCharacterId() != null){
+                        detailId = raidDetailRepository.findRaidDetailIdByDto(raidDetailDto);
+                    }
                     raidDetailRepository.save(RaidDetailEntity.builder()
                             .detailId(detailId)
                             .characterEntity(CharacterEntity.builder().characterId(raidDetailDto.getCharacterId()).build())
@@ -323,17 +325,15 @@ public class CharacterService {
                     .filter(c -> c.getLevel() >= 60)
                     .map( c ->
                             CharacterDto.builder()
-                                            .characterSeNumber(c.getId())
-                                            .userId(userId)
-                                            .name(c.getName().toLowerCase())
-                                            .level(c.getLevel())
-                                            .playableClass(c.getPlayableClass().getName())
-                                            .race(c.getPlayableRace().getName())
-                                            .slug(c.getRealm().getName())
-                                            .realm(c.getRealm().getSlug())
-                                            .faction(c.getFaction().getName())
-                                            .gender(c.getGender().getName())
-                                    .build()
+                                    .characterSeNumber(c.getId())
+                                    .userId(userId)
+                                    .name(c.getName().toLowerCase())
+                                    .level(c.getLevel())
+                                    .playableClass(c.getPlayableClass().getName())
+                                    .race(c.getPlayableRace().getName())
+                                    .faction(c.getFaction().getName())
+                                    .gender(c.getGender().getName())
+                            .build()
                             ).collect(Collectors.toList());
 
         return requestList;
@@ -369,7 +369,7 @@ public class CharacterService {
             log.info("Fetched CharacterSpec={}", characterProfileSummary);
 
             characterDto = generateCharacterEntityByCharacterProfileSummary(characterProfileSummary);
-            characterRepository.save(CharacterMapper.INSTANCE.characterDtoToEntity(characterDto));
+            CharacterEntity savedEntity = characterRepository.save(CharacterMapper.INSTANCE.characterDtoToEntity(characterDto));
 
             // fetch RaidInfo
             RaidInfoDto raidInfoDto = wowClientWrapper.fetchRaidEncounter(
@@ -381,6 +381,7 @@ public class CharacterService {
                             .characterName(characterSpecRequest.getCharacterName())
                             .build());
 
+            raidInfoDto.setCharacterId(savedEntity.getCharacterId());
             List<RaidDetailDto> raidDetailList =  parseCharacterRaidInfosToRaidDetails(Stream.of(raidInfoDto).collect(Collectors.toList()));
             if (!ObjectUtils.isEmpty(raidDetailList)) {
 
