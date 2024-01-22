@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PartyInfoRepository extends JpaRepository<PartyInfoEntity, Long>, PartyInfoRepositoryCustom {
 
-    public List<PartyInfoEntity> findPartyInfoEntitiesByCreateAccountId_AccountId(long createAccountId);
+    public List<PartyInfoEntity> findPartyInfoEntitiesByCreateUser_UserId(long createAccountId);
 
     public PartyInfoEntity findPartyInfoEntityByPartyId(long partyId);
 

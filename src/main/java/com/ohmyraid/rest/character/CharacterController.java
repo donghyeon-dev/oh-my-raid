@@ -23,16 +23,18 @@ public class CharacterController {
     private final CharacterService characterService;
 
     @GetMapping("/{characterId}/raids")
-    @ApiOperation(value = "특정 캐릭터의 레이드정보 가져오기", notes = "선택된 캐릭터의 필터링된 레이드 정보를 반환한다.")
-    public ResultView<List<CharacterRaidInfoDto>> getSpecificCharacterRaidDetailInfo(//@PathVariable(name="characterId") Integer characterId,
+    @ApiOperation(value = "특정 캐릭터의 레이드정보 조회", notes = "캐릭터의 저장된 레이드 정보를 반환한다.")
+    public ResultView<List<CharacterRaidInfoDto>> getSpecificCharacterRaidDetailInfo(
             @ModelAttribute CharacterRaidInfoRequest characterRaidInfoRequest) {
         return new ResultView<List<CharacterRaidInfoDto>>(characterService.getSpecificCharacterRaidDetailInfo(characterRaidInfoRequest));
     }
 
     @GetMapping("/get-chracter")
-    @ApiOperation(value = "캐릭터 스펙정보 가져오기", notes = "선택된 캐릭터의 요약정보를 반환한다.")
+    @ApiOperation(value = "캐릭터 요약정보 조회", notes = "선택된 캐릭터의 요약정보를 반환한다.")
     public ResultView<CharacterDto> getCharacterProfile(CharacterSpecRequest characterSpecRequest) throws JsonProcessingException {
         return new ResultView<CharacterDto>(characterService.getCharacterProfile(characterSpecRequest));
     }
+
+
 
 }

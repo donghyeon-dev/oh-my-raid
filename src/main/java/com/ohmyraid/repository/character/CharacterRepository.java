@@ -15,9 +15,9 @@ public interface CharacterRepository extends JpaRepository<CharacterEntity, Long
 
     public CharacterEntity findCharacterEntityByCharacterId(long characterId);
 
-    public List<CharacterEntity> findAllByAccountEntity_AccountIdOrderByEquippedItemLevelDesc(long accountId);
+    public List<CharacterEntity> findAllByUserEntity_UserIdOrderByEquippedItemLevelDesc(long userId);
 
-    public List<CharacterDto> findCharacterDtosByAccountId(long accountId);
+    public List<CharacterDto> findCharacterDtosByUserId(long userId);
 
     public CharacterDto findCharacterDtoBySlugAndName(CharacterSpecRequest request);
 }

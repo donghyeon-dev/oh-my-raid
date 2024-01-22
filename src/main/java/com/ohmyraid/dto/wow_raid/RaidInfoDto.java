@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class RaidInfoDto {
 
-    private long characterId;
+    private Long characterId;
     
     private List<Expansions> expansions;
 }

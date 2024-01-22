@@ -1,4 +1,4 @@
-package com.ohmyraid.dto.account;
+package com.ohmyraid.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

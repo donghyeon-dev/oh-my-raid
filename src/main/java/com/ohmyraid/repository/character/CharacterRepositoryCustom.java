@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CharacterRepositoryCustom {
 
-    public List<CharacterDto> findCharacterDtosByAccountId(long accountId);
+    public List<CharacterDto> findCharacterDtosByUserId(long accountId);
 
     public CharacterDto findCharacterDtoBySlugAndName(CharacterSpecRequest request);
 }

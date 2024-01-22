@@ -1,6 +1,6 @@
 package com.ohmyraid.config;
 
-import com.ohmyraid.dto.account.ThreadInfDto;
+import com.ohmyraid.dto.user.ThreadInfDto;
 import com.ohmyraid.utils.StringUtils;
 import com.ohmyraid.utils.ThreadLocalUtils;
 import lombok.extern.slf4j.Slf4j;

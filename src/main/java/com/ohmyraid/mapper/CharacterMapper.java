@@ -1,6 +1,6 @@
 package com.ohmyraid.mapper;
 
-import com.ohmyraid.domain.account.AccountEntity;
+import com.ohmyraid.domain.user.UserEntity;
 import com.ohmyraid.domain.character.CharacterEntity;
 import com.ohmyraid.dto.wow_account.CharacterDto;
 import org.mapstruct.Mapper;
@@ -14,23 +14,22 @@ public interface CharacterMapper {
 
     CharacterMapper INSTANCE = Mappers.getMapper(CharacterMapper.class);
 
-    @Mapping(target = "accountEntity", expression = "java(mappingAccount(characterDto.getAccountId()))")
+    @Mapping(target = "userEntity", expression = "java(mappingAccount(characterDto.getUserId()))")
     CharacterEntity characterDtoToEntity(CharacterDto characterDto);
 
-    @Mapping(target = "realm", ignore = true)
-    @Mapping(source = "accountEntity.accountId", target = "accountId")
+    @Mapping(source = "userEntity.userId", target = "userId")
     CharacterDto characterEntityToDto(CharacterEntity characterEntity);
 
     List<CharacterDto> characterEntitiesToDtoList(List<CharacterEntity> characterEntity);
 
     List<CharacterEntity> dtoListToCharacterEntities(List<CharacterDto> characterEntity);
 
-    default AccountEntity mappingAccount(long accountId){
-        if(accountId == 0){
+    default UserEntity mappingAccount(long userId){
+        if(userId == 0){
             return null;
         }
 
-        return AccountEntity.builder().accountId(accountId).build();
+        return UserEntity.builder().userId(userId).build();
 
 
     }

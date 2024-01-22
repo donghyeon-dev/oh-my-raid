@@ -1,4 +1,4 @@
-package com.ohmyraid.dto.account;
+package com.ohmyraid.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,14 +16,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
-public class UpdatePasswordDto {
+public class UpdateNicknameDto {
     @ApiModelProperty(value = "로그인이메일", name = "email")
     private String email;
 
-    @ApiModelProperty(value = "이전 패스워드", name = "currentPassword")
-    private String currentPassword;
+    @ApiModelProperty(value = "이전 닉네임", name = "currentNickname")
+    private String currentNickname;
 
-    @ApiModelProperty(value = "변경 할 패스워드", name = "changePassword")
-    private String changePassword;
+    @ApiModelProperty(value = "변경 할 닉네임", name = "changeNickname")
+    private String changeNickname;
 
 }

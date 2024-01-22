@@ -1,7 +1,7 @@
 package com.ohmyraid.domain;
 
 import com.ohmyraid.domain.character.CharacterEntity;
-import com.ohmyraid.repository.account.AccountRepository;
+import com.ohmyraid.repository.user.UserRepository;
 import com.ohmyraid.repository.character.CharacterRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CharacterEntityTest {
 
     @Autowired
-    AccountRepository accountRepository;
+    UserRepository userRepository;
 
     @Autowired
     CharacterRepository characterRepository;
@@ -32,7 +32,7 @@ public class CharacterEntityTest {
         String randomName = ("autocat" + new Random().nextInt(1000));
         // 엔티티 등록
         CharacterEntity characterEntity = CharacterEntity.builder()
-                .accountEntity(accountRepository.findAllByEmail("donghyeondev@gmail.com"))
+                .userEntity(userRepository.findAllByEmail("donghyeondev@gmail.com"))
                 .characterSeNumber(123456)
                 .name(randomName)
                 .level(60)

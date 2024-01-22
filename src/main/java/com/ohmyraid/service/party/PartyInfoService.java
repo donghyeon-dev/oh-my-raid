@@ -8,7 +8,7 @@ import com.ohmyraid.domain.party.PartyInfoEntity;
 import com.ohmyraid.dto.login.UserSessionDto;
 import com.ohmyraid.dto.party.PartyInfoDto;
 import com.ohmyraid.mapper.PartyInfoMapper;
-import com.ohmyraid.repository.account.AccountRepository;
+import com.ohmyraid.repository.user.UserRepository;
 import com.ohmyraid.repository.character.CharacterRepository;
 import com.ohmyraid.repository.party.PartyInfoRepository;
 import com.ohmyraid.utils.RedisUtils;
@@ -26,7 +26,7 @@ import java.util.List;
 public class PartyInfoService {
 
     private final PartyInfoRepository partyRepository;
-    private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
     private final CharacterRepository characterRepository;
 
     private final RedisUtils redisUtils;
@@ -52,7 +52,7 @@ public class PartyInfoService {
                 .memberCapacity(inpDto.getMemberCapacity())
                 .contents(inpDto.getContents())
                 .slug(inpDto.getSlug())
-                .createAccountId(accountRepository.findAllByEmail(email))
+                .createUser(userRepository.findAllByEmail(email))
                 .startAt(inpDto.getStartAt())
                 .recruitUntil((inpDto.getRecruitUntil()))
                 .build();
@@ -68,7 +68,7 @@ public class PartyInfoService {
      * @return
      */
     public List<PartyInfoDto> getPartyInfoListByAccountId(long accountId) {
-        List<PartyInfoEntity> partyInfoEntities = partyRepository.findPartyInfoEntitiesByCreateAccountId_AccountId(accountId);
+        List<PartyInfoEntity> partyInfoEntities = partyRepository.findPartyInfoEntitiesByCreateUser_UserId(accountId);
 
         return PartyInfoMapper.INSTANCE.entityListToDtoList(partyInfoEntities);
     }
@@ -87,7 +87,7 @@ public class PartyInfoService {
         long sessionAccountId = redisUtils.getRedisValue(token, UserSessionDto.class).getAccountId();
 
         //예외
-        if (partyInfoDto.getCreateAccountId() != sessionAccountId) {
+        if (partyInfoDto.getCreateUserId() != sessionAccountId) {
             throw new CommonServiceException(ErrorResult.NO_URL_AUTH);
         }
 

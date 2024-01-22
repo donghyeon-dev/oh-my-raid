@@ -1,7 +1,7 @@
 package com.ohmyraid.utils;
 
 import com.ohmyraid.config.Constant;
-import com.ohmyraid.dto.account.ThreadInfDto;
+import com.ohmyraid.dto.user.ThreadInfDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

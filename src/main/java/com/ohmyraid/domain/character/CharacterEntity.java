@@ -1,7 +1,7 @@
 package com.ohmyraid.domain.character;
 
 import com.ohmyraid.common.converter.*;
-import com.ohmyraid.domain.account.AccountEntity;
+import com.ohmyraid.domain.user.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,8 +23,8 @@ public class CharacterEntity {
     private Long characterId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "account_id")
-    private AccountEntity accountEntity;
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
 
     /**
      * 캐릭터 고유번호

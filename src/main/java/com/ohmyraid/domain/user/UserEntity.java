@@ -1,4 +1,4 @@
-package com.ohmyraid.domain.account;
+package com.ohmyraid.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,17 +8,17 @@ import org.springframework.util.ObjectUtils;
 
 import javax.persistence.*;
 
-@Entity(name = "OMR_ACCOUNT")
+@Entity(name = "OMR_USER")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountEntity {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AutoIncrement
-    @Column(name = "account_id")
-    private Long accountId;
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(length = 25, nullable = false, unique = true)
     private String email;
