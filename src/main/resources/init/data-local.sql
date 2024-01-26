@@ -1,4 +1,4 @@
-insert into omr_account (account_id, email, nickname, password)
+insert into omr_user (user_id, email, nickname, password)
 values (1, 'donghyeondev@gmail.com', 'autocat', '$2a$08$dQLjDEjVcCK7uDhSy2RY3uCDobWvOdAjYDRkYAoe6nMok2Qgzmtvi');
 
 insert into omr_character (character_id, user_id, character_se_number, name, playable_class, specialization,
