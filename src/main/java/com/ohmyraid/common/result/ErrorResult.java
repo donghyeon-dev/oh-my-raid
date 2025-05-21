@@ -44,7 +44,8 @@ public enum ErrorResult implements Result {
 
     @Override
     public Result setMsgArgs(String resultMsgArgs) {
-        return this.setMsgArgs(resultMsgArgs);
+        this.resultMsgArgs = new String[] { resultMsgArgs };
+        return this;
     }
 
     @Override
